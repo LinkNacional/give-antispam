@@ -163,12 +163,15 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
 
 		$gatewayVerification = $configs['gatewayVerify'];
 
+		$paymentInfo = [];
+
 		// Verify the last 20 payments
 		for ($c = 0; $c < count($payments); $c++) {
 			// Get the GiveWP payment info
 			$paymentId = $payments[$c]->ID;
 			$dates[] = $payments[$c]->post_date;
 			$donationIp[] = give_get_payment_user_ip($paymentId);
+			$paymentInfo[] = give_get_payment_by('id', $paymentId);
 
 			// Verify if the saved donation IP is equal to the actual user IP
 			if ($donationIp[$c] == $userIp) {
@@ -184,16 +187,19 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
 
 				// Verify if the donations interval is greater than timeLimit specified in the admin-settings
 				if ($minutes < $timeLimit) {
-					// Verify if the user has made another donation in the time interval
-					// TODO comparar gateways de pagamento, caso seja mesmo gateway bloqueia
-
+					// Checks the gateway verification option is enabled
 					if ($gatewayVerification === 'enabled') {
-						if ($donationLimit > $donationCounter) {
-							$donationCounter++;
-						} else {
-							give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
+						// Verifies the current gateway with the donation gateway
+						if ($paymentInfo[$c]->gateway === $valid_data['gateway']) {
+							// Verify if the user has made another donation in the time interval
+							if ($donationLimit > $donationCounter) {
+								$donationCounter++;
+							} else {
+								give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
+							}
 						}
 					} else {
+						// Verify if the user has made another donation in the time interval
 						if ($donationLimit > $donationCounter) {
 							$donationCounter++;
 						} else {
@@ -209,7 +215,7 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
 			lkn_give_antispam_delete_old_logs();
 
 			// lkn_give_antispam_reg_log(' || my ip || ' . var_export($userIp, true) . ' || donation ip || ' . var_export($donationIp, true) . ' || timestamp interval || ' . var_export($minutes, true), $configs);
-			lkn_give_antispam_reg_log(' || valid data || ' . var_export($valid_data, true) . ' || raw data || ' . var_export($data, true) . ' || payments || ' . var_export($payments, true), $configs);
+			lkn_give_antispam_reg_log(' || valid data || ' . var_export($valid_data, true) . ' || raw data || ' . var_export($data, true) . ' || payments || ' . var_export($paymentInfo[0]->gateway, true), $configs);
 		}
 
 		return $valid_data;
