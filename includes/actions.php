@@ -29,7 +29,7 @@ function lkn_give_antispam_get_configs() {
 	$configs['base'] = $configs['basePath'] . '/' . date('d.m.Y-H.i.s') . '.log';
 
 	// Internal debug option
-	$configs['debug'] = true;
+	$configs['debug'] = false;
 
 	$configs['antispamEnabled'] = lkn_give_antispam_get_enabled();
 	$configs['interval'] = lkn_give_antispam_get_time_interval();
