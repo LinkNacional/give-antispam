@@ -27,9 +27,12 @@ function lkn_give_antispam_get_configs() {
 
 	$configs['basePath'] = __DIR__ . '/../logs';
 	$configs['base'] = $configs['basePath'] . '/' . date('d.m.Y-H.i.s') . '.log';
+	$configs['baseReport'] = $configs['basePath'] . '/ip-spam.log';
 
 	// Internal debug option
 	$configs['debug'] = false;
+	// External report log option
+	$configs['reportSpam'] = lkn_give_antispam_get_report_spam();
 
 	$configs['antispamEnabled'] = lkn_give_antispam_get_enabled();
 	$configs['interval'] = lkn_give_antispam_get_time_interval();
@@ -37,6 +40,17 @@ function lkn_give_antispam_get_configs() {
 	$configs['gatewayVerify'] = lkn_give_antispam_get_gateway_verification();
 
 	return $configs;
+}
+
+/**
+ * Makes a .log file for each spam report
+ *
+ * @return void
+ */
+function lkn_give_antispam_reg_report($message, $configs) {
+	error_log($message, 3, $configs['baseReport']);
+
+	chmod($configs['baseReport'], 0600);
 }
 
 /**
@@ -84,13 +98,25 @@ function lkn_give_antispam_delete_old_logs() {
 }
 
 /**
+ * Checks if the antispam report log is enabled
+ *
+ * @return string enabled | disabled
+ *
+ */
+function lkn_give_antispam_get_report_spam() {
+	$reportEnabled = give_get_option('lkn_antispam_enabled_setting_field');
+
+	return $reportEnabled;
+}
+
+/**
  * Checks if the antispam is enabled
  *
  * @return string enabled | disabled
  *
  */
 function lkn_give_antispam_get_enabled() {
-	$enabled = give_get_option('lkn_antispam_enabled_setting_field');
+	$enabled = give_get_option('lkn_antispam_save_log_setting_field');
 
 	return $enabled;
 }
@@ -143,6 +169,9 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
 
 	// Verify if plugin is active
 	if ($configs['antispamEnabled'] === 'enabled') {
+		// Get the save spam-log option
+		$reportSpam = $configs['reportSpam'];
+
 		// Get current user ip
 		$userIp = give_get_ip();
 
@@ -195,6 +224,9 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
 							if ($donationLimit > $donationCounter) {
 								$donationCounter++;
 							} else {
+								if ($reportSpam === 'enabled') {
+									lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' <br> ' . PHP_EOL, $configs);
+								}
 								give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
 							}
 						}
@@ -203,6 +235,9 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
 						if ($donationLimit > $donationCounter) {
 							$donationCounter++;
 						} else {
+							if ($reportSpam === 'enabled') {
+								lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' <br> ' . PHP_EOL, $configs);
+							}
 							give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
 						}
 					}

@@ -21,6 +21,33 @@ if (!defined('ABSPATH')) {
  * @return array
  */
 function give_lkn_antispam_add_setting_into_existing_tab($settings) {
+	$spamLogUrl = __DIR__ . '/../../logs/ip-spam.log';
+	$logContent = json_encode(file_get_contents($spamLogUrl));
+
+	$html = <<<HTML
+		<script>
+			// Open new tab and register logs
+			function openWindowContent () {
+				var newWindow = window.open('','_blank');
+				newWindow.document.write($logContent);
+			}
+			// On page load run the creation element script
+			document.addEventListener('DOMContentLoaded', function () {
+				// Get the elements from the page
+				let formTable = document.getElementsByClassName('form-table')[0];
+				let urlLogElement = document.getElementById('lkn_log_new_tab');
+
+				// Add the click event on the <a></a> element
+				urlLogElement.addEventListener('click', openWindowContent);
+			})
+		</script>
+
+		<style>
+			#lkn_log_new_tab {
+				cursor: pointer;
+			}
+		</style>
+HTML;
 	if (!Give_Admin_Settings::is_setting_page('general', 'access-control')) {
 		return $settings;
 	}
@@ -70,6 +97,23 @@ function give_lkn_antispam_add_setting_into_existing_tab($settings) {
 						'disabled' => __('Desabilitado', 'give'),
 					],
 				];
+
+				$newSetting[] = [
+					'name' => __('Salvar relatório anti-spam', 'give'),
+					'id' => 'lkn_antispam_save_log_setting_field',
+					'desc' => __('Ative para salvar um relatório contendo as doações de spam bloqueadas. <a id="lkn_log_new_tab">Relatório de spam bloqueado.</a>'),
+					'type' => 'radio',
+					'default' => 'disabled',
+					'options' => [
+						'enabled' => __('Habilitado', 'give'),
+						'disabled' => __('Desabilitado', 'give'),
+					],
+				];
+
+				// Options only apears if the plugin option is 'enabled'
+				if (give_get_option('lkn_antispam_save_log_setting_field') === 'enabled') {
+					echo $html;
+				}
 			}
 
 			$newSetting[] = [
