@@ -38,6 +38,10 @@ function lkn_give_antispam_get_configs() {
 	$configs['interval'] = lkn_give_antispam_get_time_interval();
 	$configs['donationLimit'] = lkn_give_antispam_get_donation_limit();
 	$configs['gatewayVerify'] = lkn_give_antispam_get_gateway_verification();
+	// Recaptcha keys
+	$configs['recEnabled'] = lkn_give_antispam_get_recaptcha_enabled();
+	$configs['siteRec'] = lkn_give_antispam_get_rec_id();
+	$configs['secretRec'] = lkn_give_antispam_get_rec_secret();
 
 	return $configs;
 }
@@ -104,7 +108,7 @@ function lkn_give_antispam_delete_old_logs() {
  *
  */
 function lkn_give_antispam_get_report_spam() {
-	$reportEnabled = give_get_option('lkn_antispam_enabled_setting_field');
+	$reportEnabled = give_get_option('lkn_antispam_save_log_setting_field');
 
 	return $reportEnabled;
 }
@@ -116,9 +120,45 @@ function lkn_give_antispam_get_report_spam() {
  *
  */
 function lkn_give_antispam_get_enabled() {
-	$enabled = give_get_option('lkn_antispam_save_log_setting_field');
+	$enabled = give_get_option('lkn_antispam_enabled_setting_field');
 
 	return $enabled;
+}
+
+/**
+ * Checks if the recaptcha is enabled
+ *
+ * @return string enabled | disabled
+ *
+ */
+function lkn_give_antispam_get_recaptcha_enabled() {
+	$enabled = give_get_option('lkn_antispam_active_recaptcha_setting_field');
+
+	return $enabled;
+}
+
+/**
+ * Get the recaptcha site key
+ *
+ * @return string $siteId
+ *
+ */
+function lkn_give_antispam_get_rec_id() {
+	$siteId = give_get_option('lkn_antispam_site_rec_id_setting_field');
+
+	return $siteId;
+}
+
+/**
+ * Get the recaptcha secret key
+ *
+ * @return string $recSecret
+ *
+ */
+function lkn_give_antispam_get_rec_secret() {
+	$recSecret = give_get_option('lkn_antispam_secret_rec_id_setting_field');
+
+	return $recSecret;
 }
 
 /**
@@ -260,3 +300,142 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
 }
 
 add_action('give_checkout_error_checks', 'lkn_give_antispam_validate_donation', 10, 2);
+
+/**
+ * Implementing Google's ReCaptcha on All Give Forms V3
+ *
+ *  To effectively use this snippet, please do the following:
+ *  1. Get your Google ReCAPTCHA API Key here: https://www.google.com/recaptcha/admin/create
+ *  2. In each function and action, replace "_myprefix_" with your own custom prefix
+ *  3. Put your "Secret Key" where it says "MYSECRETKEY" in the $recaptcha_secret_key string
+ *  4. Put your "Site Key" where it says "MYSITEKEY" in TWO areas below
+ */
+
+/**
+ * Validate ReCAPTCHA
+ *
+ * @param $valid_data
+ * @param $data
+ *
+ * @return array $valid_data
+ */
+function lkn_give_antispam_validate_recaptcha($valid_data, $data) {
+	$configs = lkn_give_antispam_get_configs();
+	if ($configs['antispamEnabled'] === 'enabled') {
+		if ($configs['recEnabled'] === 'enabled') {
+			$recaptcha_url        = 'https://www.google.com/recaptcha/api/siteverify';
+			$recaptcha_secret_key = $configs['secretRec']; // Replace with your own key here.
+			$recaptcha_response   = wp_remote_post($recaptcha_url . '?secret=' . $recaptcha_secret_key . '&response=' . $data['g-recaptcha-response'] . '&remoteip=' . $_SERVER['REMOTE_ADDR']);
+			$recaptcha_data       = json_decode(wp_remote_retrieve_body($recaptcha_response));
+
+			lkn_give_antispam_reg_log('(recaptcha response data): ' . var_export($recaptcha_data, true) . PHP_EOL . ' ||| (recaptcha data response): ' . var_export($data, true) . PHP_EOL . ' ||| (recaptcha html form): ' . var_export($valid_data, true), $configs);
+
+			if (!isset($recaptcha_data->success) || !$recaptcha_data->success == true) {
+				// User must have validated the reCAPTCHA to proceed with donation.
+				if (!isset($data['g-recaptcha-response']) || empty($data['g-recaptcha-response'])) {
+					give_set_error('g-recaptcha-response', __('Please verify that you are not a robot.', 'give'));
+				}
+			}
+		}
+	}
+
+	return $valid_data;
+}
+
+add_action('give_checkout_error_checks', 'lkn_give_antispam_validate_recaptcha', 10, 2);
+
+/**
+ * Enqueue ReCAPTCHA Scripts
+ */
+function lkn_give_antispam_recaptcha_scripts() {
+	$configs = lkn_give_antispam_get_configs();
+	if ($configs['antispamEnabled'] === 'enabled') {
+		if ($configs['recEnabled'] === 'enabled') {
+			$siteKey = $configs['siteRec'];
+			wp_register_script('give-captcha-js', 'https://www.google.com/recaptcha/api.js?render=' . $siteKey);
+			// If you only want to enqueue on single form pages then uncomment if statement
+			if (is_singular('give_forms')) {
+				wp_enqueue_script('give-captcha-js');
+			}
+		}
+	}
+}
+
+add_action('wp_enqueue_scripts', 'lkn_give_antispam_recaptcha_scripts');
+
+/**
+ * Print Necessary Inline JS for ReCAPTCHA
+ *
+ * This function outputs the appropriate inline js ReCAPTCHA scripts in the footer
+ */
+function lkn_give_antispam_print_my_inline_script() {
+	$configs = lkn_give_antispam_get_configs();
+	if ($configs['antispamEnabled'] === 'enabled') {
+		if ($configs['recEnabled'] === 'enabled') {
+			$siteKey = $configs['siteRec'];
+			// Uncomment if statement to control output
+			if (is_singular('give_forms')) {
+				$html = <<<HTML
+			<script type="text/javascript">
+					jQuery( document ).on( 'give_gateway_loaded', function() {
+						grecaptcha.render( 'give-recaptcha-element', {
+							'sitekey': '$siteKey' // Add your own Google API sitekey here.
+						} );
+					} );
+			</script>
+HTML;
+				echo $html;
+			}
+		}
+	}
+}
+
+add_action('wp_footer', 'lkn_give_antispam_print_my_inline_script');
+
+/**
+ * Custom ReCAPTCHA Form Field
+ *
+ * This function adds the reCAPTCHA field above the "Donation Total" field.
+ *
+ * Don't forget to update the sitekey!
+ *
+ * @param $form_id
+ */
+
+function lkn_give_antispam_custom_form_fields($form_id) {
+	$configs = lkn_give_antispam_get_configs();
+	if ($configs['antispamEnabled'] === 'enabled') {
+		if ($configs['recEnabled'] === 'enabled') {
+			$siteKey = $configs['siteRec'];
+			// Add you own google API Site key.
+			$html = <<<HTML
+			
+
+			<input type="hidden" id="g-recaptcha-lkn-input" name="g-recaptcha-response" />
+
+			<script type="text/javascript">
+				window.addEventListener('DOMContentLoaded', function() {
+					let formSubmit = document.getElementById('give-form-642-1'); 
+					formSubmit.addEventListener('submit', function (e) {
+						e.preventDefault();
+						console.log('========== EVENTO SUBMIT ==========')
+						grecaptcha.ready(function() {
+							grecaptcha.execute('$siteKey', {action: 'submit'}).then(function(token) {
+								// Add your logic to submit to your backend server here.
+								document.getElementById('g-recaptcha-lkn-input').value = token;
+							});
+						});
+					});
+					console.log('recaptcha página carregada');
+						
+				});
+			</script>
+
+			<script id="give-recaptcha-element" class="g-recaptcha" src="https://www.google.com/recaptcha/api.js?render=$siteKey"></script>
+HTML;
+			echo $html;
+		}
+	}
+}
+
+add_action('give_after_donation_levels', 'lkn_give_antispam_custom_form_fields', 10, 1);

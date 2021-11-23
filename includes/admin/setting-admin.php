@@ -110,6 +110,32 @@ HTML;
 					],
 				];
 
+				$newSetting[] = [
+					'name' => __('Habilitar Recaptcha', 'give'),
+					'id' => 'lkn_antispam_active_recaptcha_setting_field',
+					'desc' => __('Ative para habilitar o recaptcha nos formulários de doações.'),
+					'type' => 'radio',
+					'default' => 'disabled',
+					'options' => [
+						'enabled' => __('Habilitado', 'give'),
+						'disabled' => __('Desabilitado', 'give'),
+					],
+				];
+
+				$newSetting[] = [
+					'name' => __('Recaptcha site key', 'give'),
+					'id' => 'lkn_antispam_site_rec_id_setting_field',
+					'desc' => __('Chave do serviço Recaptcha.'),
+					'type' => 'api_key',
+				];
+
+				$newSetting[] = [
+					'name' => __('Recaptcha secret key', 'give'),
+					'id' => 'lkn_antispam_secret_rec_id_setting_field',
+					'desc' => __('Chave do serviço Recaptcha.'),
+					'type' => 'api_key',
+				];
+
 				// Options only apears if the plugin option is 'enabled'
 				if (give_get_option('lkn_antispam_save_log_setting_field') === 'enabled') {
 					echo $html;
