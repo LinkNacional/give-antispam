@@ -265,7 +265,7 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
 								$donationCounter++;
 							} else {
 								if ($reportSpam === 'enabled') {
-									lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' <br> ' . PHP_EOL, $configs);
+									lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED ' . ' <br> ' . PHP_EOL, $configs);
 								}
 								give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
 							}
@@ -276,7 +276,7 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
 							$donationCounter++;
 						} else {
 							if ($reportSpam === 'enabled') {
-								lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' <br> ' . PHP_EOL, $configs);
+								lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED ' . ' <br> ' . PHP_EOL, $configs);
 							}
 							give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
 						}
@@ -328,12 +328,13 @@ function lkn_give_antispam_validate_recaptcha($valid_data, $data) {
 			$recaptcha_response   = wp_remote_post($recaptcha_url . '?secret=' . $recaptcha_secret_key . '&response=' . $data['g-recaptcha-response'] . '&remoteip=' . $_SERVER['REMOTE_ADDR']);
 			$recaptcha_data       = json_decode(wp_remote_retrieve_body($recaptcha_response));
 
+			// TODO ao terminar de preparar para produção retirar
 			lkn_give_antispam_reg_log('(recaptcha response data): ' . var_export($recaptcha_data, true) . PHP_EOL . ' ||| (recaptcha data response): ' . var_export($data, true) . PHP_EOL . ' ||| (recaptcha html form): ' . var_export($valid_data, true), $configs);
 
 			if (!isset($recaptcha_data->success) || !$recaptcha_data->success == true) {
 				// User must have validated the reCAPTCHA to proceed with donation.
 				if (!isset($data['g-recaptcha-response']) || empty($data['g-recaptcha-response'])) {
-					give_set_error('g-recaptcha-response', __('Please verify that you are not a robot.', 'give'));
+					give_set_error('g-recaptcha-response', __('O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Entre em contato com o administrador do site para mais informações.', 'give'));
 				}
 			}
 		}
@@ -354,9 +355,9 @@ function lkn_give_antispam_recaptcha_scripts() {
 			$siteKey = $configs['siteRec'];
 			wp_register_script('give-captcha-js', 'https://www.google.com/recaptcha/api.js?render=' . $siteKey);
 			// If you only want to enqueue on single form pages then uncomment if statement
-			if (is_singular('give_forms')) {
-				wp_enqueue_script('give-captcha-js');
-			}
+			// if (is_singular('give_forms')) {
+			wp_enqueue_script('give-captcha-js');
+			// }
 		}
 	}
 }
@@ -374,8 +375,8 @@ function lkn_give_antispam_print_my_inline_script() {
 		if ($configs['recEnabled'] === 'enabled') {
 			$siteKey = $configs['siteRec'];
 			// Uncomment if statement to control output
-			if (is_singular('give_forms')) {
-				$html = <<<HTML
+			// if (is_singular('give_forms')) {
+			$html = <<<HTML
 			<script type="text/javascript">
 					jQuery( document ).on( 'give_gateway_loaded', function() {
 						grecaptcha.render( 'give-recaptcha-element', {
@@ -384,8 +385,8 @@ function lkn_give_antispam_print_my_inline_script() {
 					} );
 			</script>
 HTML;
-				echo $html;
-			}
+			echo $html;
+			// }
 		}
 	}
 }
@@ -414,21 +415,105 @@ function lkn_give_antispam_custom_form_fields($form_id) {
 			<input type="hidden" id="g-recaptcha-lkn-input" name="g-recaptcha-response" />
 
 			<script type="text/javascript">
+				// Verifica se página carregou
 				window.addEventListener('DOMContentLoaded', function() {
-					let formSubmit = document.getElementById('give-form-642-1'); 
-					formSubmit.addEventListener('submit', function (e) {
-						e.preventDefault();
-						console.log('========== EVENTO SUBMIT ==========')
+					let iframeLoader = parent.document.getElementsByClassName('iframe-loader')[0];
+
+					// caso for um formulário legado altera também os atributos do formulário para validação do giveWP
+					if(!iframeLoader) { // verifica a existência do iframe loader que é específico do formulário novo
+						console.log('não é iframe');
+						let givePaymentSelect = document.getElementById('give-payment-mode-wrap');
+						if(givePaymentSelect) {
+							lknPrepareRecaptcha();
+							let lknChangePayment = function () {
+								let paymentDiv = document.getElementById('give_purchase_form_wrap');
+								paymentDiv.addEventListener('click', function () {
+									grecaptcha.ready(function() {
+										grecaptcha.execute('$siteKey', {action: 'submit'}).then(function(token) {
+											// Add your logic to submit to your backend server here.
+											document.getElementById('g-recaptcha-lkn-input').value = token;
+										});
+									});
+								}, { once: true });
+							}
+							givePaymentSelect.addEventListener('click', lknChangePayment, { once: true })
+						}else{
+							let paymentDiv = document.getElementById('give_purchase_form_wrap');
+							paymentDiv.addEventListener('click', function () {
+								grecaptcha.ready(function() {
+									grecaptcha.execute('$siteKey', {action: 'submit'}).then(function(token) {
+										// Add your logic to submit to your backend server here.
+										document.getElementById('g-recaptcha-lkn-input').value = token;
+									});
+								});
+							}, { once: true });
+						}
+					}else{
+						console.log('é iframe');
+						let userInfo = document.getElementById('give_checkout_user_info');
+						userInfo.addEventListener('click', function () {
+							grecaptcha.ready(function() {
+								grecaptcha.execute('$siteKey', {action: 'submit'}).then(function(token) {
+									// Add your logic to submit to your backend server here.
+									document.getElementById('g-recaptcha-lkn-input').value = token;
+								});
+							});
+						}, { once: true });
+					}			
+				});
+
+				/**
+				 * Detect HTML DOM object and add event listener on click to execute Recaptcha V3
+				 * 
+				 * @return Boolean
+				 *  */
+				function lknPrepareRecaptcha() {
+					let paymentDiv = document.getElementById('give_purchase_form_wrap');
+					paymentDiv.addEventListener('click', function () {
 						grecaptcha.ready(function() {
 							grecaptcha.execute('$siteKey', {action: 'submit'}).then(function(token) {
 								// Add your logic to submit to your backend server here.
 								document.getElementById('g-recaptcha-lkn-input').value = token;
 							});
 						});
-					});
-					console.log('recaptcha página carregada');
-						
-				});
+					}, { once: true });
+					/* let giveBtnSubmit = document.getElementById('give-purchase-button');
+					let lknBtnSubmitDebit = document.getElementById('btnSendOrder');
+					let lknBtnSubmit = document.getElementById('btnSubmitForm');
+					if (giveBtnSubmit) {
+						giveBtnSubmit.addEventListener('click', function () {
+							grecaptcha.ready(function() {
+								grecaptcha.execute('$siteKey', {action: 'submit'}).then(function(token) {
+									// Add your logic to submit to your backend server here.
+									document.getElementById('g-recaptcha-lkn-input').value = token;
+								});
+							});
+						}, { once: true });
+						return true;
+					} else if(lknBtnSubmit) {
+						lknBtnSubmitDebit.addEventListener('click', function () {
+							grecaptcha.ready(function() {
+								grecaptcha.execute('$siteKey', {action: 'submit'}).then(function(token) {
+									// Add your logic to submit to your backend server here.
+									document.getElementById('g-recaptcha-lkn-input').value = token;
+								});
+							});
+						}, { once: true });
+						return true;
+					} else if(lknBtnSubmit) {
+						lknBtnSubmit.addEventListener('click', function () {
+							grecaptcha.ready(function() {
+								grecaptcha.execute('$siteKey', {action: 'submit'}).then(function(token) {
+									// Add your logic to submit to your backend server here.
+									document.getElementById('g-recaptcha-lkn-input').value = token;
+								});
+							});
+						}, { once: true });
+						return true;
+					} else {
+						return false;
+					} */
+				}
 			</script>
 
 			<script id="give-recaptcha-element" class="g-recaptcha" src="https://www.google.com/recaptcha/api.js?render=$siteKey"></script>
