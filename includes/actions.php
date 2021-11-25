@@ -357,7 +357,6 @@ function lkn_give_antispam_validate_recaptcha($valid_data, $data) {
 			if ($configs['debug'] === true) {
 				lkn_give_antispam_reg_log('(recaptcha response data): ' . var_export($recaptcha_data, true) . PHP_EOL . ' ||| (recaptcha data response): ' . var_export($data, true) . PHP_EOL . ' ||| (data action): ' . var_export($data['give_ajax'], true), $configs);
 			}
-			lkn_give_antispam_reg_log('(recaptcha response data): ' . var_export($recaptcha_data, true) . PHP_EOL . ' ||| (recaptcha score configs): ' . var_export($configs['scoreRec'], true) . PHP_EOL . ' ||| (data action): ' . var_export($configs['scoreRec'], true), $configs);
 
 			// Verifica se a requisição foi concluída com sucesso
 			if (!isset($recaptcha_data->success) || $recaptcha_data->success == false) {
