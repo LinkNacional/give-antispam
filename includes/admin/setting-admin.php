@@ -59,7 +59,7 @@ HTML;
 			$newSetting[] = [
 				'name' => __('Habilitar proteção de doações spam', 'give'),
 				'id' => 'lkn_antispam_enabled_setting_field',
-				'desc' => __('Ative ou desative o plugin Antispam esse plugin fará o bloqueio de doações suspeitas'),
+				'desc' => __('Ative ou desative o plugin Antispam esse plugin fará o bloqueio de doações suspeitas.'),
 				'type' => 'radio',
 				'default' => 'disabled',
 				'options' => [
@@ -73,7 +73,7 @@ HTML;
 				$newSetting[] = [
 					'name' => __('Limite de doações no intervalo de tempo', 'give'),
 					'id' => 'lkn_antispam_limit_setting_field',
-					'desc' => __('Quantidade de doações que um cliente pode fazer em determinado período de tempo'),
+					'desc' => __('Quantidade de doações que um cliente pode fazer em determinado período de tempo.'),
 					'type' => 'number',
 					'default' => '2',
 				];
@@ -81,7 +81,7 @@ HTML;
 				$newSetting[] = [
 					'name' => __('Intervalo entre doações', 'give'),
 					'id' => 'lkn_antispam_time_interval_setting_field',
-					'desc' => __('Intervalo de tempo entre doações que cliente pode fazer (em minutos)'),
+					'desc' => __('Intervalo de tempo entre doações que cliente pode fazer (em minutos).'),
 					'type' => 'number',
 					'default' => '10',
 				];
@@ -89,7 +89,7 @@ HTML;
 				$newSetting[] = [
 					'name' => __('Limitar doações para mesma forma de pagamento', 'give'),
 					'id' => 'lkn_antispam_same_gateway_setting_field',
-					'desc' => __('Ative para limitar doações em sequência que tenham os mesmos meios de pagamento'),
+					'desc' => __('Ative para limitar doações em sequência que tenham os mesmos meios de pagamento.'),
 					'type' => 'radio',
 					'default' => 'disabled',
 					'options' => [
@@ -109,6 +109,40 @@ HTML;
 						'disabled' => __('Desabilitado', 'give'),
 					],
 				];
+
+				$newSetting[] = [
+					'name' => __('Habilitar Recaptcha', 'give'),
+					'id' => 'lkn_antispam_active_recaptcha_setting_field',
+					'desc' => __('Ative para habilitar o recaptcha nos formulários de doação.'),
+					'type' => 'radio',
+					'default' => 'disabled',
+					'options' => [
+						'enabled' => __('Habilitado', 'give'),
+						'disabled' => __('Desabilitado', 'give'),
+					],
+				];
+				if (give_get_option('lkn_antispam_active_recaptcha_setting_field') === 'enabled') {
+					$newSetting[] = [
+						'name' => __('Recaptcha site key', 'give'),
+						'id' => 'lkn_antispam_site_rec_id_setting_field',
+						'desc' => __('Chave do serviço Google Recaptcha V3.'),
+						'type' => 'api_key',
+					];
+
+					$newSetting[] = [
+						'name' => __('Recaptcha secret key', 'give'),
+						'id' => 'lkn_antispam_secret_rec_id_setting_field',
+						'desc' => __('Chave do serviço Google Recaptcha V3.'),
+						'type' => 'api_key',
+					];
+					$newSetting[] = [
+						'name' => __('Score mínimo', 'give'),
+						'id' => 'lkn_antispam_score_re_setting_field',
+						'desc' => __('O score mínimo validado pelo Recaptcha para que as doações sejam aceitas. Varia entre 0 até 10.'),
+						'type' => 'number',
+						'default' => '5',
+					];
+				}
 
 				// Options only apears if the plugin option is 'enabled'
 				if (give_get_option('lkn_antispam_save_log_setting_field') === 'enabled') {
