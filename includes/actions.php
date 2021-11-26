@@ -449,7 +449,17 @@ function lkn_give_antispam_custom_form_fields($form_id) {
 			<script type="text/javascript">
 				// Verifica se DOM carregou completamente
 				window.addEventListener('DOMContentLoaded', function() {
+					
 					let iframeLoader = parent.document.getElementsByClassName('iframe-loader')[0];
+					let totalWrapper = document.getElementsByClassName('give-total-wrap')[0];
+					let gNoticeWrapper = document.createElement('div');
+					// Alguns temas e páginas do wordpress escondem o badge do recaptcha
+					// Adicionado notice contendo políticas de privacidade e termos de uso como requerido pela documentação do recaptcha
+					// @see { https://developers.google.com/recaptcha/docs/faq#id-like-to-hide-the-recaptcha-badge.-what-is-allowed }
+					gNoticeWrapper.innerHTML = 'Este site é protegido pelo reCAPTCHA e as <a href="https://policies.google.com/privacy" target="_blank">Políticas de Privacidade</a> e <a href="https://policies.google.com/terms" target="_blank">Termos de Serviço</a> do Google se aplicam.';
+					gNoticeWrapper.setAttribute('class','gNotice');
+
+					totalWrapper.append(gNoticeWrapper);
 
 					// caso for um formulário legado altera também os atributos do formulário para validação do giveWP
 					if(!iframeLoader) { // verifica a existência do iframe loader que é específico do formulário multi-step
@@ -499,6 +509,15 @@ function lkn_give_antispam_custom_form_fields($form_id) {
 			</script>
 
 			<script id="give-recaptcha-element" class="g-recaptcha" src="https://www.google.com/recaptcha/api.js?render=$siteKey"></script>
+			<style>
+				.give-total-wrap {
+					flex-direction: column;
+				}
+				.gNotice {
+					margin: 15px 20px;
+					font-size: 15px;
+				}
+			</style>
 HTML;
 			echo $html;
 		}
