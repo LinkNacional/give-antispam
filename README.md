@@ -24,6 +24,14 @@ O Give-Antispam é um plugin para a plataforma de doação GiveWP que tem o obje
 
 10) Clique em salvar;
 
+11) Caso tenha as chaves de acesso do Recaptcha V3 e deseje habilitá-lo, procura pela opção "Habilitar Recaptcha" clique em "habilitado";
+
+12) Clique em salvar;
+
+13) Novos campos aparecerão, agora insira suas credenciais do Recaptcha V3;
+
+14) Clique em salvar;
+
 Pronto, o plugin do Give-Antispam está ativo e em funcionamento.
 
 
