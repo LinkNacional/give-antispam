@@ -111,9 +111,9 @@ HTML;
 				];
 
 				$newSetting[] = [
-					'name' => __('Habilitar Recaptcha', 'give'),
+					'name' => __('Recaptcha formulário de doação', 'give'),
 					'id' => 'lkn_antispam_active_recaptcha_setting_field',
-					'desc' => __('Ative para habilitar o recaptcha nos formulários de doação.'),
+					'desc' => __('Ative para habilitar o Recaptcha nos formulários de doação. <a href="https://www.google.com/recaptcha/admin/" target="_blank">Gere as chaves do Recaptcha V3 aqui.</a>'),
 					'type' => 'radio',
 					'default' => 'disabled',
 					'options' => [
@@ -138,7 +138,7 @@ HTML;
 					$newSetting[] = [
 						'name' => __('Score mínimo', 'give'),
 						'id' => 'lkn_antispam_score_re_setting_field',
-						'desc' => __('O score mínimo validado pelo Recaptcha para que as doações sejam aceitas. Varia entre 0 até 10.'),
+						'desc' => __('O score mínimo validado pelo Recaptcha para que as doações sejam aceitas. Varia entre 0 e 10.'),
 						'type' => 'number',
 						'default' => '5',
 					];
