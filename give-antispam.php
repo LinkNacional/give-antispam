@@ -3,7 +3,7 @@
  * Plugin Name: Give - Antispam
  * Plugin URI:  https://www.linknacional.com.br
  * Description: Faz a verificação e prevenção de doações mal intencionadas.
- * Version:     1.1.1
+ * Version:     1.1.2
  * Author:      Link Nacional
  * Author URI:  https://www.linknacional.com.br
  * License:     GNU General Public License v2 or later
@@ -160,14 +160,12 @@ final class Lkn_Give_Antispam {
             //se não esta logado entra daqui
             self::$instance->load_files();
             self::$instance->setup_hooks();
-            self::$instance->load_license();
 
             return;
         }
 
         self::$instance->load_files();
         self::$instance->setup_hooks();
-        self::$instance->load_license();
     }
 
     /**
@@ -268,22 +266,6 @@ final class Lkn_Give_Antispam {
     private function setup_hooks() {
         // Filters
         add_filter('plugin_action_links_' . GIVE_Antispam_BASENAME, '__give_lkn_antispam_plugin_row_meta', 10, 2);
-    }
-
-    /**
-     * Load license
-     *
-     * @since
-     * @access private
-     */
-    private function load_license() {
-        new Give_License(
-            GIVE_Antispam_FILE,
-            'Give Antispam',
-            GIVE_Antispam_VERSION,
-            'WordImpress',
-            'give_antispam_license_key'
-        );
     }
 }
 
