@@ -4,13 +4,13 @@ O Give-Antispam é um plugin para a plataforma de doação GiveWP que tem o obje
 
 ## Instalação
 
-1) Faça o upload dos arquivos para a pasta /urldoseusite.com/wp-content/plugins/give-antispam/ caso a pasta do give-antispam não exista é necessário criá-la;
+1) Procure na barra lateral a área de plugins do Wordpress;
 
-2) Após o upload vá para a área de administrador do seu wordpress e selecione a opção 'plugins';
+2) Em plugins instalados procure pela opção 'adicionar novo';
 
-3) Procure pelo plugin de nome 'Give - Antispam';
+3) Clique na opção de 'enviar plugin' no título da página e faça o upload do plugin give-antispam.zip;
 
-4) Clique em ativar;
+4) Clique no botão 'instalar agora' e depois ative o plugin instalado;
 
 5) Agora vá para o menu de configurações do GiveWP;
 
@@ -34,4 +34,21 @@ O Give-Antispam é um plugin para a plataforma de doação GiveWP que tem o obje
 
 Pronto, o plugin do Give-Antispam está ativo e em funcionamento.
 
+## Changelog
 
+### v1.1.2
+- Corrigido bug de notice do Google Recaptcha para formulários de valor fixo;
+- Ajuste na lógica para deletar logs antigos;
+- Ajuste nos logs do antispam.
+
+### v1.1.1
+- Agora existe um link na descrição das configurações que redireciona para o administrativo do Recaptcha V3;
+- Ajustado título da configuração do Recaptcha.
+
+### v1.1.0
+- Agora o give antispam tem a opção de ativar e configurar o Recaptcha V3;
+- Ajustes e correções nas configurações do plugin;
+- Ajustes de formatação das configurações.
+
+### v1.0.0
+- Plugin com funcionalidade de verificar os IPs das doações e caso sejam iguais bloqueia tentativas de pagamento.

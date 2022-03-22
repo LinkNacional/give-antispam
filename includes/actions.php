@@ -12,7 +12,7 @@
 
 // Exit, if accessed directly.
 if (!defined('ABSPATH')) {
-	exit;
+    exit;
 }
 
 // ========== PLUGIN HELPERS ==========
@@ -23,28 +23,28 @@ if (!defined('ABSPATH')) {
  * @return array
  */
 function lkn_give_antispam_get_configs() {
-	$configs = [];
+    $configs = [];
 
-	$configs['basePath'] = __DIR__ . '/../logs';
-	$configs['base'] = $configs['basePath'] . '/' . date('d.m.Y-H.i.s') . '.log';
-	$configs['baseReport'] = $configs['basePath'] . '/ip-spam.log';
+    $configs['basePath'] = __DIR__ . '/../logs';
+    $configs['base'] = $configs['basePath'] . '/' . date('d.m.Y-H.i.s') . '.log';
+    $configs['baseReport'] = $configs['basePath'] . '/ip-spam.log';
 
-	// Internal debug option
-	$configs['debug'] = false;
-	// External report log option
-	$configs['reportSpam'] = lkn_give_antispam_get_report_spam();
+    // Internal debug option
+    $configs['debug'] = false;
+    // External report log option
+    $configs['reportSpam'] = lkn_give_antispam_get_report_spam();
 
-	$configs['antispamEnabled'] = lkn_give_antispam_get_enabled();
-	$configs['interval'] = lkn_give_antispam_get_time_interval();
-	$configs['donationLimit'] = lkn_give_antispam_get_donation_limit();
-	$configs['gatewayVerify'] = lkn_give_antispam_get_gateway_verification();
-	// Recaptcha keys
-	$configs['recEnabled'] = lkn_give_antispam_get_recaptcha_enabled();
-	$configs['siteRec'] = lkn_give_antispam_get_rec_id();
-	$configs['secretRec'] = lkn_give_antispam_get_rec_secret();
-	$configs['scoreRec'] = lkn_give_antispam_get_recaptcha_score();
+    $configs['antispamEnabled'] = lkn_give_antispam_get_enabled();
+    $configs['interval'] = lkn_give_antispam_get_time_interval();
+    $configs['donationLimit'] = lkn_give_antispam_get_donation_limit();
+    $configs['gatewayVerify'] = lkn_give_antispam_get_gateway_verification();
+    // Recaptcha keys
+    $configs['recEnabled'] = lkn_give_antispam_get_recaptcha_enabled();
+    $configs['siteRec'] = lkn_give_antispam_get_rec_id();
+    $configs['secretRec'] = lkn_give_antispam_get_rec_secret();
+    $configs['scoreRec'] = lkn_give_antispam_get_recaptcha_score();
 
-	return $configs;
+    return $configs;
 }
 
 /**
@@ -53,9 +53,15 @@ function lkn_give_antispam_get_configs() {
  * @return void
  */
 function lkn_give_antispam_reg_report($message, $configs) {
-	error_log($message, 3, $configs['baseReport']);
+    error_log($message, 3, $configs['baseReport']);
 
-	chmod($configs['baseReport'], 0600);
+    $size = filesize($configs['baseReport']);
+
+    if ($size > 2000) {
+        unlink($configs['baseReport']);
+    }
+
+    chmod($configs['baseReport'], 0600);
 }
 
 /**
@@ -64,9 +70,9 @@ function lkn_give_antispam_reg_report($message, $configs) {
  * @return void
  */
 function lkn_give_antispam_reg_log($message, $configs) {
-	error_log($message, 3, $configs['base']);
+    error_log($message, 3, $configs['base']);
 
-	chmod($configs['base'], 0600);
+    chmod($configs['base'], 0600);
 }
 
 /**
@@ -75,31 +81,31 @@ function lkn_give_antispam_reg_log($message, $configs) {
  * @return void
  */
 function lkn_give_antispam_delete_old_logs() {
-	$configs = lkn_give_antispam_get_configs();
-	$logsPath = $configs['basePath'];
+    $configs = lkn_give_antispam_get_configs();
+    $logsPath = $configs['basePath'];
 
-	foreach (scandir($logsPath) as $logFilename) {
-		if ($logFilename !== '.' && $logFilename !== '..' && $logFilename !== 'index.php') {
-			$logDate = explode('-', $logFilename)[0];
-			$logDate = explode('.', $logDate);
+    foreach (scandir($logsPath) as $logFilename) {
+        if ($logFilename !== '.' && $logFilename !== '..' && $logFilename !== 'index.php' && $logFilename !== 'ip-spam.log') {
+            $logDate = explode('-', $logFilename)[0];
+            $logDate = explode('.', $logDate);
 
-			$logDay = $logDate[0];
-			$logMonth = $logDate[1];
-			$logYear = $logDate[2];
+            $logDay = $logDate[0];
+            $logMonth = $logDate[1];
+            $logYear = $logDate[2];
 
-			$logDate = $logYear . '-' . $logMonth . '-' . $logDay;
+            $logDate = $logYear . '-' . $logMonth . '-' . $logDay;
 
-			$logDate = new DateTime($logDate);
-			$now = new DateTime(date('Y-m-d'));
+            $logDate = new DateTime($logDate);
+            $now = new DateTime(date('Y-m-d'));
 
-			$interval = $logDate->diff($now);
-			$logAge = $interval->format('%a');
+            $interval = $logDate->diff($now);
+            $logAge = $interval->format('%a');
 
-			if ($logAge >= 5) {
-				unlink($logsPath . '/' . $logFilename);
-			}
-		}
-	}
+            if ($logAge >= 5) {
+                unlink($logsPath . '/' . $logFilename);
+            }
+        }
+    }
 }
 
 /**
@@ -109,9 +115,9 @@ function lkn_give_antispam_delete_old_logs() {
  *
  */
 function lkn_give_antispam_get_report_spam() {
-	$reportEnabled = give_get_option('lkn_antispam_save_log_setting_field');
+    $reportEnabled = give_get_option('lkn_antispam_save_log_setting_field');
 
-	return $reportEnabled;
+    return $reportEnabled;
 }
 
 /**
@@ -121,13 +127,13 @@ function lkn_give_antispam_get_report_spam() {
  *
  */
 function lkn_give_antispam_get_recaptcha_score() {
-	$score = give_get_option('lkn_antispam_score_re_setting_field');
+    $score = give_get_option('lkn_antispam_score_re_setting_field');
 
-	if ($score < 0 || $score > 10) {
-		return 0.5;
-	} else {
-		return floatval($score / 10);
-	}
+    if ($score < 0 || $score > 10) {
+        return 0.5;
+    } else {
+        return floatval($score / 10);
+    }
 }
 
 /**
@@ -137,9 +143,9 @@ function lkn_give_antispam_get_recaptcha_score() {
  *
  */
 function lkn_give_antispam_get_enabled() {
-	$enabled = give_get_option('lkn_antispam_enabled_setting_field');
+    $enabled = give_get_option('lkn_antispam_enabled_setting_field');
 
-	return $enabled;
+    return $enabled;
 }
 
 /**
@@ -149,9 +155,9 @@ function lkn_give_antispam_get_enabled() {
  *
  */
 function lkn_give_antispam_get_recaptcha_enabled() {
-	$enabled = give_get_option('lkn_antispam_active_recaptcha_setting_field');
+    $enabled = give_get_option('lkn_antispam_active_recaptcha_setting_field');
 
-	return $enabled;
+    return $enabled;
 }
 
 /**
@@ -161,9 +167,9 @@ function lkn_give_antispam_get_recaptcha_enabled() {
  *
  */
 function lkn_give_antispam_get_rec_id() {
-	$siteId = give_get_option('lkn_antispam_site_rec_id_setting_field');
+    $siteId = give_get_option('lkn_antispam_site_rec_id_setting_field');
 
-	return $siteId;
+    return $siteId;
 }
 
 /**
@@ -173,9 +179,9 @@ function lkn_give_antispam_get_rec_id() {
  *
  */
 function lkn_give_antispam_get_rec_secret() {
-	$recSecret = give_get_option('lkn_antispam_secret_rec_id_setting_field');
+    $recSecret = give_get_option('lkn_antispam_secret_rec_id_setting_field');
 
-	return $recSecret;
+    return $recSecret;
 }
 
 /**
@@ -185,9 +191,9 @@ function lkn_give_antispam_get_rec_secret() {
  *
  */
 function lkn_give_antispam_get_gateway_verification() {
-	$gatewayVerification = give_get_option('lkn_antispam_same_gateway_setting_field');
+    $gatewayVerification = give_get_option('lkn_antispam_same_gateway_setting_field');
 
-	return $gatewayVerification;
+    return $gatewayVerification;
 }
 
 /**
@@ -197,13 +203,13 @@ function lkn_give_antispam_get_gateway_verification() {
  *
  */
 function lkn_give_antispam_get_time_interval() {
-	$timeInterval = give_get_option('lkn_antispam_time_interval_setting_field');
+    $timeInterval = give_get_option('lkn_antispam_time_interval_setting_field');
 
-	if ($timeInterval < 0) {
-		return 0;
-	} else {
-		return $timeInterval;
-	}
+    if ($timeInterval < 0) {
+        return 0;
+    } else {
+        return $timeInterval;
+    }
 }
 
 /**
@@ -212,9 +218,9 @@ function lkn_give_antispam_get_time_interval() {
  * @return integer $donationLimit
  */
 function lkn_give_antispam_get_donation_limit() {
-	$donationLimit = give_get_option('lkn_antispam_limit_setting_field');
+    $donationLimit = give_get_option('lkn_antispam_limit_setting_field');
 
-	return $donationLimit;
+    return $donationLimit;
 }
 
 /**
@@ -226,98 +232,97 @@ function lkn_give_antispam_get_donation_limit() {
  * @return array $valid_data
  */
 function lkn_give_antispam_validate_donation($valid_data, $data) {
-	$configs = lkn_give_antispam_get_configs();
+    $configs = lkn_give_antispam_get_configs();
 
-	// Verify if plugin is active
-	if ($configs['antispamEnabled'] === 'enabled') {
-		// Get the save spam-log option
-		$reportSpam = $configs['reportSpam'];
+    // Verify if plugin is active
+    if ($configs['antispamEnabled'] === 'enabled') {
+        // Get the save spam-log option
+        $reportSpam = $configs['reportSpam'];
 
-		// Get current user ip
-		$userIp = give_get_ip();
+        // Get current user ip
+        $userIp = give_get_ip();
 
-		// Get givewp payment data
-		$payments = give_get_payments();
+        // Get givewp payment data
+        $payments = give_get_payments();
 
-		// Get the current dateTime and the time limit in minutes
-		$actualDate = new DateTime(current_time('mysql'));
-		$timeLimit = absint($configs['interval']);
+        // Get the current dateTime and the time limit in minutes
+        $actualDate = new DateTime(current_time('mysql'));
+        $timeLimit = absint($configs['interval']);
 
-		// Get donation limit and the donation counter
-		$donationLimit = absint($configs['donationLimit']) - 1;
-		$donationCounter = 0;
+        // Get donation limit and the donation counter
+        $donationLimit = absint($configs['donationLimit']) - 1;
+        $donationCounter = 0;
 
-		// The donation list ip and date
-		$donationIp = [];
-		$dates = [];
+        // The donation list ip and date
+        $donationIp = [];
+        $dates = [];
 
-		$gatewayVerification = $configs['gatewayVerify'];
+        $gatewayVerification = $configs['gatewayVerify'];
 
-		$paymentInfo = [];
+        $paymentInfo = [];
 
-		// Verify the last 20 payments
-		for ($c = 0; $c < count($payments); $c++) {
-			// Get the GiveWP payment info
-			$paymentId = $payments[$c]->ID;
-			$dates[] = $payments[$c]->post_date;
-			$donationIp[] = give_get_payment_user_ip($paymentId);
-			$paymentInfo[] = give_get_payment_by('id', $paymentId);
+        // Verify the last 20 payments
+        for ($c = 0; $c < count($payments); $c++) {
+            // Get the GiveWP payment info
+            $paymentId = $payments[$c]->ID;
+            $dates[] = $payments[$c]->post_date;
+            $donationIp[] = give_get_payment_user_ip($paymentId);
+            $paymentInfo[] = give_get_payment_by('id', $paymentId);
 
-			// Verify if the saved donation IP is equal to the actual user IP
-			if ($donationIp[$c] == $userIp) {
-				// Initializes a DateTime object with the donation saved date
-				$donationDate = new DateTime($dates[$c]);
-				// Verify the time interval between the actual date and the saved date
-				$dateInterval = $actualDate->diff($donationDate);
+            // Verify if the saved donation IP is equal to the actual user IP
+            if ($donationIp[$c] == $userIp) {
+                // Initializes a DateTime object with the donation saved date
+                $donationDate = new DateTime($dates[$c]);
+                // Verify the time interval between the actual date and the saved date
+                $dateInterval = $actualDate->diff($donationDate);
 
-				// Convert time to minutes
-				$minutes = $dateInterval->days * 24 * 60;
-				$minutes += $dateInterval->h * 60;
-				$minutes += $dateInterval->i;
+                // Convert time to minutes
+                $minutes = $dateInterval->days * 24 * 60;
+                $minutes += $dateInterval->h * 60;
+                $minutes += $dateInterval->i;
 
-				// Verify if the donations interval is greater than timeLimit specified in the admin-settings
-				if ($minutes < $timeLimit) {
-					// Checks the gateway verification option is enabled
-					if ($gatewayVerification === 'enabled') {
-						// Verifies the current gateway with the donation gateway
-						if ($paymentInfo[$c]->gateway === $valid_data['gateway']) {
-							// Verify if the user has made another donation in the time interval
-							if ($donationLimit > $donationCounter) {
-								$donationCounter++;
-							} else {
-								if ($reportSpam === 'enabled') {
-									lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED ' . ' <br> ' . PHP_EOL, $configs);
-								}
-								give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
-							}
-						}
-					} else {
-						// Verify if the user has made another donation in the time interval
-						if ($donationLimit > $donationCounter) {
-							$donationCounter++;
-						} else {
-							if ($reportSpam === 'enabled') {
-								lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED ' . ' <br> ' . PHP_EOL, $configs);
-							}
-							give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
-						}
-					}
-				}
-			}
-		}
+                // Verify if the donations interval is greater than timeLimit specified in the admin-settings
+                if ($minutes < $timeLimit) {
+                    // Checks the gateway verification option is enabled
+                    if ($gatewayVerification === 'enabled') {
+                        // Verifies the current gateway with the donation gateway
+                        if ($paymentInfo[$c]->gateway === $valid_data['gateway']) {
+                            // Verify if the user has made another donation in the time interval
+                            if ($donationLimit > $donationCounter) {
+                                $donationCounter++;
+                            } else {
+                                if ($reportSpam === 'enabled') {
+                                    lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED ' . ' <br> ' . PHP_EOL, $configs);
+                                }
+                                give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
+                            }
+                        }
+                    } else {
+                        // Verify if the user has made another donation in the time interval
+                        if ($donationLimit > $donationCounter) {
+                            $donationCounter++;
+                        } else {
+                            if ($reportSpam === 'enabled') {
+                                lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED ' . ' <br> ' . PHP_EOL, $configs);
+                            }
+                            give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
+                        }
+                    }
+                }
+            }
+        }
 
-		// Activates debug mode and saves a temporary log
-		if ($configs['debug'] === true) {
-			lkn_give_antispam_delete_old_logs();
+        // Activates debug mode and saves a temporary log
+        if ($configs['debug'] === true) {
+            lkn_give_antispam_delete_old_logs();
 
-			// lkn_give_antispam_reg_log(' || my ip || ' . var_export($userIp, true) . ' || donation ip || ' . var_export($donationIp, true) . ' || timestamp interval || ' . var_export($minutes, true), $configs);
-			lkn_give_antispam_reg_log(' || valid data || ' . var_export($valid_data, true) . ' || raw data || ' . var_export($data, true) . ' || payments || ' . var_export($paymentInfo[0]->gateway, true), $configs);
-		}
+            lkn_give_antispam_reg_log(PHP_EOL . '(my ip) - ' . var_export($userIp, true) . PHP_EOL . '(donation ip) - ' . var_export($donationIp, true) . PHP_EOL . '(timestamp interval) - ' . var_export($minutes, true), $configs);
+        }
 
-		return $valid_data;
-	} else {
-		return $valid_data;
-	}
+        return $valid_data;
+    } else {
+        return $valid_data;
+    }
 }
 
 add_action('give_checkout_error_checks', 'lkn_give_antispam_validate_donation', 10, 2);
@@ -341,37 +346,37 @@ add_action('give_checkout_error_checks', 'lkn_give_antispam_validate_donation', 
  * @return array $valid_data
  */
 function lkn_give_antispam_validate_recaptcha($valid_data, $data) {
-	$configs = lkn_give_antispam_get_configs();
-	// Verifica se plugin está habilitado e garante que só executa 1 vez
-	if ($configs['antispamEnabled'] === 'enabled' && !isset($data['give_ajax'])) {
-		// Verifica se opção do recaptcha está habilitada
-		if ($configs['recEnabled'] === 'enabled') {
-			$recaptcha_url        = 'https://www.google.com/recaptcha/api/siteverify';
-			$recaptcha_secret_key = $configs['secretRec']; // Replace with your own key here.
-			// Requisição de verificação do recaptcha
-			$recaptcha_response   = wp_remote_post($recaptcha_url . '?secret=' . $recaptcha_secret_key . '&response=' . $data['g-recaptcha-response'] . '&remoteip=' . $_SERVER['REMOTE_ADDR']);
-			// Formata a resposta recebida em um objeto
-			$recaptcha_data       = json_decode(wp_remote_retrieve_body($recaptcha_response));
+    $configs = lkn_give_antispam_get_configs();
+    // Verifica se plugin está habilitado e garante que só executa 1 vez
+    if ($configs['antispamEnabled'] === 'enabled' && !isset($data['give_ajax'])) {
+        // Verifica se opção do recaptcha está habilitada
+        if ($configs['recEnabled'] === 'enabled') {
+            $recaptcha_url        = 'https://www.google.com/recaptcha/api/siteverify';
+            $recaptcha_secret_key = $configs['secretRec']; // Replace with your own key here.
+            // Requisição de verificação do recaptcha
+            $recaptcha_response   = wp_remote_post($recaptcha_url . '?secret=' . $recaptcha_secret_key . '&response=' . $data['g-recaptcha-response'] . '&remoteip=' . $_SERVER['REMOTE_ADDR']);
+            // Formata a resposta recebida em um objeto
+            $recaptcha_data       = json_decode(wp_remote_retrieve_body($recaptcha_response));
 
-			// Ativar logs de depuração
-			if ($configs['debug'] === true) {
-				lkn_give_antispam_reg_log('(recaptcha response data): ' . var_export($recaptcha_data, true) . PHP_EOL . ' ||| (recaptcha data response): ' . var_export($data, true) . PHP_EOL . ' ||| (data action): ' . var_export($data['give_ajax'], true), $configs);
-			}
+            // Ativar logs de depuração
+            if ($configs['debug'] === true) {
+                lkn_give_antispam_reg_log(PHP_EOL . '(recaptcha response data): ' . var_export($recaptcha_data, true) . PHP_EOL . ' (data action): ' . var_export($data['give_ajax'], true), $configs);
+            }
 
-			// Verifica se a requisição foi concluída com sucesso
-			if (!isset($recaptcha_data->success) || $recaptcha_data->success == false) {
-				// User must have validated the reCAPTCHA to proceed with donation.
-				if (!isset($data['g-recaptcha-response']) || empty($data['g-recaptcha-response'])) {
-					give_set_error('g-recaptcha-response', __('O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Entre em contato com o administrador do site para mais informações.', 'give'));
-				}
-			} elseif (!isset($recaptcha_data->score) || $recaptcha_data->score < $configs['scoreRec']) {
-				// Caso o score seja menor que o valor definido mostra mensagem de erro
-				give_set_error('g-recaptcha-response', __('O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Entre em contato com o administrador do site para mais informações.', 'give'));
-			}
-		}
-	}
+            // Verifica se a requisição foi concluída com sucesso
+            if (!isset($recaptcha_data->success) || $recaptcha_data->success == false) {
+                // User must have validated the reCAPTCHA to proceed with donation.
+                if (!isset($data['g-recaptcha-response']) || empty($data['g-recaptcha-response'])) {
+                    give_set_error('g-recaptcha-response', __('O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Entre em contato com o administrador do site para mais informações.', 'give'));
+                }
+            } elseif (!isset($recaptcha_data->score) || $recaptcha_data->score < $configs['scoreRec']) {
+                // Caso o score seja menor que o valor definido mostra mensagem de erro
+                give_set_error('g-recaptcha-response', __('O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Entre em contato com o administrador do site para mais informações.', 'give'));
+            }
+        }
+    }
 
-	return $valid_data;
+    return $valid_data;
 }
 
 add_action('give_checkout_error_checks', 'lkn_give_antispam_validate_recaptcha', 9, 2);
@@ -380,17 +385,17 @@ add_action('give_checkout_error_checks', 'lkn_give_antispam_validate_recaptcha',
  * Enqueue ReCAPTCHA Scripts
  */
 function lkn_give_antispam_recaptcha_scripts() {
-	$configs = lkn_give_antispam_get_configs();
-	if ($configs['antispamEnabled'] === 'enabled') {
-		if ($configs['recEnabled'] === 'enabled') {
-			$siteKey = $configs['siteRec'];
-			wp_register_script('give-captcha-js', 'https://www.google.com/recaptcha/api.js?render=' . $siteKey);
-			// If you only want to enqueue on single form pages then uncomment if statement
-			if (is_singular('give_forms')) {
-				wp_enqueue_script('give-captcha-js');
-			}
-		}
-	}
+    $configs = lkn_give_antispam_get_configs();
+    if ($configs['antispamEnabled'] === 'enabled') {
+        if ($configs['recEnabled'] === 'enabled') {
+            $siteKey = $configs['siteRec'];
+            wp_register_script('give-captcha-js', 'https://www.google.com/recaptcha/api.js?render=' . $siteKey);
+            // If you only want to enqueue on single form pages then uncomment if statement
+            if (is_singular('give_forms')) {
+                wp_enqueue_script('give-captcha-js');
+            }
+        }
+    }
 }
 
 add_action('wp_enqueue_scripts', 'lkn_give_antispam_recaptcha_scripts');
@@ -401,14 +406,14 @@ add_action('wp_enqueue_scripts', 'lkn_give_antispam_recaptcha_scripts');
  * This function outputs the appropriate inline js ReCAPTCHA scripts in the footer
  */
 function lkn_give_antispam_print_my_inline_script() {
-	$configs = lkn_give_antispam_get_configs();
-	if ($configs['antispamEnabled'] === 'enabled') {
-		if ($configs['recEnabled'] === 'enabled') {
-			$siteKey = $configs['siteRec'];
-			// Uncomment if statement to control output
-			// Só executa 1 vez por formulário
-			if (is_singular('give_forms')) {
-				$html = <<<HTML
+    $configs = lkn_give_antispam_get_configs();
+    if ($configs['antispamEnabled'] === 'enabled') {
+        if ($configs['recEnabled'] === 'enabled') {
+            $siteKey = $configs['siteRec'];
+            // Uncomment if statement to control output
+            // Só executa 1 vez por formulário
+            if (is_singular('give_forms')) {
+                $html = <<<HTML
 			<script type="text/javascript">
 				// Faz a renderização do footer do recaptcha
 					jQuery( document ).on( 'give_gateway_loaded', function() {
@@ -418,10 +423,10 @@ function lkn_give_antispam_print_my_inline_script() {
 					} );
 			</script>
 HTML;
-				echo $html;
-			}
-		}
-	}
+                echo $html;
+            }
+        }
+    }
 }
 
 add_action('wp_footer', 'lkn_give_antispam_print_my_inline_script');
@@ -437,75 +442,79 @@ add_action('wp_footer', 'lkn_give_antispam_print_my_inline_script');
  */
 
 function lkn_give_antispam_custom_form_fields($form_id) {
-	$configs = lkn_give_antispam_get_configs();
-	if ($configs['antispamEnabled'] === 'enabled') {
-		if ($configs['recEnabled'] === 'enabled') {
-			$siteKey = $configs['siteRec'];
-			// Add you own google API Site key.
-			$html = <<<HTML
+    $configs = lkn_give_antispam_get_configs();
+    if ($configs['antispamEnabled'] === 'enabled') {
+        if ($configs['recEnabled'] === 'enabled') {
+            $siteKey = $configs['siteRec'];
+            // Add you own google API Site key.
+            $html = <<<HTML
 
 			<input type="hidden" id="g-recaptcha-lkn-input" name="g-recaptcha-response" />
 
+            <div id="g-notice-wrapper" class="gNotice">
+                Este site é protegido pelo reCAPTCHA e as <a href="https://policies.google.com/privacy" target="_blank">Políticas de Privacidade</a> e <a href="https://policies.google.com/terms" target="_blank">Termos de Serviço</a> do Google se aplicam.
+            </div>
+
 			<script type="text/javascript">
-				// Verifica se DOM carregou completamente
-				window.addEventListener('DOMContentLoaded', function() {
-					
-					let iframeLoader = parent.document.getElementsByClassName('iframe-loader')[0];
-					let totalWrapper = document.getElementsByClassName('give-total-wrap')[0];
-					let gNoticeWrapper = document.createElement('div');
-					// Alguns temas e páginas do wordpress escondem o badge do recaptcha
-					// Adicionado notice contendo políticas de privacidade e termos de uso como requerido pela documentação do recaptcha
-					// @see { https://developers.google.com/recaptcha/docs/faq#id-like-to-hide-the-recaptcha-badge.-what-is-allowed }
-					gNoticeWrapper.innerHTML = 'Este site é protegido pelo reCAPTCHA e as <a href="https://policies.google.com/privacy" target="_blank">Políticas de Privacidade</a> e <a href="https://policies.google.com/terms" target="_blank">Termos de Serviço</a> do Google se aplicam.';
-					gNoticeWrapper.setAttribute('class','gNotice');
+                // Verifica se DOM carregou completamente
+                window.addEventListener('DOMContentLoaded', function () {
 
-					totalWrapper.append(gNoticeWrapper);
+                let iframeLoader = parent.document.getElementsByClassName('iframe-loader')[0];
+                let totalWrapper = document.getElementsByClassName('give-total-wrap')[0];
+                let gNoticeWrapper = document.getElementById('g-notice-wrapper');
 
-					// caso for um formulário legado altera também os atributos do formulário para validação do giveWP
-					if(!iframeLoader) { // verifica a existência do iframe loader que é específico do formulário multi-step
-						let givePaymentSelect = document.getElementById('give-payment-mode-wrap');
-						if(givePaymentSelect) {
-							lknPrepareRecaptcha();
-						} else {
-							let paymentDiv = document.getElementById('give_purchase_form_wrap');
-							paymentDiv.addEventListener('click', function () {
-								grecaptcha.ready(function() {
-									grecaptcha.execute('$siteKey', {action: 'submit'}).then(function(token) {
-										// Add your logic to submit to your backend server here.
-										document.getElementById('g-recaptcha-lkn-input').value = token;
-									});
-								});
-							}, { once: true });
-						}
-					} else { // Formulário não tem iframe
-						let userInfo = document.getElementById('give_checkout_user_info');
-						userInfo.addEventListener('click', function () {
-							grecaptcha.ready(function() {
-								grecaptcha.execute('$siteKey', {action: 'submit'}).then(function(token) {
-									// Add your logic to submit to your backend server here.
-									document.getElementById('g-recaptcha-lkn-input').value = token;
-								});
-							});
-						}, { once: true });
-					}			
-				});
+                // Alguns temas e páginas do wordpress escondem o badge do recaptcha
+                // Adicionado notice contendo políticas de privacidade e termos de uso como requerido pela documentação do recaptcha
+                // @see { https://developers.google.com/recaptcha/docs/faq#id-like-to-hide-the-recaptcha-badge.-what-is-allowed }
+                if (totalWrapper) {
+                    totalWrapper.append(gNoticeWrapper);
+                }
 
-				/**
-				 * Detect HTML DOM object and add event listener on click to execute Recaptcha V3
-				 * 
-				 * @return Boolean
-				 *  */
-				function lknPrepareRecaptcha() {
-					let paymentDiv = document.getElementById('give_purchase_form_wrap');
-					paymentDiv.addEventListener('click', function () {
-						grecaptcha.ready(function() {
-							grecaptcha.execute('$siteKey', {action: 'submit'}).then(function(token) {
-								// Add your logic to submit to your backend server here.
-								document.getElementById('g-recaptcha-lkn-input').value = token;
-							});
-						});
-					}, { once: true });
-				}
+                // caso for um formulário legado altera também os atributos do formulário para validação do giveWP
+                if (!iframeLoader) { // verifica a existência do iframe loader que é específico do formulário multi-step
+                    let givePaymentSelect = document.getElementById('give-payment-mode-wrap');
+                    if (givePaymentSelect) {
+                        lknPrepareRecaptcha();
+                    } else {
+                        let paymentDiv = document.getElementById('give_purchase_form_wrap');
+                        paymentDiv.addEventListener('click', function () {
+                            grecaptcha.ready(function () {
+                                grecaptcha.execute('$siteKey', { action: 'submit' }).then(function (token) {
+                                    // Add your logic to submit to your backend server here.
+                                    document.getElementById('g-recaptcha-lkn-input').value = token;
+                                });
+                            });
+                        }, { once: true });
+                    }
+                } else { // Formulário não tem iframe
+                    let userInfo = document.getElementById('give_checkout_user_info');
+                    userInfo.addEventListener('click', function () {
+                        grecaptcha.ready(function () {
+                            grecaptcha.execute('$siteKey', { action: 'submit' }).then(function (token) {
+                                // Add your logic to submit to your backend server here.
+                                document.getElementById('g-recaptcha-lkn-input').value = token;
+                            });
+                        });
+                    }, { once: true });
+                }
+                });
+
+                /**
+                * Detect HTML DOM object and add event listener on click to execute Recaptcha V3
+                * 
+                * @return Boolean
+                *  */
+                function lknPrepareRecaptcha() {
+                    let paymentDiv = document.getElementById('give_purchase_form_wrap');
+                    paymentDiv.addEventListener('click', function () {
+                        grecaptcha.ready(function () {
+                            grecaptcha.execute('$siteKey', { action: 'submit' }).then(function (token) {
+                                // Add your logic to submit to your backend server here.
+                                document.getElementById('g-recaptcha-lkn-input').value = token;
+                            });
+                        });
+                    }, { once: true });
+                }
 			</script>
 
 			<script id="give-recaptcha-element" class="g-recaptcha" src="https://www.google.com/recaptcha/api.js?render=$siteKey"></script>
@@ -519,9 +528,9 @@ function lkn_give_antispam_custom_form_fields($form_id) {
 				}
 			</style>
 HTML;
-			echo $html;
-		}
-	}
+            echo $html;
+        }
+    }
 }
 
 add_action('give_after_donation_levels', 'lkn_give_antispam_custom_form_fields', 10, 1);
