@@ -108,7 +108,7 @@ final class Lkn_Give_Antispam {
     private function setup_constants() {
         // Defines addon version number for easy reference.
         if (!defined('GIVE_Antispam_VERSION')) {
-            define('GIVE_Antispam_VERSION', '1.0');
+            define('GIVE_Antispam_VERSION', '2.0.0');
         }
 
         // Set it to latest.
