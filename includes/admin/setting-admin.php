@@ -75,6 +75,18 @@ HTML;
                 ],
             ];
 
+            $newSetting[] = [
+                'name' => __('Habilitar debug', 'give'),
+                'id' => 'lkn_antispam_debug_setting_field',
+                'desc' => __('Habilitar registro de logs.'),
+                'type' => 'radio',
+                'default' => 'disabled',
+                'options' => [
+                    'enabled' => __('Habilitado', 'give'),
+                    'disabled' => __('Desabilitado', 'give'),
+                ],
+            ];
+
             // Options only apears if the plugin option is 'enabled'
             if (give_get_option('lkn_antispam_enabled_setting_field') === 'enabled') {
                 $newSetting[] = [

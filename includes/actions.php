@@ -36,7 +36,7 @@ function lkn_give_antispam_get_configs() {
     $configs['baseReport'] = $configs['basePath'] . '/ip-spam.log';
 
     // Internal debug option
-    $configs['debug'] = false;
+    $configs['debug'] = give_get_option('lkn_antispam_debug_setting_field');
     // External report log option
     $configs['reportSpam'] = give_get_option('lkn_antispam_save_log_setting_field');
 
@@ -75,16 +75,19 @@ function lkn_give_antispam_reg_report($message, $configs) {
 
 /**
  * Makes a .log file for each donation
-  *
- * @param string $message
+ *
+ * @param string|array $log
  * @param array $configs
  *
  * @return void
  */
-function lkn_give_antispam_reg_log($message, $configs) {
-    error_log($message, 3, $configs['base']);
+function lkn_give_antispam_reg_log($log, $configs) {
+    if ($configs['debug'] === 'enabled') {
+        $jsonLog = json_encode($log, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) . "\n";
 
-    chmod($configs['base'], 0600);
+        error_log($jsonLog, 3, $configs['base']);
+        chmod($configs['base'], 0600);
+    }
 }
 
 /**
@@ -242,11 +245,13 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
         }
 
         // Activates debug mode and saves a temporary log
-        if ($configs['debug'] === true) {
-            lkn_give_antispam_delete_old_logs();
+        lkn_give_antispam_delete_old_logs();
 
-            lkn_give_antispam_reg_log(PHP_EOL . '(my ip) - ' . var_export($userIp, true) . PHP_EOL . '(donation ip) - ' . var_export($donationIp, true) . PHP_EOL . '(timestamp interval) - ' . var_export($minutes, true), $configs);
-        }
+        lkn_give_antispam_reg_log([
+            'ip' => $userIp,
+            'donation_ip' => $donationIp,
+            'timestamp_interval' => $minutes
+        ], $configs);
 
         return $valid_data;
     } else {
@@ -287,10 +292,10 @@ function lkn_give_antispam_validate_recaptcha($valid_data, $data) {
             // Formata a resposta recebida em um objeto
             $recaptcha_data       = json_decode(wp_remote_retrieve_body($recaptcha_response));
 
-            // Ativar logs de depuração
-            if ($configs['debug'] === true) {
-                lkn_give_antispam_reg_log(PHP_EOL . '(recaptcha response data): ' . var_export($recaptcha_data, true) . PHP_EOL . ' (data action): ' . var_export($data['give_ajax'], true), $configs);
-            }
+            lkn_give_antispam_reg_log([
+                'give_ajax' => $data['give_ajax'],
+                'recaptcha_response' => $recaptcha_data,
+            ], $configs);
 
             // Verifica se a requisição foi concluída com sucesso
             if (!isset($recaptcha_data->success) || $recaptcha_data->success == false) {
