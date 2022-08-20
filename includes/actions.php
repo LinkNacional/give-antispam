@@ -38,16 +38,16 @@ function lkn_give_antispam_get_configs() {
     // Internal debug option
     $configs['debug'] = false;
     // External report log option
-    $configs['reportSpam'] = lkn_give_antispam_get_report_spam();
+    $configs['reportSpam'] = give_get_option('lkn_antispam_save_log_setting_field');
 
-    $configs['antispamEnabled'] = lkn_give_antispam_get_enabled();
+    $configs['antispamEnabled'] = give_get_option('lkn_antispam_enabled_setting_field');
     $configs['interval'] = lkn_give_antispam_get_time_interval();
-    $configs['donationLimit'] = lkn_give_antispam_get_donation_limit();
-    $configs['gatewayVerify'] = lkn_give_antispam_get_gateway_verification();
+    $configs['donationLimit'] = give_get_option('lkn_antispam_limit_setting_field');
+    $configs['gatewayVerify'] = give_get_option('lkn_antispam_same_gateway_setting_field');
     // Recaptcha keys
-    $configs['recEnabled'] = lkn_give_antispam_get_recaptcha_enabled();
-    $configs['siteRec'] = lkn_give_antispam_get_rec_id();
-    $configs['secretRec'] = lkn_give_antispam_get_rec_secret();
+    $configs['recEnabled'] = give_get_option('lkn_antispam_active_recaptcha_setting_field');
+    $configs['siteRec'] = give_get_option('lkn_antispam_site_rec_id_setting_field');
+    $configs['secretRec'] = give_get_option('lkn_antispam_secret_rec_id_setting_field');
     $configs['scoreRec'] = lkn_give_antispam_get_recaptcha_score();
 
     return $configs;
@@ -121,18 +121,6 @@ function lkn_give_antispam_delete_old_logs() {
 }
 
 /**
- * Checks if the antispam report log is enabled
- *
- * @return string
- *
- */
-function lkn_give_antispam_get_report_spam() {
-    $reportEnabled = give_get_option('lkn_antispam_save_log_setting_field');
-
-    return $reportEnabled;
-}
-
-/**
  * Get the Recaptcha min score
  *
  * @return float
@@ -149,66 +137,6 @@ function lkn_give_antispam_get_recaptcha_score() {
 }
 
 /**
- * Checks if the antispam is enabled
- *
- * @return string
- *
- */
-function lkn_give_antispam_get_enabled() {
-    $enabled = give_get_option('lkn_antispam_enabled_setting_field');
-
-    return $enabled;
-}
-
-/**
- * Checks if the recaptcha is enabled
- *
- * @return string
- *
- */
-function lkn_give_antispam_get_recaptcha_enabled() {
-    $enabled = give_get_option('lkn_antispam_active_recaptcha_setting_field');
-
-    return $enabled;
-}
-
-/**
- * Get the recaptcha site key
- *
- * @return string
- *
- */
-function lkn_give_antispam_get_rec_id() {
-    $siteId = give_get_option('lkn_antispam_site_rec_id_setting_field');
-
-    return $siteId;
-}
-
-/**
- * Get the recaptcha secret key
- *
- * @return string
- *
- */
-function lkn_give_antispam_get_rec_secret() {
-    $recSecret = give_get_option('lkn_antispam_secret_rec_id_setting_field');
-
-    return $recSecret;
-}
-
-/**
- * Checks if the gateway verification is enabled
- *
- * @return string
- *
- */
-function lkn_give_antispam_get_gateway_verification() {
-    $gatewayVerification = give_get_option('lkn_antispam_same_gateway_setting_field');
-
-    return $gatewayVerification;
-}
-
-/**
  * Gets the time interval from settings
  *
  * @return integer
@@ -222,17 +150,6 @@ function lkn_give_antispam_get_time_interval() {
     } else {
         return $timeInterval;
     }
-}
-
-/**
- * User donation limit
- *
- * @return integer
- */
-function lkn_give_antispam_get_donation_limit() {
-    $donationLimit = give_get_option('lkn_antispam_limit_setting_field');
-
-    return $donationLimit;
 }
 
 /**
