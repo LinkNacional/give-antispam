@@ -49,6 +49,7 @@ function lkn_give_antispam_get_configs() {
     $configs['siteRec'] = give_get_option('lkn_antispam_site_rec_id_setting_field');
     $configs['secretRec'] = give_get_option('lkn_antispam_secret_rec_id_setting_field');
     $configs['scoreRec'] = lkn_give_antispam_get_recaptcha_score();
+    $configs['bannedIps'] = give_get_option('lkn_antispam_banned_ips_setting_field');
 
     return $configs;
 }
@@ -171,8 +172,17 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
         // Get the save spam-log option
         $reportSpam = $configs['reportSpam'];
 
+        $bannedIps = explode(PHP_EOL, $configs['bannedIps']);
+
         // Get current user ip
         $userIp = give_get_ip();
+
+        if (in_array($userIp, $bannedIps)) {
+            if ($reportSpam === 'enabled') {
+                lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED ' . ' <br> ' . PHP_EOL, $configs);
+            }
+            give_set_error('spam_donation', 'O seu endereço de IP está banido.');
+        }
 
         // Get givewp payment data
         $payments = give_get_payments();

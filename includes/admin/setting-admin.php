@@ -87,6 +87,12 @@ HTML;
                 ],
             ];
 
+            $newSetting[] = [
+                'name' => __('Ips banidos', 'give'),
+                'id' => 'lkn_antispam_banned_ips_setting_field',
+                'type' => 'textarea',
+            ];
+
             // Options only apears if the plugin option is 'enabled'
             if (give_get_option('lkn_antispam_enabled_setting_field') === 'enabled') {
                 $newSetting[] = [
