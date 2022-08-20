@@ -1,4 +1,10 @@
 <?php
+/**
+ * @since      1.0.0
+ *
+ * @package    Give_Antispam
+ * @subpackage Give_Antispam/includes
+ */
 
 /**
  * Give - Antispam Frontend Actions
@@ -50,6 +56,9 @@ function lkn_give_antispam_get_configs() {
 /**
  * Makes a .log file for each spam report
  *
+ * @param string $message
+ * @param array $configs
+ *
  * @return void
  */
 function lkn_give_antispam_reg_report($message, $configs) {
@@ -66,6 +75,9 @@ function lkn_give_antispam_reg_report($message, $configs) {
 
 /**
  * Makes a .log file for each donation
+  *
+ * @param string $message
+ * @param array $configs
  *
  * @return void
  */
@@ -111,7 +123,7 @@ function lkn_give_antispam_delete_old_logs() {
 /**
  * Checks if the antispam report log is enabled
  *
- * @return string enabled | disabled
+ * @return string
  *
  */
 function lkn_give_antispam_get_report_spam() {
@@ -123,7 +135,7 @@ function lkn_give_antispam_get_report_spam() {
 /**
  * Get the Recaptcha min score
  *
- * @return float $score
+ * @return float
  *
  */
 function lkn_give_antispam_get_recaptcha_score() {
@@ -139,7 +151,7 @@ function lkn_give_antispam_get_recaptcha_score() {
 /**
  * Checks if the antispam is enabled
  *
- * @return string enabled | disabled
+ * @return string
  *
  */
 function lkn_give_antispam_get_enabled() {
@@ -151,7 +163,7 @@ function lkn_give_antispam_get_enabled() {
 /**
  * Checks if the recaptcha is enabled
  *
- * @return string enabled | disabled
+ * @return string
  *
  */
 function lkn_give_antispam_get_recaptcha_enabled() {
@@ -163,7 +175,7 @@ function lkn_give_antispam_get_recaptcha_enabled() {
 /**
  * Get the recaptcha site key
  *
- * @return string $siteId
+ * @return string
  *
  */
 function lkn_give_antispam_get_rec_id() {
@@ -175,7 +187,7 @@ function lkn_give_antispam_get_rec_id() {
 /**
  * Get the recaptcha secret key
  *
- * @return string $recSecret
+ * @return string
  *
  */
 function lkn_give_antispam_get_rec_secret() {
@@ -187,7 +199,7 @@ function lkn_give_antispam_get_rec_secret() {
 /**
  * Checks if the gateway verification is enabled
  *
- * @return string enabled | disabled
+ * @return string
  *
  */
 function lkn_give_antispam_get_gateway_verification() {
@@ -199,7 +211,7 @@ function lkn_give_antispam_get_gateway_verification() {
 /**
  * Gets the time interval from settings
  *
- * @return integer $timeInterval
+ * @return integer
  *
  */
 function lkn_give_antispam_get_time_interval() {
@@ -215,7 +227,7 @@ function lkn_give_antispam_get_time_interval() {
 /**
  * User donation limit
  *
- * @return integer $donationLimit
+ * @return integer
  */
 function lkn_give_antispam_get_donation_limit() {
     $donationLimit = give_get_option('lkn_antispam_limit_setting_field');
@@ -229,7 +241,7 @@ function lkn_give_antispam_get_donation_limit() {
  * @param $valid_data
  * @param $data
  *
- * @return array $valid_data
+ * @return array
  */
 function lkn_give_antispam_validate_donation($valid_data, $data) {
     $configs = lkn_give_antispam_get_configs();
@@ -343,7 +355,7 @@ add_action('give_checkout_error_checks', 'lkn_give_antispam_validate_donation', 
  * @param $valid_data
  * @param $data
  *
- * @return array $valid_data
+ * @return array
  */
 function lkn_give_antispam_validate_recaptcha($valid_data, $data) {
     $configs = lkn_give_antispam_get_configs();
@@ -401,9 +413,10 @@ function lkn_give_antispam_recaptcha_scripts() {
 add_action('wp_enqueue_scripts', 'lkn_give_antispam_recaptcha_scripts');
 
 /**
- * Print Necessary Inline JS for ReCAPTCHA
+ * Print Necessary Inline JS for ReCAPTCHA.
+ * This function outputs the appropriate inline js ReCAPTCHA scripts in the footer.
  *
- * This function outputs the appropriate inline js ReCAPTCHA scripts in the footer
+ * @return void
  */
 function lkn_give_antispam_print_my_inline_script() {
     $configs = lkn_give_antispam_get_configs();
@@ -432,15 +445,12 @@ HTML;
 add_action('wp_footer', 'lkn_give_antispam_print_my_inline_script');
 
 /**
- * Custom ReCAPTCHA Form Field
- *
+ * Custom ReCAPTCHA Form Field.
  * This function adds the reCAPTCHA field above the "Donation Total" field.
- *
  * Don't forget to update the sitekey!
  *
  * @param $form_id
  */
-
 function lkn_give_antispam_custom_form_fields($form_id) {
     $configs = lkn_give_antispam_get_configs();
     if ($configs['antispamEnabled'] === 'enabled') {
@@ -501,7 +511,7 @@ function lkn_give_antispam_custom_form_fields($form_id) {
 
                 /**
                 * Detect HTML DOM object and add event listener on click to execute Recaptcha V3
-                * 
+                *
                 * @return Boolean
                 *  */
                 function lknPrepareRecaptcha() {

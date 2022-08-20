@@ -1,5 +1,12 @@
 <?php
 /**
+ * @since      1.0.0
+ *
+ * @package    Give_Antispam
+ * @subpackage Give_Antispam/includes
+ */
+
+/**
  * Show plugin dependency notice
  *
  * @since

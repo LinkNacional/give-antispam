@@ -2,6 +2,8 @@
 /**
  * Give - Antispam Settings Page/Tab
  *
+ * @since      1.0.0
+ *
  * @package    Give_Antispam
  * @subpackage Give_Antispam/includes/admin
  * @author     GiveWP <https://givewp.com>
