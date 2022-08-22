@@ -16,6 +16,8 @@
 * Domain Path:       /languages
 */
 
+// Teste
+
 require_once __DIR__ . '/plugin-updater/plugin-update-checker.php';
 
 // Exit if accessed directly. ABSPATH is attribute in wp-admin - plugin.php
