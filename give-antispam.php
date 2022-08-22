@@ -17,7 +17,7 @@ require_once __DIR__ . '/plugin-updater/plugin-update-checker.php';
 if (!defined('ABSPATH')) {
     exit;
 }
-
+// Test
 /**
  * Class Lkn_Give_Antispam
  */
