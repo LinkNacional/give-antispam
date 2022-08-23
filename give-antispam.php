@@ -7,7 +7,7 @@
 * Plugin Name:       Give - Antispam
 * Plugin URI:        https://github.com/LinkNacional/give-antispam
 * Description:       Faz a verificação e prevenção de doações mal intencionadas.
-* Version:           2.0.0
+* Version:           1.2.0
 * Author:            Link Nacional
 * Author URI:        https://www.linknacional.com.br
 * License:           GPL-2.0+
@@ -110,7 +110,7 @@ final class Lkn_Give_Antispam {
     private function setup_constants() {
         // Defines addon version number for easy reference.
         if (!defined('GIVE_Antispam_VERSION')) {
-            define('GIVE_Antispam_VERSION', '2.0.0');
+            define('GIVE_Antispam_VERSION', '1.2.0');
         }
 
         // Set it to latest.
