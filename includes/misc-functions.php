@@ -6,6 +6,10 @@
  * @subpackage Give_Antispam/includes
  */
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * Show plugin dependency notice
  *
