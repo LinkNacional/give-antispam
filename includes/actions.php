@@ -63,15 +63,17 @@ function lkn_give_antispam_get_configs() {
  * @return void
  */
 function lkn_give_antispam_reg_report($message, $configs) {
-    error_log($message, 3, $configs['baseReport']);
+    if ($configs['reportSpam'] === 'enabled') {
+        error_log($message, 3, $configs['baseReport']);
 
-    $size = filesize($configs['baseReport']);
+        $size = filesize($configs['baseReport']);
 
-    if ($size > 2000) {
-        unlink($configs['baseReport']);
+        chmod($configs['baseReport'], 0600);
+
+        if ($size > 2000) {
+            unlink($configs['baseReport']);
+        }
     }
-
-    chmod($configs['baseReport'], 0600);
 }
 
 /**
@@ -178,9 +180,7 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
         $userIp = give_get_ip();
 
         if (in_array($userIp, $bannedIps)) {
-            if ($reportSpam === 'enabled') {
-                lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED ' . ' <br> ' . PHP_EOL, $configs);
-            }
+            lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED ' . ' <br> ' . PHP_EOL, $configs);
             give_set_error('spam_donation', 'O seu endereço de IP está banido.');
         }
 
@@ -233,9 +233,7 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
                             if ($donationLimit > $donationCounter) {
                                 $donationCounter++;
                             } else {
-                                if ($reportSpam === 'enabled') {
-                                    lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED ' . ' <br> ' . PHP_EOL, $configs);
-                                }
+                                lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED ' . ' <br> ' . PHP_EOL, $configs);
                                 give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
                             }
                         }
@@ -244,9 +242,7 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
                         if ($donationLimit > $donationCounter) {
                             $donationCounter++;
                         } else {
-                            if ($reportSpam === 'enabled') {
-                                lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED ' . ' <br> ' . PHP_EOL, $configs);
-                            }
+                            lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED ' . ' <br> ' . PHP_EOL, $configs);
                             give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
                         }
                     }
