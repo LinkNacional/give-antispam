@@ -30,7 +30,7 @@ function give_lkn_antispam_add_setting_into_existing_tab($settings) {
     if ($logContent !== false) {
         $logContent = json_encode($logContent);
     } else {
-        $logContent = json_encode(['msg' => 'Nenhum spam bloqueado']);
+        $logContent = json_encode('Nenhum spam bloqueado');
     }
 
     $html = <<<HTML
