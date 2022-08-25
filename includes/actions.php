@@ -256,7 +256,8 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
         lkn_give_antispam_reg_log([
             'ip' => $userIp,
             'donation_ip' => $donationIp,
-            'timestamp_interval' => $minutes
+            'timestamp_interval' => $minutes,
+            'form_id' => $data['give-form-id'],
         ], $configs);
 
         return $valid_data;
