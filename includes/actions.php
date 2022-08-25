@@ -180,7 +180,7 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
         $userIp = give_get_ip();
 
         if (in_array($userIp, $bannedIps)) {
-            lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED ' . ' <br> ' . PHP_EOL, $configs);
+            lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, BANNED IP ' . ' <br> ' . PHP_EOL, $configs);
             give_set_error('spam_donation', 'O seu endereço de IP está banido.');
         }
 
@@ -233,7 +233,7 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
                             if ($donationLimit > $donationCounter) {
                                 $donationCounter++;
                             } else {
-                                lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED ' . ' <br> ' . PHP_EOL, $configs);
+                                lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, TOO MANY ATTEMPTS ' . ' <br> ' . PHP_EOL, $configs);
                                 give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
                             }
                         }
@@ -242,7 +242,7 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
                         if ($donationLimit > $donationCounter) {
                             $donationCounter++;
                         } else {
-                            lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED ' . ' <br> ' . PHP_EOL, $configs);
+                            lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, TOO MANY ATTEMPTS ' . ' <br> ' . PHP_EOL, $configs);
                             give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
                         }
                     }
