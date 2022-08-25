@@ -1,5 +1,16 @@
 <?php
 /**
+ * @since      1.0.0
+ *
+ * @package    Give_Antispam
+ * @subpackage Give_Antispam/includes
+ */
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+/**
  * Show plugin dependency notice
  *
  * @since

@@ -2,6 +2,8 @@
 /**
  * Give - Antispam Settings Page/Tab
  *
+ * @since      1.0.0
+ *
  * @package    Give_Antispam
  * @subpackage Give_Antispam/includes/admin
  * @author     GiveWP <https://givewp.com>
@@ -22,11 +24,13 @@ if (!defined('ABSPATH')) {
  */
 function give_lkn_antispam_add_setting_into_existing_tab($settings) {
     $spamLogUrl = __DIR__ . '/../../logs/ip-spam.log';
-    $logContent = file_get_contents($spamLogUrl);
+
+    $logContent = file_exists($spamLogUrl) ? file_get_contents($spamLogUrl) : false;
+
     if ($logContent !== false) {
         $logContent = json_encode($logContent);
     } else {
-        $logContent = 'Nenhum spam bloqueado';
+        $logContent = json_encode('Nenhum spam bloqueado');
     }
 
     $html = <<<HTML
@@ -75,6 +79,25 @@ HTML;
 
             // Options only apears if the plugin option is 'enabled'
             if (give_get_option('lkn_antispam_enabled_setting_field') === 'enabled') {
+                $newSetting[] = [
+                    'name' => __('Habilitar debug', 'give'),
+                    'id' => 'lkn_antispam_debug_setting_field',
+                    'desc' => __('Habilitar registro de logs.'),
+                    'type' => 'radio',
+                    'default' => 'disabled',
+                    'options' => [
+                        'enabled' => __('Habilitado', 'give'),
+                        'disabled' => __('Desabilitado', 'give'),
+                    ],
+                ];
+
+                $newSetting[] = [
+                    'name' => __('Ips banidos', 'give'),
+                    'id' => 'lkn_antispam_banned_ips_setting_field',
+                    'desc' => __('Separar os IPs pulando uma linha com a tecla Enter.'),
+                    'type' => 'textarea',
+                ];
+
                 $newSetting[] = [
                     'name' => __('Limite de doações no intervalo de tempo', 'give'),
                     'id' => 'lkn_antispam_limit_setting_field',

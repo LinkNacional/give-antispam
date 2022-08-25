@@ -35,6 +35,10 @@ O Give-Antispam é um plugin para a plataforma de doação GiveWP que tem o obje
 Pronto, o plugin do Give-Antispam está ativo e em funcionamento.
 
 ## Changelog
+### v1.2.0
+- Refatoração e melhorias no código.
+- Adicionar configuração para habilitar ou desabilitar geração de .logs.
+- Adicionar configuração para inserção de IP's banidos de fazer doações.
 
 ### v1.1.2
 - Corrigido bug de notice do Google Recaptcha para formulários de valor fixo;

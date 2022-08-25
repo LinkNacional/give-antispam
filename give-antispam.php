@@ -1,15 +1,22 @@
 <?php
 /**
- * Plugin Name: Give - Antispam
- * Plugin URI:  https://www.linknacional.com.br
- * Description: Faz a verificação e prevenção de doações mal intencionadas.
- * Version:     1.1.2
- * Author:      Link Nacional
- * Author URI:  https://www.linknacional.com.br
- * License:     GNU General Public License v2 or later
- * License URI: http://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: give-antispam
- */
+* @link              https://github.com/LinkNacional/give-antispam
+* @since             1.0.0
+* @package           Give_Antispam
+*
+* Plugin Name:       Give - Antispam
+* Plugin URI:        https://github.com/LinkNacional/give-antispam
+* Description:       Faz a verificação e prevenção de doações mal intencionadas.
+* Version:           1.2.0
+* Author:            Link Nacional
+* Author URI:        https://www.linknacional.com.br
+* License:           GPL-2.0+
+* License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+* Text Domain:       give-antispam
+* Domain Path:       /languages
+*/
+
+// Teste
 
 require_once __DIR__ . '/plugin-updater/plugin-update-checker.php';
 
@@ -103,7 +110,7 @@ final class Lkn_Give_Antispam {
     private function setup_constants() {
         // Defines addon version number for easy reference.
         if (!defined('GIVE_Antispam_VERSION')) {
-            define('GIVE_Antispam_VERSION', '1.0');
+            define('GIVE_Antispam_VERSION', '1.2.0');
         }
 
         // Set it to latest.
@@ -299,7 +306,7 @@ lkn_give_antispam();
  */
 function lkn_give_antispam_updater() {
     return new Lkn_Puc_Plugin_UpdateChecker(
-        'https://api.linknacional.com.br/app/u/link_api_update.php?slug=give-antispam',
+        'https://api.linknacional.com.br/v2/u/?slug=give-antispam',
         __FILE__,//(caso o plugin não precise de compatibilidade com ioncube utilize: __FILE__), //Full path to the main plugin file or functions.php.
         'give-antispam'
     );
