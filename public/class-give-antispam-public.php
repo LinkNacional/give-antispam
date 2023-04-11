@@ -15,7 +15,8 @@
  *
  * @author     Link Nacional <linknacional@gmail.com>
  */
-final class Lkn_Give_Antispam_Public {
+final class Lkn_Give_Antispam_Public
+{
     /**
      * The ID of this plugin.
      *
@@ -42,14 +43,16 @@ final class Lkn_Give_Antispam_Public {
      * @param string $plugin_name the name of the plugin
      * @param string $version     the version of this plugin
      */
-    public function __construct($plugin_name, $version) {
+    public function __construct($plugin_name, $version)
+    {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
 
         add_action('init', array($this, 'init_actions'));
     }
 
-    public function init_actions(): void {
+    public function init_actions(): void
+    {
         add_action('give_checkout_error_checks', 'lkn_give_antispam_validate_donation', 10, 2);
         add_action('give_checkout_error_checks', 'lkn_give_antispam_validate_recaptcha', 9, 2);
         add_action('wp_enqueue_scripts', 'lkn_give_antispam_recaptcha_scripts');
@@ -62,7 +65,8 @@ final class Lkn_Give_Antispam_Public {
      *
      * @since    1.0.0
      */
-    public function enqueue_styles(): void {
+    public function enqueue_styles(): void
+    {
         /*
          * This function is provided for demonstration purposes only.
          *
@@ -83,7 +87,8 @@ final class Lkn_Give_Antispam_Public {
      *
      * @since    1.0.0
      */
-    public function enqueue_scripts(): void {
+    public function enqueue_scripts(): void
+    {
         /*
          * This function is provided for demonstration purposes only.
          *

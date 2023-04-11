@@ -23,7 +23,8 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Give_Antispam {
+final class Lkn_Give_Antispam
+{
     /**
      * The loader that's responsible for maintaining and registering all hooks that power
      * the plugin.
@@ -61,7 +62,8 @@ final class Lkn_Give_Antispam {
      *
      * @since    1.0.0
      */
-    public function __construct() {
+    public function __construct()
+    {
         if ( defined( 'LKN_ANTISPAM_FOR_GIVEWP_VERSION' ) ) {
             $this->version = LKN_ANTISPAM_FOR_GIVEWP_VERSION;
         } else {
@@ -80,7 +82,8 @@ final class Lkn_Give_Antispam {
      *
      * @since    1.0.0
      */
-    public function run(): void {
+    public function run(): void
+    {
         $this->loader->run();
     }
 
@@ -92,7 +95,8 @@ final class Lkn_Give_Antispam {
      *
      * @return string the name of the plugin
      */
-    public function get_plugin_name() {
+    public function get_plugin_name()
+    {
         return $this->plugin_name;
     }
 
@@ -103,7 +107,8 @@ final class Lkn_Give_Antispam {
      *
      * @return Lkn_Give_Antispam_Loader orchestrates the hooks of the plugin
      */
-    public function get_loader() {
+    public function get_loader()
+    {
         return $this->loader;
     }
 
@@ -114,7 +119,8 @@ final class Lkn_Give_Antispam {
      *
      * @return string the version number of the plugin
      */
-    public function get_version() {
+    public function get_version()
+    {
         return $this->version;
     }
 
@@ -133,7 +139,8 @@ final class Lkn_Give_Antispam {
      *
      * @since    1.0.0
      */
-    private function load_dependencies(): void {
+    private function load_dependencies(): void
+    {
         /**
          * The class responsible for orchestrating the actions and filters of the
          * core plugin.
@@ -179,7 +186,8 @@ final class Lkn_Give_Antispam {
      *
      * @since    1.0.0
      */
-    private function set_locale(): void {
+    private function set_locale(): void
+    {
         $plugin_i18n = new Lkn_Give_Antispam_i18n();
 
         $this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
@@ -191,7 +199,8 @@ final class Lkn_Give_Antispam {
      *
      * @since    1.0.0
      */
-    private function define_admin_hooks(): void {
+    private function define_admin_hooks(): void
+    {
         $plugin_admin = new Lkn_Give_Antispam_Admin( $this->get_plugin_name(), $this->get_version() );
 
         $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
@@ -204,11 +213,12 @@ final class Lkn_Give_Antispam {
      *
      * @since    1.0.0
      */
-    private function define_public_hooks(): void {
+    private function define_public_hooks(): void
+    {
         $plugin_public = new Lkn_Give_Antispam_Public( $this->get_plugin_name(), $this->get_version() );
 
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-        add_filter('plugin_action_links_' . LKN_ANTISPAM_FOR_GIVEWP_BASENAME, '__give_lkn_antispam_plugin_row_meta', 10, 2);
+        add_filter('plugin_action_links_give-antispam/give-antispam.php', '__give_lkn_antispam_plugin_row_meta', 10, 2);
     }
 }

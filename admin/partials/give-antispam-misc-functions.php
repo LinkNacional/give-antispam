@@ -11,7 +11,59 @@ if ( ! defined('WPINC')) {
  *
  * @since
  */
-function __give_lkn_antispam_dependency_notice(): void {
+function verifyPluginDependencies(): void
+{
+    // Load plugin helper functions.
+    if ( ! function_exists('deactivate_plugins') || ! function_exists('is_plugin_active')) {
+        require_once ABSPATH . '/wp-admin/includes/plugin.php';
+    }
+
+    // Flag to check whether deactivate plugin or not.
+    $is_deactivate_plugin = null;
+
+    $give_antispam_path = ABSPATH . '/wp-content/plugins/give-antispam/give-antispam.php';
+
+    $is_installed = false;
+
+    // Verifica se o plugin Give está instalado e ativado.
+    if (function_exists('get_plugins')) {
+        $all_plugins = get_plugins();
+        $is_installed = ! empty($all_plugins['give/give.php']);
+
+        $all_activateds = get_option( 'active_plugins' );
+        $activeted_plugin = in_array('give/give.php', $all_activateds, true);
+    }
+
+    // Verifica a versão mínima do Give e se ele está ativado.
+    if ($is_installed) {
+        require_once ABSPATH . '/wp-content/plugins/give/give.php';
+
+        if ($activeted_plugin && version_compare(GIVE_VERSION, LKN_ANTISPAM_FOR_GIVEWP_MIN_GIVE_VERSION, '<')) {
+            $is_deactivate_plugin = true;
+            dependencyAlert();
+        } elseif ($activeted_plugin && version_compare(GIVE_VERSION, LKN_ANTISPAM_FOR_GIVEWP_MIN_GIVE_VERSION, '>')) {
+            $is_deactivate_plugin = false;
+        } elseif ( ! $activeted_plugin) {
+            $is_deactivate_plugin = true;
+            inactiveAlert();
+        }
+    } elseif ( ! $is_installed) {
+        $is_deactivate_plugin = true;
+        dependencyAlert();
+    }
+
+    // Deactivate plugin.
+    if ($is_deactivate_plugin) {
+        deactivate_plugins($give_antispam_path);
+
+        if (isset($_GET['activate'])) {
+            unset($_GET['activate']);
+        }
+    }
+}
+
+function __give_lkn_antispam_dependency_notice(): void
+{
     // Admin notice.
     $message = sprintf(
         '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a>  %5$s %6$s+ %7$s.</p></div>',
@@ -27,12 +79,18 @@ function __give_lkn_antispam_dependency_notice(): void {
     echo $message;
 }
 
+function dependencyAlert(): void
+{
+    add_action('admin_notices', '__give_lkn_antispam_dependency_notice');
+}
+
 /**
  * Notice for No Core Activation.
  *
  * @since
  */
-function __give_lkn_antispam_inactive_notice(): void {
+function __give_lkn_antispam_inactive_notice(): void
+{
     // Admin notice.
     $message = sprintf(
         '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a> %5$s.</p></div>',
@@ -46,6 +104,11 @@ function __give_lkn_antispam_inactive_notice(): void {
     echo $message;
 }
 
+function inactiveAlert(): void
+{
+    add_action('admin_notices', '__give_lkn_antispam_inactive_notice');
+}
+
 /**
  * Plugin row meta links.
  *
@@ -56,7 +119,8 @@ function __give_lkn_antispam_inactive_notice(): void {
  *
  * @return array
  */
-function __give_lkn_antispam_plugin_row_meta($plugin_meta, $plugin_file) {
+function __give_lkn_antispam_plugin_row_meta($plugin_meta)
+{
     $new_meta_links['setting'] = sprintf(
         '<a href="%1$s">%2$s</a>',
         admin_url('edit.php?post_type=give_forms&page=give-settings&tab=general&section=access-control'),
@@ -66,25 +130,27 @@ function __give_lkn_antispam_plugin_row_meta($plugin_meta, $plugin_file) {
     return array_merge($plugin_meta, $new_meta_links);
 }
 
-/**
- * Show activation banner.
- *
- * @since
- */
-function __give_lkn_antispam_activation(): void {
-    // Initialize activation welcome banner.
-    if (class_exists('Lkn_Give_Antispam')) {
-        // Only runs on admin.
-        $args = array(
-            'file' => LKN_ANTISPAM_FOR_GIVEWP_FILE,
-            'name' => __('Antispam', 'antispam-donation-for-givewp'),
-            'version' => LKN_ANTISPAM_FOR_GIVEWP_VERSION,
-            'settings_url' => admin_url('edit.php?post_type=give_forms&page=give-settings&tab=general&section=access-control'),
-            'documentation_url' => 'https://www.linknacional.com.br/wordpress/givewp/',
-            'support_url' => 'https://www.linknacional.com.br/wordpress/givewp/',
-            'testing' => false, // Never leave true.
-        );
+// APAGAR DEPOIS
+// /**
+//  * Show activation banner.
+//  *
+//  * @since
+//  */
+// function __give_lkn_antispam_activation(): void
+// {
+//     // Initialize activation welcome banner.
+//     if (class_exists('Lkn_Give_Antispam')) {
+//         // Only runs on admin.
+//         $args = array(
+//             'file' => LKN_ANTISPAM_FOR_GIVEWP_FILE,
+//             'name' => __('Antispam', 'antispam-donation-for-givewp'),
+//             'version' => LKN_ANTISPAM_FOR_GIVEWP_VERSION,
+//             'settings_url' => admin_url('edit.php?post_type=give_forms&page=give-settings&tab=general&section=access-control'),
+//             'documentation_url' => 'https://www.linknacional.com.br/wordpress/givewp/',
+//             'support_url' => 'https://www.linknacional.com.br/wordpress/givewp/',
+//             'testing' => false, // Never leave true.
+//         );
 
-        new Lkn_Give_Antispam($args);
-    }
-}
+//         new Lkn_Give_Antispam($args);
+//     }
+// }

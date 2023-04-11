@@ -48,7 +48,8 @@ define('LKN_ANTISPAM_FOR_GIVEWP_BASENAME', plugin_basename(LKN_ANTISPAM_FOR_GIVE
  * The code that runs during plugin activation.
  * This action is documented in includes/class-give-antispam-activator.php.
  */
-function activate_give_antispam(): void {
+function activate_give_antispam(): void
+{
     require_once plugin_dir_path( __FILE__ ) . 'includes/class-give-antispam-activator.php';
     Lkn_Give_Antispam_Activator::activate();
 }
@@ -57,7 +58,8 @@ function activate_give_antispam(): void {
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-give-antispam-deactivator.php.
  */
-function deactivate_give_antispam(): void {
+function deactivate_give_antispam(): void
+{
     require_once plugin_dir_path( __FILE__ ) . 'includes/class-give-antispam-deactivator.php';
     Lkn_Give_Antispam_Deactivator::deactivate();
 }
@@ -80,14 +82,11 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-give-antispam.php';
  *
  * @since    1.0.0
  */
-function run_give_antispam(): void {
+function run_give_antispam(): void
+{
     $plugin = new Lkn_Give_Antispam();
     $plugin->run();
 
-    add_action('admin_notices', '__give_lkn_antispam_dependency_notice');
+    verifyPluginDependencies();
 }
 run_give_antispam();
-
-function __give_lkn_antispam_dependency_notice(): void {
-    include_once __DIR__ . '/admin/partials/give-antispam-misc-functions.php';
-}

@@ -15,7 +15,8 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Give_Antispam_Admin {
+final class Lkn_Give_Antispam_Admin
+{
     /**
      * The ID of this plugin.
      *
@@ -42,16 +43,12 @@ final class Lkn_Give_Antispam_Admin {
      * @param string $plugin_name the name of this plugin
      * @param string $version     the version of this plugin
      */
-    public function __construct($plugin_name, $version) {
+    public function __construct($plugin_name, $version)
+    {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
 
         add_action('init', array($this, 'include_settings'));
-    }
-
-    // Insert settings on GiveWP settings
-    public function include_settings(): void {
-        add_filter('give_get_settings_general', array($this, 'give_lkn_antispam_add_setting_into_existing_tab'), 10, 1);
     }
 
     /**
@@ -63,41 +60,8 @@ final class Lkn_Give_Antispam_Admin {
      *
      * @return array
      */
-    public function give_lkn_antispam_add_setting_into_existing_tab($settings) {
-        $spamLogUrl = __DIR__ . '/../../logs/ip-spam.log';
-
-        $logContent = file_exists($spamLogUrl) ? file_get_contents($spamLogUrl) : false;
-
-        if (false !== $logContent) {
-            $logContent = json_encode($logContent);
-        } else {
-            $logContent = json_encode('Nenhum spam bloqueado');
-        }
-
-        $html = <<<HTML
-            <script>
-                // Open new tab and register logs
-                function openWindowContent () {
-                    var newWindow = window.open('','_blank');
-                    newWindow.document.write({$logContent});
-                }
-                // On page load run the creation element script
-                document.addEventListener('DOMContentLoaded', function () {
-                    // Get the elements from the page
-                    let formTable = document.getElementsByClassName('form-table')[0];
-                    let urlLogElement = document.getElementById('lkn_log_new_tab');
-
-                    // Add the click event on the <a></a> element
-                    urlLogElement.addEventListener('click', openWindowContent);
-                })
-            </script>
-
-            <style>
-                #lkn_log_new_tab {
-                    cursor: pointer;
-                }
-            </style>
-        HTML;
+    public function give_lkn_antispam_add_setting_into_existing_tab($settings)
+    {
         if ( ! Give_Admin_Settings::is_setting_page('general', 'access-control')) {
             return $settings;
         }
@@ -215,7 +179,6 @@ final class Lkn_Give_Antispam_Admin {
 
                     // Options only apears if the plugin option is 'enabled'
                     if (give_get_option('lkn_antispam_save_log_setting_field') === 'enabled') {
-                        echo $html;
                     }
                 }
 
@@ -231,12 +194,19 @@ final class Lkn_Give_Antispam_Admin {
         return $newSetting;
     }
 
+    // Insert settings on GiveWP settings
+    public function include_settings(): void
+    {
+        add_filter('give_get_settings_general', array($this, 'give_lkn_antispam_add_setting_into_existing_tab'), 10, 1);
+    }
+
     /**
      * Register the stylesheets for the admin area.
      *
      * @since    1.0.0
      */
-    public function enqueue_styles(): void {
+    public function enqueue_styles(): void
+    {
         /*
          * This function is provided for demonstration purposes only.
          *
@@ -249,7 +219,7 @@ final class Lkn_Give_Antispam_Admin {
          * class.
          */
 
-        wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/give-antispam-admin.css', array(), $this->version, 'all' );
+        wp_enqueue_style( 'give-antispam-admin-css', plugin_dir_url( __FILE__ ) . '/css/give-antispam-admin.css', $this->version, 'all' );
     }
 
     /**
@@ -257,7 +227,8 @@ final class Lkn_Give_Antispam_Admin {
      *
      * @since    1.0.0
      */
-    public function enqueue_scripts(): void {
+    public function enqueue_scripts(): void
+    {
         /*
          * This function is provided for demonstration purposes only.
          *
@@ -270,6 +241,6 @@ final class Lkn_Give_Antispam_Admin {
          * class.
          */
 
-        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/give-antispam-admin.js', array('jquery'), $this->version, false );
+        wp_enqueue_script( 'give-antispam-admin-js', plugin_dir_url( __FILE__ ) . '/js/give-antispam-admin.js', $this->version, false );
     }
 }

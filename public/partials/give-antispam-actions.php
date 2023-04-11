@@ -25,10 +25,11 @@ if ( ! defined('WPINC')) {
  *
  * @return array
  */
-function lkn_give_antispam_get_configs() {
+function lkn_give_antispam_get_configs()
+{
     $configs = array();
 
-    $configs['basePath'] = __DIR__ . '/../logs';
+    $configs['basePath'] = __DIR__ . '/../../logs';
     $configs['base'] = $configs['basePath'] . '/' . date('d.m.Y-H.i.s') . '.log';
     $configs['baseReport'] = $configs['basePath'] . '/ip-spam.log';
 
@@ -57,7 +58,8 @@ function lkn_give_antispam_get_configs() {
  * @param string $message
  * @param array  $configs
  */
-function lkn_give_antispam_reg_report($message, $configs): void {
+function lkn_give_antispam_reg_report($message, $configs): void
+{
     if ('enabled' === $configs['reportSpam']) {
         error_log($message, 3, $configs['baseReport']);
 
@@ -65,7 +67,7 @@ function lkn_give_antispam_reg_report($message, $configs): void {
 
         chmod($configs['baseReport'], 0600);
 
-        if ($size > 2000) {
+        if ($size > 2000) { // 2Kb
             unlink($configs['baseReport']);
         }
     }
@@ -77,7 +79,8 @@ function lkn_give_antispam_reg_report($message, $configs): void {
  * @param string|array $log
  * @param array        $configs
  */
-function lkn_give_antispam_reg_log($log, $configs): void {
+function lkn_give_antispam_reg_log($log, $configs): void
+{
     if ('enabled' === $configs['debug']) {
         $jsonLog = json_encode($log, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE) . "\n";
 
@@ -89,7 +92,8 @@ function lkn_give_antispam_reg_log($log, $configs): void {
 /**
  * Delete the log files older than 5 days.
  */
-function lkn_give_antispam_delete_old_logs(): void {
+function lkn_give_antispam_delete_old_logs(): void
+{
     $configs = lkn_give_antispam_get_configs();
     $logsPath = $configs['basePath'];
 
@@ -122,7 +126,8 @@ function lkn_give_antispam_delete_old_logs(): void {
  *
  * @return float
  */
-function lkn_give_antispam_get_recaptcha_score() {
+function lkn_give_antispam_get_recaptcha_score()
+{
     $score = give_get_option('lkn_antispam_score_re_setting_field');
 
     if ($score < 0 || $score > 10) {
@@ -137,7 +142,8 @@ function lkn_give_antispam_get_recaptcha_score() {
  *
  * @return int
  */
-function lkn_give_antispam_get_time_interval() {
+function lkn_give_antispam_get_time_interval()
+{
     $timeInterval = give_get_option('lkn_antispam_time_interval_setting_field');
 
     if ($timeInterval < 0) {
@@ -155,7 +161,8 @@ function lkn_give_antispam_get_time_interval() {
  *
  * @return array
  */
-function lkn_give_antispam_validate_donation($valid_data, $data) {
+function lkn_give_antispam_validate_donation($valid_data, $data)
+{
     $configs = lkn_give_antispam_get_configs();
 
     // Verify if plugin is active
@@ -273,7 +280,8 @@ function lkn_give_antispam_validate_donation($valid_data, $data) {
  *
  * @return array
  */
-function lkn_give_antispam_validate_recaptcha($valid_data, $data) {
+function lkn_give_antispam_validate_recaptcha($valid_data, $data)
+{
     $configs = lkn_give_antispam_get_configs();
     // Verifica se plugin está habilitado e garante que só executa 1 vez
     if ('enabled' === $configs['antispamEnabled'] && ! isset($data['give_ajax'])) {
@@ -310,7 +318,8 @@ function lkn_give_antispam_validate_recaptcha($valid_data, $data) {
 /**
  * Enqueue ReCAPTCHA Scripts.
  */
-function lkn_give_antispam_recaptcha_scripts(): void {
+function lkn_give_antispam_recaptcha_scripts(): void
+{
     $configs = lkn_give_antispam_get_configs();
     if ('enabled' === $configs['antispamEnabled']) {
         if ('enabled' === $configs['recEnabled']) {
@@ -328,7 +337,8 @@ function lkn_give_antispam_recaptcha_scripts(): void {
  * Print Necessary Inline JS for ReCAPTCHA.
  * This function outputs the appropriate inline js ReCAPTCHA scripts in the footer.
  */
-function lkn_give_antispam_print_my_inline_script(): void {
+function lkn_give_antispam_print_my_inline_script(): void
+{
     $configs = lkn_give_antispam_get_configs();
     if ('enabled' === $configs['antispamEnabled']) {
         if ('enabled' === $configs['recEnabled']) {
@@ -359,7 +369,8 @@ HTML;
  *
  * @param mixed $form_id
  */
-function lkn_give_antispam_custom_form_fields($form_id): void {
+function lkn_give_antispam_custom_form_fields($form_id): void
+{
     $configs = lkn_give_antispam_get_configs();
     if ('enabled' === $configs['antispamEnabled']) {
         if ('enabled' === $configs['recEnabled']) {
