@@ -376,6 +376,7 @@ function lkn_give_antispam_custom_form_fields($form_id): void
         if ('enabled' === $configs['recEnabled']) {
             $siteKey = $configs['siteRec'];
             // Add you own google API Site key.
+            // $recResponse = sanitize_text_field($_POST['g-recaptcha-lkn-input']);
             $html = <<<HTML
 
 			<input type="hidden" id="g-recaptcha-lkn-input" name="g-recaptcha-response" />
