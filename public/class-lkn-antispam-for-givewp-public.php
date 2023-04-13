@@ -3,7 +3,7 @@
 /**
  * The public-facing functionality of the plugin.
  *
- * @see       https://https://www.linknacional.com.br
+ * @see       https://www.linknacional.com.br
  * @since      1.0.0
  */
 
@@ -13,10 +13,9 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the public-facing stylesheet and JavaScript.
  *
- * @author     Link Nacional <linknacional@gmail.com>
+ * @author     Link Nacional
  */
-final class Lkn_Give_Antispam_Public
-{
+final class Lkn_Antispam_For_GiveWP_Public {
     /**
      * The ID of this plugin.
      *
@@ -43,21 +42,19 @@ final class Lkn_Give_Antispam_Public
      * @param string $plugin_name the name of the plugin
      * @param string $version     the version of this plugin
      */
-    public function __construct($plugin_name, $version)
-    {
+    public function __construct($plugin_name, $version) {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
 
         add_action('init', array($this, 'init_actions'));
     }
 
-    public function init_actions(): void
-    {
-        add_action('give_checkout_error_checks', 'lkn_give_antispam_validate_donation', 10, 2);
-        add_action('give_checkout_error_checks', 'lkn_give_antispam_validate_recaptcha', 9, 2);
-        add_action('wp_enqueue_scripts', 'lkn_give_antispam_recaptcha_scripts');
-        add_action('wp_footer', 'lkn_give_antispam_print_my_inline_script');
-        add_action('give_after_donation_levels', 'lkn_give_antispam_custom_form_fields', 10, 1);
+    public function init_actions(): void {
+        add_action('give_checkout_error_checks', 'lkn_antispam_for_givewp_validate_donation', 10, 2);
+        add_action('give_checkout_error_checks', 'lkn_antispam_for_givewp_validate_recaptcha', 9, 2);
+        add_action('wp_enqueue_scripts', 'lkn_antispam_for_givewp_recaptcha_scripts');
+        add_action('wp_footer', 'lkn_antispam_for_givewp_print_my_inline_script');
+        add_action('give_after_donation_levels', 'lkn_antispam_for_givewp_custom_form_fields', 10, 1);
     }
 
     /**
@@ -65,21 +62,20 @@ final class Lkn_Give_Antispam_Public
      *
      * @since    1.0.0
      */
-    public function enqueue_styles(): void
-    {
+    public function enqueue_styles(): void {
         /*
          * This function is provided for demonstration purposes only.
          *
          * An instance of this class should be passed to the run() function
-         * defined in Lkn_Give_Antispam_Loader as all of the hooks are defined
+         * defined in Lkn_Antispam_For_GiveWP_Loader as all of the hooks are defined
          * in that particular class.
          *
-         * The Lkn_Give_Antispam_Loader will then create the relationship
+         * The Lkn_Antispam_For_GiveWP_Loader will then create the relationship
          * between the defined hooks and the functions defined in this
          * class.
          */
 
-        wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/give-antispam-public.css', array(), $this->version, 'all' );
+        wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/lkn-antispam-for-givewp-public.css', $this->version, 'all' );
     }
 
     /**
@@ -87,20 +83,19 @@ final class Lkn_Give_Antispam_Public
      *
      * @since    1.0.0
      */
-    public function enqueue_scripts(): void
-    {
+    public function enqueue_scripts(): void {
         /*
          * This function is provided for demonstration purposes only.
          *
          * An instance of this class should be passed to the run() function
-         * defined in Lkn_Give_Antispam_Loader as all of the hooks are defined
+         * defined in Lkn_Antispam_For_GiveWP_Loader as all of the hooks are defined
          * in that particular class.
          *
-         * The Lkn_Give_Antispam_Loader will then create the relationship
+         * The Lkn_Antispam_For_GiveWP_Loader will then create the relationship
          * between the defined hooks and the functions defined in this
          * class.
          */
 
-        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/give-antispam-public.js', array('jquery'), $this->version, false );
+        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/lkn-antispam-for-givewp-public.js', $this->version, false );
     }
 }

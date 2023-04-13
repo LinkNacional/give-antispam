@@ -6,7 +6,7 @@
  * Loads and defines the internationalization files for this plugin
  * so that it is ready for translation.
  *
- * @see       https://https://www.linknacional.com.br
+ * @see       https://www.linknacional.com.br
  * @since      1.0.0
  */
 
@@ -20,7 +20,7 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Give_Antispam_i18n {
+final class Lkn_Antispam_For_GiveWP_i18n {
     /**
      * Load the plugin text domain for translation.
      *

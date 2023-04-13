@@ -6,7 +6,7 @@
  * A class definition that includes attributes and functions used across both the
  * public-facing side of the site and the admin area.
  *
- * @see       https://https://www.linknacional.com.br
+ * @see       https://www.linknacional.com.br
  * @since      1.0.0
  */
 
@@ -23,15 +23,14 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Give_Antispam
-{
+final class Lkn_Antispam_For_GiveWP {
     /**
      * The loader that's responsible for maintaining and registering all hooks that power
      * the plugin.
      *
      * @since    1.0.0
      *
-     * @var Lkn_Give_Antispam_Loader maintains and registers all hooks for the plugin
+     * @var Lkn_Antispam_For_GiveWP_Loader maintains and registers all hooks for the plugin
      */
     private $loader;
 
@@ -62,8 +61,7 @@ final class Lkn_Give_Antispam
      *
      * @since    1.0.0
      */
-    public function __construct()
-    {
+    public function __construct() {
         if ( defined( 'LKN_ANTISPAM_FOR_GIVEWP_VERSION' ) ) {
             $this->version = LKN_ANTISPAM_FOR_GIVEWP_VERSION;
         } else {
@@ -82,8 +80,7 @@ final class Lkn_Give_Antispam
      *
      * @since    1.0.0
      */
-    public function run(): void
-    {
+    public function run(): void {
         $this->loader->run();
     }
 
@@ -95,8 +92,7 @@ final class Lkn_Give_Antispam
      *
      * @return string the name of the plugin
      */
-    public function get_plugin_name()
-    {
+    public function get_plugin_name() {
         return $this->plugin_name;
     }
 
@@ -105,10 +101,9 @@ final class Lkn_Give_Antispam
      *
      * @since     1.0.0
      *
-     * @return Lkn_Give_Antispam_Loader orchestrates the hooks of the plugin
+     * @return Lkn_Antispam_For_GiveWP_Loader orchestrates the hooks of the plugin
      */
-    public function get_loader()
-    {
+    public function get_loader() {
         return $this->loader;
     }
 
@@ -119,8 +114,7 @@ final class Lkn_Give_Antispam
      *
      * @return string the version number of the plugin
      */
-    public function get_version()
-    {
+    public function get_version() {
         return $this->version;
     }
 
@@ -129,66 +123,64 @@ final class Lkn_Give_Antispam
      *
      * Include the following files that make up the plugin:
      *
-     * - Lkn_Give_Antispam_Loader. Orchestrates the hooks of the plugin.
-     * - Lkn_Give_Antispam_i18n. Defines internationalization functionality.
-     * - Lkn_Give_Antispam_Admin. Defines all hooks for the admin area.
-     * - Lkn_Give_Antispam_Public. Defines all hooks for the public side of the site.
+     * - Lkn_Antispam_For_GiveWP_Loader. Orchestrates the hooks of the plugin.
+     * - Lkn_Antispam_For_GiveWP_i18n. Defines internationalization functionality.
+     * - Lkn_Antispam_For_GiveWP_Admin. Defines all hooks for the admin area.
+     * - Lkn_Antispam_For_GiveWP_Public. Defines all hooks for the public side of the site.
      *
      * Create an instance of the loader which will be used to register the hooks
      * with WordPress.
      *
      * @since    1.0.0
      */
-    private function load_dependencies(): void
-    {
+    private function load_dependencies(): void {
         /**
          * The class responsible for orchestrating the actions and filters of the
          * core plugin.
          */
-        require_once plugin_dir_path( __DIR__ ) . 'includes/class-give-antispam-loader.php';
+        require_once plugin_dir_path( __DIR__ ) . 'includes/class-lkn-antispam-for-givewp-loader.php';
 
         /**
          * The class responsible for defining internationalization functionality
          * of the plugin.
          */
-        require_once plugin_dir_path( __DIR__ ) . 'includes/class-give-antispam-i18n.php';
+        require_once plugin_dir_path( __DIR__ ) . 'includes/class-lkn-antispam-for-givewp-i18n.php';
 
         /**
          * The class responsible for defining all actions that occur in the admin area.
          */
-        require_once plugin_dir_path( __DIR__ ) . 'admin/class-give-antispam-admin.php';
+        require_once plugin_dir_path( __DIR__ ) . 'admin/class-lkn-antispam-for-givewp-admin.php';
 
         /**
          * The class responsible for defining all actions that occur in the public-facing
          * side of the site.
          */
-        require_once plugin_dir_path( __DIR__ ) . 'public/class-give-antispam-public.php';
+        require_once plugin_dir_path( __DIR__ ) . 'public/class-lkn-antispam-for-givewp-public.php';
 
         /**
          * Load plugin files. (PROVISÓRIO) (PROVISÓRIO) (PROVISÓRIO) (PROVISÓRIO).
          */
-        require_once plugin_dir_path( __DIR__ ) . 'admin/partials/give-antispam-misc-functions.php';
+        require_once plugin_dir_path( __DIR__ ) . 'admin/partials/lkn-antispam-for-givewp-misc-functions.php';
 
-        require_once plugin_dir_path( __DIR__ ) . 'public/partials/give-antispam-actions.php';
+        require_once plugin_dir_path( __DIR__ ) . 'public/partials/lkn-antispam-for-givewp-actions.php';
 
         if (is_admin()) {
-            require_once plugin_dir_path( __DIR__ ) . 'admin/class-give-antispam-admin.php';
+            require_once plugin_dir_path( __DIR__ ) . 'admin/class-lkn-antispam-for-givewp-admin.php';
         }
 
-        $this->loader = new Lkn_Give_Antispam_Loader();
+        $this->loader = new Lkn_Antispam_For_GiveWP_Loader();
     }
 
     /**
      * Define the locale for this plugin for internationalization.
      *
-     * Uses the Lkn_Give_Antispam_i18n class in order to set the domain and to register the hook
+     * Uses the Lkn_Antispam_For_GiveWP_i18n class in order to set the domain and to register the hook
      * with WordPress.
      *
      * @since    1.0.0
      */
-    private function set_locale(): void
-    {
-        $plugin_i18n = new Lkn_Give_Antispam_i18n();
+    private function set_locale(): void {
+        $plugin_i18n = new Lkn_Antispam_For_GiveWP_i18n();
 
         $this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
     }
@@ -199,9 +191,8 @@ final class Lkn_Give_Antispam
      *
      * @since    1.0.0
      */
-    private function define_admin_hooks(): void
-    {
-        $plugin_admin = new Lkn_Give_Antispam_Admin( $this->get_plugin_name(), $this->get_version() );
+    private function define_admin_hooks(): void {
+        $plugin_admin = new Lkn_Antispam_For_GiveWP_Admin( $this->get_plugin_name(), $this->get_version() );
 
         $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
         $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -213,12 +204,11 @@ final class Lkn_Give_Antispam
      *
      * @since    1.0.0
      */
-    private function define_public_hooks(): void
-    {
-        $plugin_public = new Lkn_Give_Antispam_Public( $this->get_plugin_name(), $this->get_version() );
+    private function define_public_hooks(): void {
+        $plugin_public = new Lkn_Antispam_For_GiveWP_Public( $this->get_plugin_name(), $this->get_version() );
 
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-        add_filter('plugin_action_links_give-antispam/give-antispam.php', '__give_lkn_antispam_plugin_row_meta', 10, 2);
+        add_filter('plugin_action_links_give-antispam/lkn-antispam-for-givewp.php', '__lkn_antispam_for_givewp_plugin_row_meta', 10, 2);
     }
 }

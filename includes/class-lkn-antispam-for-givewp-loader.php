@@ -3,7 +3,7 @@
 /**
  * Register all actions and filters for the plugin.
  *
- * @see       https://https://www.linknacional.com.br
+ * @see       https://www.linknacional.com.br
  * @since      1.0.0
  */
 
@@ -14,9 +14,9 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @author     Link Nacional <linknacional@gmail.com>
+ * @author     Link Nacional
  */
-final class Lkn_Give_Antispam_Loader {
+final class Lkn_Antispam_For_GiveWP_Loader {
     /**
      * The array of actions registered with WordPress.
      *

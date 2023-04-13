@@ -3,7 +3,7 @@
 /**
  * The admin-specific functionality of the plugin.
  *
- * @see       https://https://www.linknacional.com.br
+ * @see       https://www.linknacional.com.br
  * @since      1.0.0
  */
 
@@ -15,8 +15,7 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Give_Antispam_Admin
-{
+final class Lkn_Antispam_For_GiveWP_Admin {
     /**
      * The ID of this plugin.
      *
@@ -43,8 +42,7 @@ final class Lkn_Give_Antispam_Admin
      * @param string $plugin_name the name of this plugin
      * @param string $version     the version of this plugin
      */
-    public function __construct($plugin_name, $version)
-    {
+    public function __construct($plugin_name, $version) {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
 
@@ -60,8 +58,7 @@ final class Lkn_Give_Antispam_Admin
      *
      * @return array
      */
-    public function give_lkn_antispam_add_setting_into_existing_tab($settings)
-    {
+    public function lkn_antispam_for_givewp_add_setting_into_existing_tab($settings) {
         if ( ! Give_Admin_Settings::is_setting_page('general', 'access-control')) {
             return $settings;
         }
@@ -195,9 +192,8 @@ final class Lkn_Give_Antispam_Admin
     }
 
     // Insert settings on GiveWP settings
-    public function include_settings(): void
-    {
-        add_filter('give_get_settings_general', array($this, 'give_lkn_antispam_add_setting_into_existing_tab'), 10, 1);
+    public function include_settings(): void {
+        add_filter('give_get_settings_general', array($this, 'lkn_antispam_for_givewp_add_setting_into_existing_tab'), 10, 1);
     }
 
     /**
@@ -205,21 +201,20 @@ final class Lkn_Give_Antispam_Admin
      *
      * @since    1.0.0
      */
-    public function enqueue_styles(): void
-    {
+    public function enqueue_styles(): void {
         /*
          * This function is provided for demonstration purposes only.
          *
          * An instance of this class should be passed to the run() function
-         * defined in Lkn_Give_Antispam_Loader as all of the hooks are defined
+         * defined in Lkn_Antispam_For_GiveWP_Loader as all of the hooks are defined
          * in that particular class.
          *
-         * The Lkn_Give_Antispam_Loader will then create the relationship
+         * The Lkn_Antispam_For_GiveWP_Loader will then create the relationship
          * between the defined hooks and the functions defined in this
          * class.
          */
 
-        wp_enqueue_style( 'give-antispam-admin-css', plugin_dir_url( __FILE__ ) . '/css/give-antispam-admin.css', $this->version, 'all' );
+        wp_enqueue_style( 'lkn-antispam-for-givewp-admin-css', plugin_dir_url( __FILE__ ) . '/css/lkn-antispam-for-givewp-admin.css', $this->version, 'all' );
     }
 
     /**
@@ -227,20 +222,19 @@ final class Lkn_Give_Antispam_Admin
      *
      * @since    1.0.0
      */
-    public function enqueue_scripts(): void
-    {
+    public function enqueue_scripts(): void {
         /*
          * This function is provided for demonstration purposes only.
          *
          * An instance of this class should be passed to the run() function
-         * defined in Lkn_Give_Antispam_Loader as all of the hooks are defined
+         * defined in Lkn_Antispam_For_GiveWP_Loader as all of the hooks are defined
          * in that particular class.
          *
-         * The Lkn_Give_Antispam_Loader will then create the relationship
+         * The Lkn_Antispam_For_GiveWP_Loader will then create the relationship
          * between the defined hooks and the functions defined in this
          * class.
          */
 
-        wp_enqueue_script( 'give-antispam-admin-js', plugin_dir_url( __FILE__ ) . '/js/give-antispam-admin.js', $this->version, false );
+        wp_enqueue_script( 'lkn-antispam-for-givewp-admin-js', plugin_dir_url( __FILE__ ) . '/js/lkn-antispam-for-givewp-admin.js', $this->version, false );
     }
 }

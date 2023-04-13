@@ -3,7 +3,7 @@
 /**
  * Fired during plugin deactivation.
  *
- * @see       https://https://www.linknacional.com.br
+ * @see       https://www.linknacional.com.br
  * @since      1.0.0
  */
 
@@ -14,9 +14,9 @@
  *
  * @since      1.0.0
  *
- * @author     Link Nacional <linknacional@gmail.com>
+ * @author     Link Nacional
  */
-final class Lkn_Give_Antispam_Deactivator {
+final class Lkn_Antispam_For_GiveWP_Deactivator {
     /**
      * Short Description. (use period).
      *

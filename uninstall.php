@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Uninstall Lkn_Give_Antispam.
+ * Uninstall Lkn_Antispam_For_GiveWP.
  *
  * @copyright   Copyright (c) 2016, GiveWP
  * @license     https://opensource.org/licenses/gpl-license GNU Public License

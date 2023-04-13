@@ -1,4 +1,4 @@
-#: Give Antispam en_US translation
+#: Antispam Donation For GiveWP en_US translation
 msgid "Performs verification and prevention of malicious donations."
 msgstr ""
 

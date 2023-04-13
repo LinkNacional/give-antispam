@@ -25,8 +25,7 @@ if ( ! defined('WPINC')) {
  *
  * @return array
  */
-function lkn_give_antispam_get_configs()
-{
+function lkn_antispam_for_givewp_get_configs() {
     $configs = array();
 
     $configs['basePath'] = __DIR__ . '/../../logs';
@@ -39,14 +38,14 @@ function lkn_give_antispam_get_configs()
     $configs['reportSpam'] = give_get_option('lkn_antispam_save_log_setting_field');
 
     $configs['antispamEnabled'] = give_get_option('lkn_antispam_enabled_setting_field');
-    $configs['interval'] = lkn_give_antispam_get_time_interval();
+    $configs['interval'] = lkn_antispam_for_givewp_get_time_interval();
     $configs['donationLimit'] = give_get_option('lkn_antispam_limit_setting_field');
     $configs['gatewayVerify'] = give_get_option('lkn_antispam_same_gateway_setting_field');
     // Recaptcha keys
     $configs['recEnabled'] = give_get_option('lkn_antispam_active_recaptcha_setting_field');
     $configs['siteRec'] = give_get_option('lkn_antispam_site_rec_id_setting_field');
     $configs['secretRec'] = give_get_option('lkn_antispam_secret_rec_id_setting_field');
-    $configs['scoreRec'] = lkn_give_antispam_get_recaptcha_score();
+    $configs['scoreRec'] = lkn_antispam_for_givewp_get_recaptcha_score();
     $configs['bannedIps'] = give_get_option('lkn_antispam_banned_ips_setting_field');
 
     return $configs;
@@ -58,8 +57,7 @@ function lkn_give_antispam_get_configs()
  * @param string $message
  * @param array  $configs
  */
-function lkn_give_antispam_reg_report($message, $configs): void
-{
+function lkn_antispam_for_givewp_reg_report($message, $configs): void {
     if ('enabled' === $configs['reportSpam']) {
         error_log($message, 3, $configs['baseReport']);
 
@@ -79,8 +77,7 @@ function lkn_give_antispam_reg_report($message, $configs): void
  * @param string|array $log
  * @param array        $configs
  */
-function lkn_give_antispam_reg_log($log, $configs): void
-{
+function lkn_antispam_for_givewp_reg_log($log, $configs): void {
     if ('enabled' === $configs['debug']) {
         $jsonLog = json_encode($log, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE) . "\n";
 
@@ -92,9 +89,8 @@ function lkn_give_antispam_reg_log($log, $configs): void
 /**
  * Delete the log files older than 5 days.
  */
-function lkn_give_antispam_delete_old_logs(): void
-{
-    $configs = lkn_give_antispam_get_configs();
+function lkn_antispam_for_givewp_delete_old_logs(): void {
+    $configs = lkn_antispam_for_givewp_get_configs();
     $logsPath = $configs['basePath'];
 
     foreach (scandir($logsPath) as $logFilename) {
@@ -126,8 +122,7 @@ function lkn_give_antispam_delete_old_logs(): void
  *
  * @return float
  */
-function lkn_give_antispam_get_recaptcha_score()
-{
+function lkn_antispam_for_givewp_get_recaptcha_score() {
     $score = give_get_option('lkn_antispam_score_re_setting_field');
 
     if ($score < 0 || $score > 10) {
@@ -142,8 +137,7 @@ function lkn_give_antispam_get_recaptcha_score()
  *
  * @return int
  */
-function lkn_give_antispam_get_time_interval()
-{
+function lkn_antispam_for_givewp_get_time_interval() {
     $timeInterval = give_get_option('lkn_antispam_time_interval_setting_field');
 
     if ($timeInterval < 0) {
@@ -161,9 +155,8 @@ function lkn_give_antispam_get_time_interval()
  *
  * @return array
  */
-function lkn_give_antispam_validate_donation($valid_data, $data)
-{
-    $configs = lkn_give_antispam_get_configs();
+function lkn_antispam_for_givewp_validate_donation($valid_data, $data) {
+    $configs = lkn_antispam_for_givewp_get_configs();
 
     // Verify if plugin is active
     if ('enabled' === $configs['antispamEnabled']) {
@@ -176,7 +169,7 @@ function lkn_give_antispam_validate_donation($valid_data, $data)
         $userIp = give_get_ip();
 
         if (in_array($userIp, $bannedIps, true)) {
-            lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, BANNED IP  <br> ' . \PHP_EOL, $configs);
+            lkn_antispam_for_givewp_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, BANNED IP  <br> ' . \PHP_EOL, $configs);
             give_set_error('spam_donation', 'O seu endereço de IP está banido.');
         }
 
@@ -229,7 +222,7 @@ function lkn_give_antispam_validate_donation($valid_data, $data)
                             if ($donationLimit > $donationCounter) {
                                 ++$donationCounter;
                             } else {
-                                lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, TOO MANY ATTEMPTS  <br> ' . \PHP_EOL, $configs);
+                                lkn_antispam_for_givewp_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, TOO MANY ATTEMPTS  <br> ' . \PHP_EOL, $configs);
                                 give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
                             }
                         }
@@ -238,7 +231,7 @@ function lkn_give_antispam_validate_donation($valid_data, $data)
                         if ($donationLimit > $donationCounter) {
                             ++$donationCounter;
                         } else {
-                            lkn_give_antispam_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, TOO MANY ATTEMPTS  <br> ' . \PHP_EOL, $configs);
+                            lkn_antispam_for_givewp_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, TOO MANY ATTEMPTS  <br> ' . \PHP_EOL, $configs);
                             give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
                         }
                     }
@@ -247,9 +240,9 @@ function lkn_give_antispam_validate_donation($valid_data, $data)
         }
 
         // Activates debug mode and saves a temporary log
-        lkn_give_antispam_delete_old_logs();
+        lkn_antispam_for_givewp_delete_old_logs();
 
-        lkn_give_antispam_reg_log(array(
+        lkn_antispam_for_givewp_reg_log(array(
             'ip' => $userIp,
             'donation_ip' => $donationIp,
             'timestamp_interval' => $minutes,
@@ -280,9 +273,8 @@ function lkn_give_antispam_validate_donation($valid_data, $data)
  *
  * @return array
  */
-function lkn_give_antispam_validate_recaptcha($valid_data, $data)
-{
-    $configs = lkn_give_antispam_get_configs();
+function lkn_antispam_for_givewp_validate_recaptcha($valid_data, $data) {
+    $configs = lkn_antispam_for_givewp_get_configs();
     // Verifica se plugin está habilitado e garante que só executa 1 vez
     if ('enabled' === $configs['antispamEnabled'] && ! isset($data['give_ajax'])) {
         // Verifica se opção do recaptcha está habilitada
@@ -294,7 +286,7 @@ function lkn_give_antispam_validate_recaptcha($valid_data, $data)
             // Formata a resposta recebida em um objeto
             $recaptcha_data = json_decode(wp_remote_retrieve_body($recaptcha_response));
 
-            lkn_give_antispam_reg_log(array(
+            lkn_antispam_for_givewp_reg_log(array(
                 'give_ajax' => $data['give_ajax'],
                 'recaptcha_response' => $recaptcha_data,
             ), $configs);
@@ -318,9 +310,8 @@ function lkn_give_antispam_validate_recaptcha($valid_data, $data)
 /**
  * Enqueue ReCAPTCHA Scripts.
  */
-function lkn_give_antispam_recaptcha_scripts(): void
-{
-    $configs = lkn_give_antispam_get_configs();
+function lkn_antispam_for_givewp_recaptcha_scripts(): void {
+    $configs = lkn_antispam_for_givewp_get_configs();
     if ('enabled' === $configs['antispamEnabled']) {
         if ('enabled' === $configs['recEnabled']) {
             $siteKey = $configs['siteRec'];
@@ -337,9 +328,8 @@ function lkn_give_antispam_recaptcha_scripts(): void
  * Print Necessary Inline JS for ReCAPTCHA.
  * This function outputs the appropriate inline js ReCAPTCHA scripts in the footer.
  */
-function lkn_give_antispam_print_my_inline_script(): void
-{
-    $configs = lkn_give_antispam_get_configs();
+function lkn_antispam_for_givewp_print_my_inline_script(): void {
+    $configs = lkn_antispam_for_givewp_get_configs();
     if ('enabled' === $configs['antispamEnabled']) {
         if ('enabled' === $configs['recEnabled']) {
             $siteKey = $configs['siteRec'];
@@ -369,9 +359,8 @@ HTML;
  *
  * @param mixed $form_id
  */
-function lkn_give_antispam_custom_form_fields($form_id): void
-{
-    $configs = lkn_give_antispam_get_configs();
+function lkn_antispam_for_givewp_custom_form_fields($form_id): void {
+    $configs = lkn_antispam_for_givewp_get_configs();
     if ('enabled' === $configs['antispamEnabled']) {
         if ('enabled' === $configs['recEnabled']) {
             $siteKey = $configs['siteRec'];

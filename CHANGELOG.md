@@ -13,7 +13,7 @@
 - Ajustado título da configuração do Recaptcha.
 
 ### v1.1.0
-- Agora o give antispam tem a opção de ativar e configurar o Recaptcha V3;
+- Agora o antispam donation for givewp tem a opção de ativar e configurar o Recaptcha V3;
 - Ajustes e correções nas configurações do plugin;
 - Ajustes de formatação das configurações.
 

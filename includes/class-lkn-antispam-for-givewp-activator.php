@@ -3,7 +3,7 @@
 /**
  * Fired during plugin activation.
  *
- * @see        https://https://www.linknacional.com.br
+ * @see        https://www.linknacional.com.br
  * @since      1.0.0
  */
 
@@ -16,8 +16,7 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Give_Antispam_Activator
-{
+final class Lkn_Antispam_For_GiveWP_Activator {
     /**
      * Short Description. (use period).
      *
@@ -25,9 +24,8 @@ final class Lkn_Give_Antispam_Activator
      *
      * @since    1.0.0
      */
-    public static function activate(): void
-    {
-        if ( ! Lkn_Give_Antispam_Activator::check_environment()) {
+    public static function activate(): void {
+        if ( ! Lkn_Antispam_For_GiveWP_Activator::check_environment()) {
             return;
         }
     }
@@ -39,12 +37,11 @@ final class Lkn_Give_Antispam_Activator
      *
      * @since
      */
-    public static function check_environment()
-    {
+    public static function check_environment() {
         // Not admin insert here.
         if (is_user_logged_in()) {
             if ( ! is_admin() || ! current_user_can('activate_plugins')) {
-                require_once LKN_ANTISPAM_FOR_GIVEWP_DIR . 'public/partials/give-antispam-actions.php';
+                require_once LKN_ANTISPAM_FOR_GIVEWP_DIR . 'public/partials/lkn-antispam-for-givewp-actions.php';
             }
         }
     }

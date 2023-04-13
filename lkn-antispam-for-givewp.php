@@ -17,8 +17,8 @@
  * Version:           1.2.0
  * Author:            Link Nacional
  * Author URI:        https://www.linknacional.com/
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * License:           GPL-3.0+
+ * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain:       antispam-donation-for-givewp
  * Domain Path:       /languages
  */
@@ -46,32 +46,30 @@ define('LKN_ANTISPAM_FOR_GIVEWP_BASENAME', plugin_basename(LKN_ANTISPAM_FOR_GIVE
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-give-antispam-activator.php.
+ * This action is documented in includes/class-lkn-antispam-for-givewp-activator.php.
  */
-function activate_give_antispam(): void
-{
-    require_once plugin_dir_path( __FILE__ ) . 'includes/class-give-antispam-activator.php';
-    Lkn_Give_Antispam_Activator::activate();
+function activate_lkn_antispam_for_givewp(): void {
+    require_once plugin_dir_path( __FILE__ ) . 'includes/class-lkn-antispam-for-givewp-activator.php';
+    Lkn_Antispam_For_GiveWP_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-give-antispam-deactivator.php.
+ * This action is documented in includes/class-lkn-antispam-for-givewp-deactivator.php.
  */
-function deactivate_give_antispam(): void
-{
-    require_once plugin_dir_path( __FILE__ ) . 'includes/class-give-antispam-deactivator.php';
-    Lkn_Give_Antispam_Deactivator::deactivate();
+function deactivate_lkn_antispam_for_givewp(): void {
+    require_once plugin_dir_path( __FILE__ ) . 'includes/class-lkn-antispam-for-givewp-deactivator.php';
+    Lkn_Antispam_For_GiveWP_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_give_antispam' );
-register_deactivation_hook( __FILE__, 'deactivate_give_antispam' );
+register_activation_hook( __FILE__, 'activate_lkn_antispam_for_givewp' );
+register_deactivation_hook( __FILE__, 'deactivate_lkn_antispam_for_givewp' );
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-give-antispam.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-lkn-antispam-for-givewp.php';
 
 /**
  * Begins execution of the plugin.
@@ -82,11 +80,10 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-give-antispam.php';
  *
  * @since    1.0.0
  */
-function run_give_antispam(): void
-{
-    $plugin = new Lkn_Give_Antispam();
+function run_lkn_antispam_for_givewp(): void {
+    $plugin = new Lkn_Antispam_For_GiveWP();
     $plugin->run();
 
     verifyPluginDependencies();
 }
-run_give_antispam();
+run_lkn_antispam_for_givewp();
