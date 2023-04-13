@@ -1,35 +1,43 @@
-# Give-Antispam
+# Antispam Donation for GiveWP
 
-O Give-Antispam é um plugin para a plataforma de doação GiveWP que tem o objetivo de fazer a proteção de formulários de doação contra teste de cartões e doações spam.
+The [Antispam Donation for GiveWP](https://www.linknacional.com/wordpress/plugins/) is an extension plugin for GiveWP which aims to protect donation forms against card testing and spam donations.
 
-## Instalação
+## Dependencies
 
-1) Procure na barra lateral a área de plugins do Wordpress;
+Antispam Donation for GiveWP plugin is dependent on GiveWP plugin, please make sure GiveWP is installed and properly configured before starting Antispam Donation for GiveWP installation.
 
-2) Em plugins instalados procure pela opção 'adicionar novo';
+## Installation
 
-3) Clique na opção de 'enviar plugin' no título da página e faça o upload do plugin antispam-donation-for-givewp.zip;
+1) Look in the sidebar for the WordPress plugins area;
 
-4) Clique no botão 'instalar agora' e depois ative o plugin instalado;
+2) In installed plugins look for the 'add new' option in the header;
 
-5) Agora vá para o menu de configurações do GiveWP;
+3) Click on the 'submit plugin' option in the page title and upload the give-antispam.zip plugin;
 
-6) Selecione a opção 'controle de acesso';
+4) Click on the 'install now' button and then activate the installed plugin;
 
-7) Procure pela opção 'Habilitar proteção de doações spam';
+The Antispam Donation for GiveWP is now activated.
 
-8) Clique em salvar;
+## User instructions
 
-9) Novas opções irão aparecer, pode deixar os valores padrões ou alterar para algo que se encaixe com suas necessidades;
+1) Now go to the Settings menu of the GiveWP;
 
-10) Clique em salvar;
+2) Select the 'Access Control' option;
 
-11) Caso tenha as chaves de acesso do Recaptcha V3 e deseje habilitá-lo, procura pela opção "Habilitar Recaptcha" clique em "habilitado";
+3) Look for the option 'Enable spam donation protection' and enable it;
 
-12) Clique em salvar;
+4) Click on the 'Save changes' button;
 
-13) Novos campos aparecerão, agora insira suas credenciais do Recaptcha V3;
+5) New options will appear, you can leave the default values or change to something that fits your needs; 
 
-14) Clique em salvar;
+6) Click on the 'Save changes' button;
 
-Pronto, o plugin do Give-Antispam está ativo e em funcionamento.
+7) If you have Recaptcha V3 access keys and want to enable it, look for the option 'Recaptcha donation form' and enable it;
+
+8) Click on the 'Save changes' button;
+
+9) New fields will appear, now enter your Recaptcha V3 credentials;
+
+10) Click on the 'Save changes' button;
+
+The Antispam Donation for GiveWP is now live and working.
