@@ -170,7 +170,7 @@ function lkn_antispam_for_givewp_validate_donation($valid_data, $data) {
 
         if (in_array($userIp, $bannedIps, true)) {
             lkn_antispam_for_givewp_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, BANNED IP  <br> ' . \PHP_EOL, $configs);
-            give_set_error('spam_donation', 'O seu endereço de IP está banido.');
+            give_set_error('spam_donation', '%s', __('Your IP address is banned.', 'antispam-donation-for-givewp'));
         }
 
         // Get givewp payment data
@@ -223,7 +223,7 @@ function lkn_antispam_for_givewp_validate_donation($valid_data, $data) {
                                 ++$donationCounter;
                             } else {
                                 lkn_antispam_for_givewp_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, TOO MANY ATTEMPTS  <br> ' . \PHP_EOL, $configs);
-                                give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
+                                give_set_error('spam_donation', '%s', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Try using a different email address or contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
                             }
                         }
                     } else {
@@ -232,7 +232,7 @@ function lkn_antispam_for_givewp_validate_donation($valid_data, $data) {
                             ++$donationCounter;
                         } else {
                             lkn_antispam_for_givewp_reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, TOO MANY ATTEMPTS  <br> ' . \PHP_EOL, $configs);
-                            give_set_error('spam_donation', 'O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Tente usar um endereço de e-mail diferente ou entre em contato com o administrador do site se tiver alguma dúvida.');
+                            give_set_error('spam_donation', '%s', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Try using a different email address or contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
                         }
                     }
                 }
@@ -295,11 +295,11 @@ function lkn_antispam_for_givewp_validate_recaptcha($valid_data, $data) {
             if ( ! isset($recaptcha_data->success) || false == $recaptcha_data->success) {
                 // User must have validated the reCAPTCHA to proceed with donation.
                 if ( ! isset($data['g-recaptcha-response']) || empty($data['g-recaptcha-response'])) {
-                    give_set_error('g-recaptcha-response', __('O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Entre em contato com o administrador do site para mais informações.', 'antispam-donation-for-givewp'));
+                    give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Please contact the site administrator for more information.', 'antispam-donation-for-givewp'));
                 }
             } elseif ( ! isset($recaptcha_data->score) || $recaptcha_data->score < $configs['scoreRec']) {
                 // Caso o score seja menor que o valor definido mostra mensagem de erro
-                give_set_error('g-recaptcha-response', __('O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Entre em contato com o administrador do site para mais informações.', 'antispam-donation-for-givewp'));
+                give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Please contact the site administrator for more information.', 'antispam-donation-for-givewp'));
             }
         }
     }
@@ -371,7 +371,7 @@ function lkn_antispam_for_givewp_custom_form_fields($form_id): void {
 			<input type="hidden" id="g-recaptcha-lkn-input" name="g-recaptcha-response" />
 
             <div id="g-notice-wrapper" class="gNotice">
-                Este site é protegido pelo reCAPTCHA e as <a href="https://policies.google.com/privacy" target="_blank">Políticas de Privacidade</a> e <a href="https://policies.google.com/terms" target="_blank">Termos de Serviço</a> do Google se aplicam.
+                This site is protected by reCAPTCHA and the <a href="https://policies.google.com/privacy" target="_blank">Privacy Policy</a> and Google <a href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.
             </div>
 
 			<script type="text/javascript">
