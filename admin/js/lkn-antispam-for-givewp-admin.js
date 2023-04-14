@@ -12,12 +12,12 @@ async function verifyLogs () {
           if (xhr.responseText !== '') {
             logData = xhr.responseText
           } else if (xhr.responseText === '') {
-            logData = 'Nenhum IP bloqueado por spam.'
+            logData = 'No IP blocked by spam.'
           }
 
           resolve(logData)
         } else {
-          reject(new Error('Erro ao carregar o relatório de IPs bloqueados por spam.'))
+          reject(new Error('Error loading the report of blocked IPs due to spam.'))
         }
       }
     }

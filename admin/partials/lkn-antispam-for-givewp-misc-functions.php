@@ -24,7 +24,7 @@ function verifyPluginDependencies(): void {
 
     $is_installed = false;
 
-    // Verifica se o plugin Give está instalado e ativado.
+    // Check if the Give plugin is installed and activated.
     if (function_exists('get_plugins')) {
         $all_plugins = get_plugins();
         $is_installed = ! empty($all_plugins['give/give.php']);
@@ -33,7 +33,7 @@ function verifyPluginDependencies(): void {
         $activeted_plugin = in_array('give/give.php', $all_activateds, true);
     }
 
-    // Verifica a versão mínima do Give e se ele está ativado.
+    // Check the minimum version of Give and if it is enabled.
     if ($is_installed) {
         require_once ABSPATH . '/wp-content/plugins/give/give.php';
 

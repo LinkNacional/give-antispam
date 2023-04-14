@@ -275,15 +275,15 @@ function lkn_antispam_for_givewp_validate_donation($valid_data, $data) {
  */
 function lkn_antispam_for_givewp_validate_recaptcha($valid_data, $data) {
     $configs = lkn_antispam_for_givewp_get_configs();
-    // Verifica se plugin está habilitado e garante que só executa 1 vez
+    // Verify if the plugin is enabled and ensure that it only runs once.
     if ('enabled' === $configs['antispamEnabled'] && ! isset($data['give_ajax'])) {
-        // Verifica se opção do recaptcha está habilitada
+        // Verify if the Recaptcha option is enabled.
         if ('enabled' === $configs['recEnabled']) {
             $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
             $recaptcha_secret_key = $configs['secretRec']; // Replace with your own key here.
-            // Requisição de verificação do recaptcha
+            // Request for Recaptcha verification.
             $recaptcha_response = wp_remote_post($recaptcha_url . '?secret=' . $recaptcha_secret_key . '&response=' . $data['g-recaptcha-response'] . '&remoteip=' . $_SERVER['REMOTE_ADDR']);
-            // Formata a resposta recebida em um objeto
+            // Format the received response into an object.
             $recaptcha_data = json_decode(wp_remote_retrieve_body($recaptcha_response));
 
             lkn_antispam_for_givewp_reg_log(array(
@@ -291,14 +291,14 @@ function lkn_antispam_for_givewp_validate_recaptcha($valid_data, $data) {
                 'recaptcha_response' => $recaptcha_data,
             ), $configs);
 
-            // Verifica se a requisição foi concluída com sucesso
+            // Verify if the request was completed successfully.
             if ( ! isset($recaptcha_data->success) || false == $recaptcha_data->success) {
                 // User must have validated the reCAPTCHA to proceed with donation.
                 if ( ! isset($data['g-recaptcha-response']) || empty($data['g-recaptcha-response'])) {
                     give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Please contact the site administrator for more information.', 'antispam-donation-for-givewp'));
                 }
             } elseif ( ! isset($recaptcha_data->score) || $recaptcha_data->score < $configs['scoreRec']) {
-                // Caso o score seja menor que o valor definido mostra mensagem de erro
+                // If the score is lower than the defined value, display an error message.
                 give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Please contact the site administrator for more information.', 'antispam-donation-for-givewp'));
             }
         }
@@ -334,11 +334,11 @@ function lkn_antispam_for_givewp_print_my_inline_script(): void {
         if ('enabled' === $configs['recEnabled']) {
             $siteKey = $configs['siteRec'];
             // Uncomment if statement to control output
-            // Só executa 1 vez por formulário
+            // Only execute once per form.
             if (is_singular('give_forms')) {
                 $html = <<<HTML
 			<script type="text/javascript">
-				// Faz a renderização do footer do recaptcha
+				// Render the Recaptcha footer.
 					jQuery( document ).on( 'give_gateway_loaded', function() {
 						grecaptcha.render( 'give-recaptcha-element', {
 							'sitekey': '{$siteKey}' // Add your own Google API sitekey here.
@@ -375,22 +375,22 @@ function lkn_antispam_for_givewp_custom_form_fields($form_id): void {
             </div>
 
 			<script type="text/javascript">
-                // Verifica se DOM carregou completamente
+                // Check if the DOM has fully loaded.
                 window.addEventListener('DOMContentLoaded', function () {
 
                 let iframeLoader = parent.document.getElementsByClassName('iframe-loader')[0];
                 let totalWrapper = document.getElementsByClassName('give-total-wrap')[0];
                 let gNoticeWrapper = document.getElementById('g-notice-wrapper');
 
-                // Alguns temas e páginas do wordpress escondem o badge do recaptcha
-                // Adicionado notice contendo políticas de privacidade e termos de uso como requerido pela documentação do recaptcha
+                // Some Wordpress themes and pages hide the Recaptcha badge.
+                // Add a notice containing privacy policy and terms of use as required by the Recaptcha documentation.
                 // @see { https://developers.google.com/recaptcha/docs/faq#id-like-to-hide-the-recaptcha-badge.-what-is-allowed }
                 if (totalWrapper) {
                     totalWrapper.append(gNoticeWrapper);
                 }
 
-                // caso for um formulário legado altera também os atributos do formulário para validação do giveWP
-                if (!iframeLoader) { // verifica a existência do iframe loader que é específico do formulário multi-step
+                // If it is a legacy form, also modify the form attributes for GiveWP validation.
+                if (!iframeLoader) { // Verify for the existence of the iframe  loader specific to the multi-step form.
                     let givePaymentSelect = document.getElementById('give-payment-mode-wrap');
                     if (givePaymentSelect) {
                         lknPrepareRecaptcha();
@@ -405,7 +405,7 @@ function lkn_antispam_for_givewp_custom_form_fields($form_id): void {
                             });
                         }, { once: true });
                     }
-                } else { // Formulário não tem iframe
+                } else { // The form doesn't have iframe.
                     let userInfo = document.getElementById('give_checkout_user_info');
                     userInfo.addEventListener('click', function () {
                         grecaptcha.ready(function () {
