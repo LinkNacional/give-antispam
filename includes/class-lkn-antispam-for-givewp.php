@@ -73,6 +73,10 @@ final class Lkn_Antispam_For_GiveWP {
         $this->set_locale();
         $this->define_admin_hooks();
         $this->define_public_hooks();
+        Lkn_Antispam_Helper::verify_plugin_dependencies();
+        $this->define_event_delete_old_logs();
+
+        // TODO arrumar
     }
 
     /**
@@ -118,6 +122,21 @@ final class Lkn_Antispam_For_GiveWP {
         return $this->version;
     }
 
+    public function define_cron_hook(): void {
+        add_action('lkn_antispam_delete_old_logs_cron_hook', array('Lkn_Antispam_Helper', 'delete_old_logs'));
+    }
+
+    // TODO criar função de chamada do wp_cron
+    // TODO criar uma função de definição do wp
+    private function define_event_delete_old_logs(): void {
+        wp_next_scheduled('lkn_antispam_delete_old_logs_cron_hook');
+        if ( ! wp_next_scheduled('lkn_antispam_delete_old_logs_cron_hook')) {
+            // Add timestamp plus a week
+            $time = time() + 604800;
+            wp_schedule_event($time, 'weekly', 'lkn_antispam_delete_old_logs_cron_hook');
+        }
+    }
+
     /**
      * Load the required dependencies for this plugin.
      *
@@ -160,7 +179,7 @@ final class Lkn_Antispam_For_GiveWP {
         /**
          * Load plugin files. (PROVISÓRIO) (PROVISÓRIO) (PROVISÓRIO) (PROVISÓRIO).
          */
-        require_once plugin_dir_path( __DIR__ ) . 'admin/partials/lkn-antispam-for-givewp-misc-functions.php';
+        require_once plugin_dir_path( __DIR__ ) . 'includes/class-lkn-antispam-for-givewp-helper.php';
 
         require_once plugin_dir_path( __DIR__ ) . 'public/partials/lkn-antispam-for-givewp-actions.php';
 
@@ -209,6 +228,7 @@ final class Lkn_Antispam_For_GiveWP {
 
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-        add_filter('plugin_action_links_give-antispam/lkn-antispam-for-givewp.php', '__lkn_antispam_for_givewp_plugin_row_meta', 10, 2);
+        add_filter('plugin_action_links_give-antispam/lkn-antispam-for-givewp.php', array('Lkn_Antispam_Helper', 'plugin_row_meta'), 10, 2);
+        add_action('give_init', array($this, 'define_cron_hook'), 10, 1);
     }
 }

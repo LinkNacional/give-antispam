@@ -14,7 +14,7 @@
  * Plugin Name:       Antispam Donation for GiveWP
  * Plugin URI:        https://www.linknacional.com/wordpress/plugins/
  * Description:       Performs verification and prevention of malicious donations.
- * Version:           1.2.0
+ * Version:           1.2.1
  * Author:            Link Nacional
  * Author URI:        https://www.linknacional.com/
  * License:           GPL-3.0+
@@ -30,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
     exit;
 }
 
-define('LKN_ANTISPAM_FOR_GIVEWP_VERSION', '1.2.0');
+define('LKN_ANTISPAM_FOR_GIVEWP_VERSION', '1.2.1');
 
 define('LKN_ANTISPAM_FOR_GIVEWP_MIN_GIVE_VERSION', '2.3.0');
 
@@ -83,7 +83,19 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-lkn-antispam-for-givewp.ph
 function run_lkn_antispam_for_givewp(): void {
     $plugin = new Lkn_Antispam_For_GiveWP();
     $plugin->run();
-
-    verifyPluginDependencies();
 }
 run_lkn_antispam_for_givewp();
+
+// function bl_cron_exec(): void {
+//     $message = 'TESTE TESTE TESTE';
+//     echo $message;
+// }
+
+// wp_next_scheduled( 'bl_cron_hook' );
+
+// add_action( 'bl_cron_hook', 'bl_cron_exec' );
+
+// if ( ! wp_next_scheduled('bl_cron_hook')) {
+//     $time = time() + 3600;
+//     wp_schedule_event( time(), 'hourly', 'bl_cron_hook' );
+// }

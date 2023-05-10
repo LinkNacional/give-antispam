@@ -4,7 +4,7 @@ Donate link: https://www.linknacional.com/wordpress/plugins/
 Tags: spam, antispam, givewp, give, donation.
 Requires at least: 5.5
 Tested up to: 6.1
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -76,7 +76,7 @@ The Antispam Donation for GiveWP is now activated.
 
 == Changelog ==
 
-= 1.2.1 - 14/04/2023 =
+= v1.2.1 = - 14/04/2023
 * Code refactoring.
 
 = v1.2.0 =

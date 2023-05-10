@@ -50,11 +50,10 @@ final class Lkn_Antispam_For_GiveWP_Public {
     }
 
     public function init_actions(): void {
-        add_action('give_checkout_error_checks', 'lkn_antispam_for_givewp_validate_donation', 10, 2);
-        add_action('give_checkout_error_checks', 'lkn_antispam_for_givewp_validate_recaptcha', 9, 2);
-        add_action('wp_enqueue_scripts', 'lkn_antispam_for_givewp_recaptcha_scripts');
-        add_action('wp_footer', 'lkn_antispam_for_givewp_print_my_inline_script');
-        add_action('give_after_donation_levels', 'lkn_antispam_for_givewp_custom_form_fields', 10, 1);
+        add_action('give_checkout_error_checks', 'validate_donation', 10, 2);
+        add_action('give_checkout_error_checks', 'validate_recaptcha', 9, 2);
+        add_action('wp_enqueue_scripts', 'recaptcha_scripts');
+        add_action('give_after_donation_levels', 'custom_form_fields', 10, 1);
     }
 
     /**
@@ -95,7 +94,19 @@ final class Lkn_Antispam_For_GiveWP_Public {
          * between the defined hooks and the functions defined in this
          * class.
          */
+        if (is_singular('give_forms')) {
+            wp_enqueue_script( 'lkn-antispam-for-givewp-public-js', plugin_dir_url( __FILE__ ) . '/js/lkn-antispam-for-givewp-public.js', $this->version, false );
 
-        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/lkn-antispam-for-givewp-public.js', $this->version, false );
+            $configs = get_configs();
+
+            $siteKeyData = array(
+                'sitekey' => $configs['siteRec'],
+            );
+
+            wp_localize_script('lkn-antispam-for-givewp-public-js', 'skData', $siteKeyData);
+        }
+
+        // Uncomment if statement to control output
+        // Only execute once per form.
     }
 }

@@ -235,6 +235,6 @@ final class Lkn_Antispam_For_GiveWP_Admin {
          * class.
          */
 
-        wp_enqueue_script( 'lkn-antispam-for-givewp-admin-js', plugin_dir_url( __FILE__ ) . '/js/lkn-antispam-for-givewp-admin.js', $this->version, false );
+        wp_enqueue_script( 'lkn-antispam-for-givewp-admin-js', plugin_dir_url( __FILE__ ) . '/js/lkn-antispam-for-givewp-admin.js', array('jquery'), $this->version, false );
     }
 }
