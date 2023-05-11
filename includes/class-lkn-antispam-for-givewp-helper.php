@@ -153,33 +153,32 @@ abstract class Lkn_Antispam_Helper {
      * Delete the log files older than 5 days.
      */
     final public static function delete_old_logs(): void {
-        $configs = Lkn_Antispam_Helper::get_configs();
-        $logsPath = $configs['basePath'];
+        echo 'Cron rodou';
+        // $configs = Lkn_Antispam_Helper::get_configs();
+        // $logsPath = $configs['basePath'];
 
-        error_log('Qualquer coisa', 3, $logsPath . '/teste.log');
+        // foreach (scandir($logsPath) as $logFilename) {
+        //     if ('.' !== $logFilename && '..' !== $logFilename && 'index.php' !== $logFilename && 'ip-spam.log' !== $logFilename) {
+        //         $logDate = explode('-', $logFilename)[0];
+        //         $logDate = explode('.', $logDate);
 
-        foreach (scandir($logsPath) as $logFilename) {
-            if ('.' !== $logFilename && '..' !== $logFilename && 'index.php' !== $logFilename && 'ip-spam.log' !== $logFilename) {
-                $logDate = explode('-', $logFilename)[0];
-                $logDate = explode('.', $logDate);
+        //         $logDay = $logDate[0];
+        //         $logMonth = $logDate[1];
+        //         $logYear = $logDate[2];
 
-                $logDay = $logDate[0];
-                $logMonth = $logDate[1];
-                $logYear = $logDate[2];
+        //         $logDate = $logYear . '-' . $logMonth . '-' . $logDay;
 
-                $logDate = $logYear . '-' . $logMonth . '-' . $logDay;
+        //         $logDate = new DateTime($logDate);
+        //         $now = new DateTime(date('Y-m-d'));
 
-                $logDate = new DateTime($logDate);
-                $now = new DateTime(date('Y-m-d'));
+        //         $interval = $logDate->diff($now);
+        //         $logAge = $interval->format('%a');
 
-                $interval = $logDate->diff($now);
-                $logAge = $interval->format('%a');
-
-                if ($logAge >= 5) {
-                    unlink($logsPath . '/' . $logFilename);
-                }
-            }
-        }
+        //         if ($logAge >= 5) {
+        //             unlink($logsPath . '/' . $logFilename);
+        //         }
+        //     }
+        // }
     }
 
     final public static function dependency_alert(): void {

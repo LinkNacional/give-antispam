@@ -75,8 +75,6 @@ final class Lkn_Antispam_For_GiveWP {
         $this->define_public_hooks();
         Lkn_Antispam_Helper::verify_plugin_dependencies();
         $this->define_event_delete_old_logs();
-
-        // TODO arrumar
     }
 
     /**
@@ -126,13 +124,10 @@ final class Lkn_Antispam_For_GiveWP {
         add_action('lkn_antispam_delete_old_logs_cron_hook', array('Lkn_Antispam_Helper', 'delete_old_logs'));
     }
 
-    // TODO criar função de chamada do wp_cron
-    // TODO criar uma função de definição do wp
+    // TODO Arrumar esse cron
     private function define_event_delete_old_logs(): void {
-        wp_next_scheduled('lkn_antispam_delete_old_logs_cron_hook');
         if ( ! wp_next_scheduled('lkn_antispam_delete_old_logs_cron_hook')) {
-            // Add timestamp plus a week
-            $time = time() + 604800;
+            $time = time() + ((7 * 24) * (60 * 60));
             wp_schedule_event($time, 'weekly', 'lkn_antispam_delete_old_logs_cron_hook');
         }
     }

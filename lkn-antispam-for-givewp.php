@@ -85,17 +85,3 @@ function run_lkn_antispam_for_givewp(): void {
     $plugin->run();
 }
 run_lkn_antispam_for_givewp();
-
-// function bl_cron_exec(): void {
-//     $message = 'TESTE TESTE TESTE';
-//     echo $message;
-// }
-
-// wp_next_scheduled( 'bl_cron_hook' );
-
-// add_action( 'bl_cron_hook', 'bl_cron_exec' );
-
-// if ( ! wp_next_scheduled('bl_cron_hook')) {
-//     $time = time() + 3600;
-//     wp_schedule_event( time(), 'hourly', 'bl_cron_hook' );
-// }

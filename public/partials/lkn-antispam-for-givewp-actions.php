@@ -172,10 +172,6 @@ final class Lkn_Antispam_Actions {
                 }
             }
 
-            // TODO Retirar função e configurar wp_cron
-            // Activates debug mode and saves a temporary log
-            // delete_old_logs();
-
             Lkn_Antispam_Actions::reg_log(array(
                 'ip' => $userIp,
                 'donation_ip' => $donationIp,
@@ -272,6 +268,7 @@ final class Lkn_Antispam_Actions {
                 $siteKey = $configs['siteRec'];
                 // Add you own google API Site key.
                 // $recResponse = sanitize_text_field($_POST['g-recaptcha-lkn-input']);
+                // TODO realocar trechos HTML
                 $html = <<<HTML
 
 			<input type="hidden" id="g-recaptcha-lkn-input" name="g-recaptcha-response" />
@@ -281,65 +278,7 @@ final class Lkn_Antispam_Actions {
             </div>
 
 			<script type="text/javascript">
-                // Check if the DOM has fully loaded.
-                window.addEventListener('DOMContentLoaded', function () {
 
-                let iframeLoader = parent.document.getElementsByClassName('iframe-loader')[0];
-                let totalWrapper = document.getElementsByClassName('give-total-wrap')[0];
-                let gNoticeWrapper = document.getElementById('g-notice-wrapper');
-
-                // Some Wordpress themes and pages hide the Recaptcha badge.
-                // Add a notice containing privacy policy and terms of use as required by the Recaptcha documentation.
-                // @see { https://developers.google.com/recaptcha/docs/faq#id-like-to-hide-the-recaptcha-badge.-what-is-allowed }
-                if (totalWrapper) {
-                    totalWrapper.append(gNoticeWrapper);
-                }
-
-                // If it is a legacy form, also modify the form attributes for GiveWP validation.
-                if (!iframeLoader) { // Verify for the existence of the iframe  loader specific to the multi-step form.
-                    let givePaymentSelect = document.getElementById('give-payment-mode-wrap');
-                    if (givePaymentSelect) {
-                        lknPrepareRecaptcha();
-                    } else {
-                        let paymentDiv = document.getElementById('give_purchase_form_wrap');
-                        paymentDiv.addEventListener('click', function () {
-                            grecaptcha.ready(function () {
-                                grecaptcha.execute('{$siteKey}', { action: 'submit' }).then(function (token) {
-                                    // Add your logic to submit to your backend server here.
-                                    document.getElementById('g-recaptcha-lkn-input').value = token;
-                                });
-                            });
-                        }, { once: true });
-                    }
-                } else { // The form doesn't have iframe.
-                    let userInfo = document.getElementById('give_checkout_user_info');
-                    userInfo.addEventListener('click', function () {
-                        grecaptcha.ready(function () {
-                            grecaptcha.execute('{$siteKey}', { action: 'submit' }).then(function (token) {
-                                // Add your logic to submit to your backend server here.
-                                document.getElementById('g-recaptcha-lkn-input').value = token;
-                            });
-                        });
-                    }, { once: true });
-                }
-                });
-
-                /**
-                * Detect HTML DOM object and add event listener on click to execute Recaptcha V3
-                *
-                * @return Boolean
-                *  */
-                function lknPrepareRecaptcha() {
-                    let paymentDiv = document.getElementById('give_purchase_form_wrap');
-                    paymentDiv.addEventListener('click', function () {
-                        grecaptcha.ready(function () {
-                            grecaptcha.execute('{$siteKey}', { action: 'submit' }).then(function (token) {
-                                // Add your logic to submit to your backend server here.
-                                document.getElementById('g-recaptcha-lkn-input').value = token;
-                            });
-                        });
-                    }, { once: true });
-                }
 			</script>
 
 			<div id="give-recaptcha-element" class="g-recaptcha" src="https://www.google.com/recaptcha/api.js?render={$siteKey}"></div>
@@ -354,7 +293,6 @@ final class Lkn_Antispam_Actions {
 			</style>
 HTML;
                 echo $html;
-                // TODO realocar trechos HTML
             }
         }
     }
