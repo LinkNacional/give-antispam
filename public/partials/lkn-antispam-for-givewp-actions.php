@@ -14,14 +14,16 @@ if ( ! defined('WPINC')) {
     exit;
 }
 
-final class Lkn_Antispam_Actions {
+final class Lkn_Antispam_Actions
+{
     /**
      * Makes a .log file for each spam report.
      *
      * @param string $message
      * @param array  $configs
      */
-    public static function reg_report($message, $configs): void {
+    public static function reg_report($message, $configs): void
+    {
         if ('enabled' === $configs['reportSpam']) {
             error_log($message, 3, $configs['baseReport']);
 
@@ -41,7 +43,8 @@ final class Lkn_Antispam_Actions {
      * @param string|array $log
      * @param array        $configs
      */
-    public static function reg_log($log, $configs): void {
+    public static function reg_log($log, $configs): void
+    {
         if ('enabled' === $configs['debug']) {
             $jsonLog = json_encode($log, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE) . "\n";
 
@@ -55,7 +58,8 @@ final class Lkn_Antispam_Actions {
      *
      * @return float
      */
-    public static function get_recaptcha_score() {
+    public static function get_recaptcha_score()
+    {
         $score = give_get_option('lkn_antispam_score_re_setting_field');
 
         if ($score < 0 || $score > 10) {
@@ -70,7 +74,8 @@ final class Lkn_Antispam_Actions {
      *
      * @return int
      */
-    public static function get_time_interval() {
+    public static function get_time_interval()
+    {
         $timeInterval = give_get_option('lkn_antispam_time_interval_setting_field');
 
         if ($timeInterval < 0) {
@@ -88,7 +93,8 @@ final class Lkn_Antispam_Actions {
      *
      * @return array
      */
-    public static function validate_donation($valid_data, $data) {
+    public static function validate_donation($valid_data, $data)
+    {
         $configs = Lkn_Antispam_Helper::get_configs();
 
         // Verify if plugin is active
@@ -203,7 +209,8 @@ final class Lkn_Antispam_Actions {
      *
      * @return array
      */
-    public static function validate_recaptcha($valid_data, $data) {
+    public static function validate_recaptcha($valid_data, $data)
+    {
         $configs = Lkn_Antispam_Helper::get_configs();
         // Verify if the plugin is enabled and ensure that it only runs once.
         if ('enabled' === $configs['antispamEnabled'] && ! isset($data['give_ajax'])) {
@@ -238,30 +245,14 @@ final class Lkn_Antispam_Actions {
     }
 
     /**
-     * Enqueue ReCAPTCHA Scripts.
-     */
-    public static function recaptcha_scripts(): void {
-        $configs = Lkn_Antispam_Helper::get_configs();
-        if ('enabled' === $configs['antispamEnabled']) {
-            if ('enabled' === $configs['recEnabled']) {
-                $siteKey = $configs['siteRec'];
-                wp_register_script('give-captcha-js', 'https://www.google.com/recaptcha/api.js?render=' . $siteKey);
-                // If you only want to enqueue on single form pages then uncomment if statement
-                if (is_singular('give_forms')) {
-                    wp_enqueue_script('give-captcha-js');
-                }
-            }
-        }
-    }
-
-    /**
      * Custom ReCAPTCHA Form Field.
      * This function adds the reCAPTCHA field above the "Donation Total" field.
      * Don't forget to update the sitekey!
      *
      * @param mixed $form_id
      */
-    public static function custom_form_fields($form_id): void {
+    public static function custom_form_fields($form_id): void
+    {
         $configs = Lkn_Antispam_Helper::get_configs();
         if ('enabled' === $configs['antispamEnabled']) {
             if ('enabled' === $configs['recEnabled']) {
@@ -269,28 +260,14 @@ final class Lkn_Antispam_Actions {
                 // Add you own google API Site key.
                 // $recResponse = sanitize_text_field($_POST['g-recaptcha-lkn-input']);
                 // TODO realocar trechos HTML
-                $html = <<<HTML
-
-			<input type="hidden" id="g-recaptcha-lkn-input" name="g-recaptcha-response" />
-
-            <div id="g-notice-wrapper" class="gNotice">
+                $html = <<<'HTML'
+            
+			<div id="g-notice-wrapper" class="gNotice">
                 This site is protected by reCAPTCHA and the <a href="https://policies.google.com/privacy" target="_blank">Privacy Policy</a> and Google <a href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.
             </div>
+            
+            <input type="hidden" id="g-recaptcha-lkn-input" name="g-recaptcha-response" />
 
-			<script type="text/javascript">
-
-			</script>
-
-			<div id="give-recaptcha-element" class="g-recaptcha" src="https://www.google.com/recaptcha/api.js?render={$siteKey}"></div>
-			<style>
-				.give-total-wrap {
-					flex-direction: column;
-				}
-				.gNotice {
-					margin: 15px 20px;
-					font-size: 15px;
-				}
-			</style>
 HTML;
                 echo $html;
             }

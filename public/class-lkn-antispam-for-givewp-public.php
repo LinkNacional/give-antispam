@@ -15,7 +15,8 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Antispam_For_GiveWP_Public {
+final class Lkn_Antispam_For_GiveWP_Public
+{
     /**
      * The ID of this plugin.
      *
@@ -42,17 +43,18 @@ final class Lkn_Antispam_For_GiveWP_Public {
      * @param string $plugin_name the name of the plugin
      * @param string $version     the version of this plugin
      */
-    public function __construct($plugin_name, $version) {
+    public function __construct($plugin_name, $version)
+    {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
 
         add_action('init', array($this, 'init_actions'));
     }
 
-    public function init_actions(): void {
+    public function init_actions(): void
+    {
         add_action('give_checkout_error_checks', 'validate_donation', 10, 2);
         add_action('give_checkout_error_checks', 'validate_recaptcha', 9, 2);
-        add_action('wp_enqueue_scripts', array('Lkn_Antispam_Actions', 'recaptcha_scripts'));
         add_action('give_after_donation_levels', array('Lkn_Antispam_Actions', 'custom_form_fields'), 10, 1);
     }
 
@@ -61,7 +63,8 @@ final class Lkn_Antispam_For_GiveWP_Public {
      *
      * @since    1.0.0
      */
-    public function enqueue_styles(): void {
+    public function enqueue_styles(): void
+    {
         /*
          * This function is provided for demonstration purposes only.
          *
@@ -82,7 +85,8 @@ final class Lkn_Antispam_For_GiveWP_Public {
      *
      * @since    1.0.0
      */
-    public function enqueue_scripts(): void {
+    public function enqueue_scripts(): void
+    {
         /*
          * This function is provided for demonstration purposes only.
          *
@@ -94,10 +98,21 @@ final class Lkn_Antispam_For_GiveWP_Public {
          * between the defined hooks and the functions defined in this
          * class.
          */
-        if (is_singular('give_forms')) {
-            wp_enqueue_script( 'lkn-antispam-for-givewp-public-js', plugin_dir_url( __FILE__ ) . '/js/lkn-antispam-for-givewp-public.js', $this->version, false );
 
+        if (is_singular('give_forms')) {
             $configs = Lkn_Antispam_Helper::get_configs();
+
+            if ('enabled' === $configs['antispamEnabled']) {
+                if ('enabled' === $configs['recEnabled']) {
+                    $siteKey = $configs['siteRec'];
+                    wp_register_script('give-captcha-js', 'https://www.google.com/recaptcha/api.js?render=' . $siteKey);
+                    // If you only want to enqueue on single form pages then uncomment if statement
+
+                    wp_enqueue_script('give-captcha-js');
+                }
+            }
+
+            wp_enqueue_script( 'lkn-antispam-for-givewp-public-js', plugin_dir_url( __FILE__ ) . '/js/lkn-antispam-for-givewp-public.js', array('jquery', 'give-captcha-js'), $this->version, false );
 
             $siteKeyData = array(
                 'sitekey' => $configs['siteRec'],
