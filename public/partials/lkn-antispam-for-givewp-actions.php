@@ -259,7 +259,6 @@ final class Lkn_Antispam_Actions
                 $siteKey = $configs['siteRec'];
                 // Add you own google API Site key.
                 // $recResponse = sanitize_text_field($_POST['g-recaptcha-lkn-input']);
-                // TODO realocar trechos HTML
                 $html = <<<'HTML'
             
 			<div id="g-notice-wrapper" class="gNotice">
