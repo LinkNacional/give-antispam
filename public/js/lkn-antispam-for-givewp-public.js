@@ -21,14 +21,12 @@
     // Verify for the existence of the iframe loader, specific to the multi-step form.
     if (!iframeLoader) {
       lknPrepareRecaptcha('#give_checkout_user_info')
-      console.log('Teste 3')
 
     // The form have iframe.
     // TODO em form multi-step tá sendo chamado antes do usuário chegar na página que tem o give_purchase_form_wrap
     } else {
       $('#give_purchase_form_wrap').ready(function () {
         lknPrepareRecaptcha('#give_purchase_form_wrap')
-        console.log('Teste 2')
       })
     }
   })
@@ -49,6 +47,7 @@
   **/
   function lknPrepareRecaptcha (element) {
     $(element).one('click', function () {
+      $('#g-recaptcha-lkn-input').val('5')
       // eslint-disable-next-line no-undef
       grecaptcha.ready(function () {
         // eslint-disable-next-line no-undef
@@ -57,7 +56,6 @@
           $('#g-recaptcha-lkn-input').value = token
         })
       })
-      console.log('Run')
     })
   }
 

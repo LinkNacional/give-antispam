@@ -109,7 +109,13 @@ final class Lkn_Antispam_Actions
 
             if (in_array($userIp, $bannedIps, true)) {
                 Lkn_Antispam_Actions::reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, BANNED IP  <br> ' . \PHP_EOL, $configs);
-                give_set_error('spam_donation', __('Your IP address is banned.', 'antispam-donation-for-givewp'));
+
+                return give_set_error('spam_donation', __('Your IP address is banned.', 'antispam-donation-for-givewp'));
+                // TODO Não está aparecendo a mensagem de IP Banido para o user. Quando testar o ban por reCAPTCHA, consertar.
+                // TODO No geral, todas mensagens de Erro desse tipo, só são visíveis na área de Network do console.
+                // TODO Fonte do problema de logs era o parametro $configs['basePath'] do helper, que estava errado, arrumar tudo que usar esse param.
+                // TODO Mesmo com o IP registrado no report e no registro, a doação funciona após um tempo.
+                // TODO Tirar duvida com Emanuel: Os ips nos logs e no ip-spam-log devem ser bloqueados ao tentar fazer uma doação?
             }
 
             // Get givewp payment data
@@ -178,14 +184,12 @@ final class Lkn_Antispam_Actions
                 }
             }
 
-            Lkn_Antispam_Actions::reg_log(array(
+            return Lkn_Antispam_Actions::reg_log(array(
                 'ip' => $userIp,
                 'donation_ip' => $donationIp,
                 'timestamp_interval' => $minutes,
                 'form_id' => $data['give-form-id'],
             ), $configs);
-
-            return $valid_data;
         }
 
         return $valid_data;

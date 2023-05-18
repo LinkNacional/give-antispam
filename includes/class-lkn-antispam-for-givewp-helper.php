@@ -7,13 +7,15 @@ if ( ! defined('WPINC')) {
     exit;
 }
 
-abstract class Lkn_Antispam_Helper {
+abstract class Lkn_Antispam_Helper
+{
     /**
      * Show plugin dependency notice.
      *
      * @since
      */
-    final public static function verify_plugin_dependencies(): void {
+    final public static function verify_plugin_dependencies(): void
+    {
         // Load plugin helper functions.
         if ( ! function_exists('deactivate_plugins') || ! function_exists('is_plugin_active')) {
             require_once ABSPATH . '/wp-admin/includes/plugin.php';
@@ -63,7 +65,8 @@ abstract class Lkn_Antispam_Helper {
         }
     }
 
-    final public static function dependency_notice(): void {
+    final public static function dependency_notice(): void
+    {
         // Admin notice.
         $message = sprintf(
             '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a>  %5$s %6$s+ %7$s.</p></div>',
@@ -84,7 +87,8 @@ abstract class Lkn_Antispam_Helper {
      *
      * @since
      */
-    final public static function inactive_notice(): void {
+    final public static function inactive_notice(): void
+    {
         // Admin notice.
         $message = sprintf(
             '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a> %5$s.</p></div>',
@@ -108,7 +112,8 @@ abstract class Lkn_Antispam_Helper {
      *
      * @return array
      */
-    final public static function plugin_row_meta($plugin_meta) {
+    final public static function plugin_row_meta($plugin_meta)
+    {
         $new_meta_links['setting'] = sprintf(
             '<a href="%1$s">%2$s</a>',
             admin_url('edit.php?post_type=give_forms&page=give-settings&tab=general&section=access-control'),
@@ -123,12 +128,13 @@ abstract class Lkn_Antispam_Helper {
      *
      * @return array
      */
-    final public static function get_configs() {
+    final public static function get_configs()
+    {
         $configs = array();
 
-        $configs['basePath'] = __DIR__ . '/../../logs';
-        $configs['base'] = $configs['basePath'] . '/' . date('d.m.Y-H.i.s') . '.log';
-        $configs['baseReport'] = $configs['basePath'] . '/ip-spam.log';
+        $configs['basePath'] = LKN_ANTISPAM_FOR_GIVEWP_DIR;
+        $configs['base'] = $configs['basePath'] . 'logs/' . date('d.m.Y-H.i.s') . '.log';
+        $configs['baseReport'] = $configs['basePath'] . 'logs/ip-spam.log';
 
         // Internal debug option
         $configs['debug'] = give_get_option('lkn_antispam_debug_setting_field');
@@ -152,40 +158,42 @@ abstract class Lkn_Antispam_Helper {
     /**
      * Delete the log files older than 5 days.
      */
-    final public static function delete_old_logs(): void {
-        echo 'Cron rodou';
-        // $configs = Lkn_Antispam_Helper::get_configs();
-        // $logsPath = $configs['basePath'];
+    final public static function delete_old_logs(): void
+    {
+        $configs = Lkn_Antispam_Helper::get_configs();
+        $logsPath = $configs['basePath'];
 
-        // foreach (scandir($logsPath) as $logFilename) {
-        //     if ('.' !== $logFilename && '..' !== $logFilename && 'index.php' !== $logFilename && 'ip-spam.log' !== $logFilename) {
-        //         $logDate = explode('-', $logFilename)[0];
-        //         $logDate = explode('.', $logDate);
+        foreach (scandir($logsPath) as $logFilename) {
+            if ('.' !== $logFilename && '..' !== $logFilename && 'index.php' !== $logFilename && 'ip-spam.log' !== $logFilename) {
+                $logDate = explode('-', $logFilename)[0];
+                $logDate = explode('.', $logDate);
 
-        //         $logDay = $logDate[0];
-        //         $logMonth = $logDate[1];
-        //         $logYear = $logDate[2];
+                $logDay = $logDate[0];
+                $logMonth = $logDate[1];
+                $logYear = $logDate[2];
 
-        //         $logDate = $logYear . '-' . $logMonth . '-' . $logDay;
+                $logDate = $logYear . '-' . $logMonth . '-' . $logDay;
 
-        //         $logDate = new DateTime($logDate);
-        //         $now = new DateTime(date('Y-m-d'));
+                $logDate = new DateTime($logDate);
+                $now = new DateTime(date('Y-m-d'));
 
-        //         $interval = $logDate->diff($now);
-        //         $logAge = $interval->format('%a');
+                $interval = $logDate->diff($now);
+                $logAge = $interval->format('%a');
 
-        //         if ($logAge >= 5) {
-        //             unlink($logsPath . '/' . $logFilename);
-        //         }
-        //     }
-        // }
+                if ($logAge >= 5) {
+                    unlink($logsPath . '/' . $logFilename);
+                }
+            }
+        }
     }
 
-    final public static function dependency_alert(): void {
+    final public static function dependency_alert(): void
+    {
         add_action('admin_notices', array('Lkn_Antispam_Helper', 'dependency_notice'));
     }
 
-    final public static function inactive_alert(): void {
+    final public static function inactive_alert(): void
+    {
         add_action('admin_notices', array('Lkn_Antispam_Helper', 'inactive_notice'));
     }
 }
