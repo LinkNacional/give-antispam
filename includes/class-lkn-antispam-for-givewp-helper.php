@@ -161,7 +161,7 @@ abstract class Lkn_Antispam_Helper
     final public static function delete_old_logs(): void
     {
         $configs = Lkn_Antispam_Helper::get_configs();
-        $logsPath = $configs['basePath'];
+        $logsPath = $configs['basePath'] . 'logs/';
 
         foreach (scandir($logsPath) as $logFilename) {
             if ('.' !== $logFilename && '..' !== $logFilename && 'index.php' !== $logFilename && 'ip-spam.log' !== $logFilename) {

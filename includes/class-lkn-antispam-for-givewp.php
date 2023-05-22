@@ -23,7 +23,8 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Antispam_For_GiveWP {
+final class Lkn_Antispam_For_GiveWP
+{
     /**
      * The loader that's responsible for maintaining and registering all hooks that power
      * the plugin.
@@ -61,7 +62,8 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @since    1.0.0
      */
-    public function __construct() {
+    public function __construct()
+    {
         if ( defined( 'LKN_ANTISPAM_FOR_GIVEWP_VERSION' ) ) {
             $this->version = LKN_ANTISPAM_FOR_GIVEWP_VERSION;
         } else {
@@ -82,7 +84,8 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @since    1.0.0
      */
-    public function run(): void {
+    public function run(): void
+    {
         $this->loader->run();
     }
 
@@ -94,7 +97,8 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @return string the name of the plugin
      */
-    public function get_plugin_name() {
+    public function get_plugin_name()
+    {
         return $this->plugin_name;
     }
 
@@ -105,7 +109,8 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @return Lkn_Antispam_For_GiveWP_Loader orchestrates the hooks of the plugin
      */
-    public function get_loader() {
+    public function get_loader()
+    {
         return $this->loader;
     }
 
@@ -116,16 +121,18 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @return string the version number of the plugin
      */
-    public function get_version() {
+    public function get_version()
+    {
         return $this->version;
     }
 
-    public function define_cron_hook(): void {
+    public function define_cron_hook(): void
+    {
         add_action('lkn_antispam_delete_old_logs_cron_hook', array('Lkn_Antispam_Helper', 'delete_old_logs'));
     }
 
-    // TODO Arrumar esse cron
-    private function define_event_delete_old_logs(): void {
+    private function define_event_delete_old_logs(): void
+    {
         if ( ! wp_next_scheduled('lkn_antispam_delete_old_logs_cron_hook')) {
             $time = time() + ((7 * 24) * (60 * 60));
             wp_schedule_event($time, 'weekly', 'lkn_antispam_delete_old_logs_cron_hook');
@@ -147,7 +154,8 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @since    1.0.0
      */
-    private function load_dependencies(): void {
+    private function load_dependencies(): void
+    {
         /**
          * The class responsible for orchestrating the actions and filters of the
          * core plugin.
@@ -193,7 +201,8 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @since    1.0.0
      */
-    private function set_locale(): void {
+    private function set_locale(): void
+    {
         $plugin_i18n = new Lkn_Antispam_For_GiveWP_i18n();
 
         $this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
@@ -205,7 +214,8 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @since    1.0.0
      */
-    private function define_admin_hooks(): void {
+    private function define_admin_hooks(): void
+    {
         $plugin_admin = new Lkn_Antispam_For_GiveWP_Admin( $this->get_plugin_name(), $this->get_version() );
 
         $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
@@ -218,7 +228,8 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @since    1.0.0
      */
-    private function define_public_hooks(): void {
+    private function define_public_hooks(): void
+    {
         $plugin_public = new Lkn_Antispam_For_GiveWP_Public( $this->get_plugin_name(), $this->get_version() );
 
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );

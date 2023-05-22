@@ -111,11 +111,6 @@ final class Lkn_Antispam_Actions
                 Lkn_Antispam_Actions::reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, BANNED IP  <br> ' . \PHP_EOL, $configs);
 
                 return give_set_error('spam_donation', __('Your IP address is banned.', 'antispam-donation-for-givewp'));
-                // TODO Não está aparecendo a mensagem de IP Banido para o user. Quando testar o ban por reCAPTCHA, consertar.
-                // TODO No geral, todas mensagens de Erro desse tipo, só são visíveis na área de Network do console.
-                // TODO Fonte do problema de logs era o parametro $configs['basePath'] do helper, que estava errado, arrumar tudo que usar esse param.
-                // TODO Mesmo com o IP registrado no report e no registro, a doação funciona após um tempo.
-                // TODO Tirar duvida com Emanuel: Os ips nos logs e no ip-spam-log devem ser bloqueados ao tentar fazer uma doação?
             }
 
             // Get givewp payment data
@@ -237,10 +232,12 @@ final class Lkn_Antispam_Actions
                     // User must have validated the reCAPTCHA to proceed with donation.
                     if ( ! isset($data['g-recaptcha-response']) || empty($data['g-recaptcha-response'])) {
                         give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Please contact the site administrator for more information.', 'antispam-donation-for-givewp'));
+                        give_set_error('g-recaptcha-response', 'Recaptcha not verified');
                     }
                 } elseif ( ! isset($recaptcha_data->score) || $recaptcha_data->score < $configs['scoreRec']) {
                     // If the score is lower than the defined value, display an error message.
                     give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Please contact the site administrator for more information.', 'antispam-donation-for-givewp'));
+                    give_set_error('g-recaptcha-response', 'Recaptcha not verified');
                 }
             }
         }

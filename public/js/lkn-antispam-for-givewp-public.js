@@ -23,11 +23,18 @@
       lknPrepareRecaptcha('#give_checkout_user_info')
 
     // The form have iframe.
-    // TODO em form multi-step tá sendo chamado antes do usuário chegar na página que tem o give_purchase_form_wrap
     } else {
-      $('#give_purchase_form_wrap').ready(function () {
-        lknPrepareRecaptcha('#give_purchase_form_wrap')
-      })
+      searchMultiStep('#give_purchase_form_wrap', 8000, 10)
+        .then(function () {
+          console.log($('#give_purchase_form_wrap'))
+          lknPrepareRecaptcha('#give_purchase_form_wrap')
+        })
+        .catch(function (error) {
+          console.error('Erro:', error.message)
+        })
+      // $('#give_purchase_form_wrap').ready(function () {
+      //   lknPrepareRecaptcha('#give_purchase_form_wrap')
+      // })
     }
   })
 
@@ -47,7 +54,7 @@
   **/
   function lknPrepareRecaptcha (element) {
     $(element).one('click', function () {
-      $('#g-recaptcha-lkn-input').val('5')
+      $('#g-recaptcha-lkn-input').val('10')
       // eslint-disable-next-line no-undef
       grecaptcha.ready(function () {
         // eslint-disable-next-line no-undef
@@ -56,6 +63,32 @@
           $('#g-recaptcha-lkn-input').value = token
         })
       })
+    })
+  }
+
+  /**
+  * Detect HTML DOM object and verify your existence.
+  *
+  * @return
+  **/
+  function searchMultiStep (idOrClassElemento, intervalo, maxTentativas) {
+    return new Promise(function (resolve, reject) {
+      let tentativas = 0
+
+      const intervalId = setInterval(function () {
+        const elemento = $(idOrClassElemento).get(1)
+
+        if (elemento) {
+          clearInterval(intervalId)
+          resolve(elemento)
+        } else {
+          tentativas++
+          if (tentativas >= maxTentativas) {
+            clearInterval(intervalId)
+            reject(new Error('Erro'))
+          }
+        }
+      }, intervalo)
     })
   }
 
