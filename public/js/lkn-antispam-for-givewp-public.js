@@ -24,17 +24,41 @@
 
     // The form have iframe.
     } else {
-      searchMultiStep('#give_purchase_form_wrap', 8000, 10)
-        .then(function () {
-          console.log($('#give_purchase_form_wrap'))
-          lknPrepareRecaptcha('#give_purchase_form_wrap')
+      // TODO habilitar métodos de pagamento e ver se vai funcionar.
+      // HTML tag body in Iframe
+      const iframeBody = iframeLoader.firstChild.contentDocument.childNodes[1].childNodes[1]
+
+      let arrayAux = []
+
+      filterElements('DIV', iframeBody, arrayAux)
+      const iframeForm = arrayAux[0]
+      arrayAux = []
+
+      filterElements('FORM', iframeForm, arrayAux)
+      const iframeFormDiv = arrayAux[0]
+      arrayAux = []
+
+      filterElements('DIV', iframeFormDiv, arrayAux)
+      const iframeAmountSection = arrayAux[1]
+      arrayAux = []
+
+      filterElements('INPUT', iframeAmountSection, arrayAux)
+      const iframeRecaptchaInput = arrayAux[0]
+      arrayAux = []
+
+      console.log(iframeRecaptchaInput)
+
+      $(iframeForm).one('click', function () {
+        $(iframeRecaptchaInput).val('10')
+        // eslint-disable-next-line no-undef
+        grecaptcha.ready(function () {
+          // eslint-disable-next-line no-undef
+          grecaptcha.execute(SITEKEY, { action: 'submit' }).then(function (token) {
+            // Add your logic to submit to your backend server here.
+            $('#g-recaptcha-lkn-input').value = token
+          })
         })
-        .catch(function (error) {
-          console.error('Erro:', error.message)
-        })
-      // $('#give_purchase_form_wrap').ready(function () {
-      //   lknPrepareRecaptcha('#give_purchase_form_wrap')
-      // })
+      })
     }
   })
 
@@ -66,30 +90,18 @@
     })
   }
 
-  /**
-  * Detect HTML DOM object and verify your existence.
-  *
-  * @return
-  **/
-  function searchMultiStep (idOrClassElemento, intervalo, maxTentativas) {
-    return new Promise(function (resolve, reject) {
-      let tentativas = 0
-
-      const intervalId = setInterval(function () {
-        const elemento = $(idOrClassElemento).get(1)
-
-        if (elemento) {
-          clearInterval(intervalId)
-          resolve(elemento)
-        } else {
-          tentativas++
-          if (tentativas >= maxTentativas) {
-            clearInterval(intervalId)
-            reject(new Error('Erro'))
-          }
-        }
-      }, intervalo)
-    })
+  // /**
+  // * Filter equals elements in an HTML element.
+  // *
+  // * @return
+  // **/
+  function filterElements (elementType, parentElement, elementsArray) {
+    for (let i = 0; i < parentElement.childNodes.length; i++) {
+      const node = parentElement.childNodes[i]
+      if (node.nodeType === 1 && node.nodeName === elementType) {
+        elementsArray.push(node)
+      }
+    }
   }
 
 // eslint-disable-next-line no-undef

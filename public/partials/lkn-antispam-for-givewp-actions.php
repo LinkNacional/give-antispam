@@ -110,7 +110,7 @@ final class Lkn_Antispam_Actions
             if (in_array($userIp, $bannedIps, true)) {
                 Lkn_Antispam_Actions::reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, BANNED IP  <br> ' . \PHP_EOL, $configs);
 
-                return give_set_error('spam_donation', __('Your IP address is banned.', 'antispam-donation-for-givewp'));
+                return give_set_error('g-recaptcha-response', __('Your IP address is banned.', 'antispam-donation-for-givewp'));
             }
 
             // Get givewp payment data
@@ -163,7 +163,7 @@ final class Lkn_Antispam_Actions
                                     ++$donationCounter;
                                 } else {
                                     Lkn_Antispam_Actions::reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, TOO MANY ATTEMPTS  <br> ' . \PHP_EOL, $configs);
-                                    give_set_error('spam_donation', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Try using a different email address or contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
+                                    give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Try using a different email address or contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
                                 }
                             }
                         } else {
@@ -172,7 +172,7 @@ final class Lkn_Antispam_Actions
                                 ++$donationCounter;
                             } else {
                                 Lkn_Antispam_Actions::reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, TOO MANY ATTEMPTS  <br> ' . \PHP_EOL, $configs);
-                                give_set_error('spam_donation', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Try using a different email address or contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
+                                give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Try using a different email address or contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
                             }
                         }
                     }
@@ -231,13 +231,13 @@ final class Lkn_Antispam_Actions
                 if ( ! isset($recaptcha_data->success) || false == $recaptcha_data->success) {
                     // User must have validated the reCAPTCHA to proceed with donation.
                     if ( ! isset($data['g-recaptcha-response']) || empty($data['g-recaptcha-response'])) {
-                        give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Please contact the site administrator for more information.', 'antispam-donation-for-givewp'));
-                        give_set_error('g-recaptcha-response', 'Recaptcha not verified');
+                        // give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Please contact the site administrator for more information.', 'antispam-donation-for-givewp'));
+                        give_set_error('g-recaptcha-response', 'The reCAPTCHA was not verified');
                     }
                 } elseif ( ! isset($recaptcha_data->score) || $recaptcha_data->score < $configs['scoreRec']) {
                     // If the score is lower than the defined value, display an error message.
-                    give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Please contact the site administrator for more information.', 'antispam-donation-for-givewp'));
-                    give_set_error('g-recaptcha-response', 'Recaptcha not verified');
+                    // give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Please contact the site administrator for more information.', 'antispam-donation-for-givewp'));
+                    give_set_error('g-recaptcha-response', 'The reCAPTCHA was not verified (score)');
                 }
             }
         }
