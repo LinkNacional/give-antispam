@@ -90,11 +90,11 @@
     })
   }
 
-  // /**
-  // * Filter equals elements in an HTML element.
-  // *
-  // * @return
-  // **/
+  /**
+  * Filter equals elements in an HTML element.
+  *
+  * @return
+  **/
   function filterElements (elementType, parentElement, elementsArray) {
     for (let i = 0; i < parentElement.childNodes.length; i++) {
       const node = parentElement.childNodes[i]
