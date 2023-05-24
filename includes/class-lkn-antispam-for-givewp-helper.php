@@ -107,8 +107,7 @@ abstract class Lkn_Antispam_Helper
      *
      * @since
      *
-     * @param array  $plugin_meta an array of the plugin's metadata
-     * @param string $plugin_file path to the plugin file, relative to the plugins directory
+     * @param array $plugin_meta an array of the plugin's metadata
      *
      * @return array
      */

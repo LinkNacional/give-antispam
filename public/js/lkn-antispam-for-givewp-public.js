@@ -20,45 +20,45 @@
     // If it is a legacy form, also modify the form attributes for GiveWP validation.
     // Verify for the existence of the iframe loader, specific to the multi-step form.
     if (!iframeLoader) {
-      lknPrepareRecaptcha('#give_checkout_user_info')
+      lknPrepareRecaptcha('#give_checkout_user_info', '#g-recaptcha-lkn-input')
 
     // The form have iframe.
     } else {
-      // TODO habilitar métodos de pagamento e ver se vai funcionar.
-      // HTML tag body in Iframe
       const iframeBody = iframeLoader.firstChild.contentDocument.childNodes[1].childNodes[1]
-
       let arrayAux = []
 
-      filterElements('DIV', iframeBody, arrayAux)
+      filterElementsByClass('give-form-wrap give-embed-form give-viewing-form-in-iframe', iframeBody, arrayAux)
       const iframeForm = arrayAux[0]
       arrayAux = []
 
-      filterElements('FORM', iframeForm, arrayAux)
+      filterElementsByType('FORM', iframeForm, arrayAux)
       const iframeFormDiv = arrayAux[0]
       arrayAux = []
 
-      filterElements('DIV', iframeFormDiv, arrayAux)
-      const iframeAmountSection = arrayAux[1]
+      filterElementsByClass('give-form-section give-donation-amount-section', iframeFormDiv, arrayAux)
+      const iframeRecaptchaSection = arrayAux[0]
       arrayAux = []
 
-      filterElements('INPUT', iframeAmountSection, arrayAux)
-      const iframeRecaptchaInput = arrayAux[0]
-      arrayAux = []
+      // For classic template
+      if (iframeRecaptchaSection !== undefined) {
+        filterElementsById('g-recaptcha-lkn-input', iframeRecaptchaSection, arrayAux)
+        const iframeRecaptchaInput = arrayAux[0]
+        arrayAux = []
 
-      console.log(iframeRecaptchaInput)
+        lknPrepareRecaptcha(iframeForm, iframeRecaptchaInput)
 
-      $(iframeForm).one('click', function () {
-        $(iframeRecaptchaInput).val('10')
-        // eslint-disable-next-line no-undef
-        grecaptcha.ready(function () {
-          // eslint-disable-next-line no-undef
-          grecaptcha.execute(SITEKEY, { action: 'submit' }).then(function (token) {
-            // Add your logic to submit to your backend server here.
-            $('#g-recaptcha-lkn-input').value = token
-          })
-        })
-      })
+        // For multi step template
+      } else {
+        filterElementsByClass('give-section choose-amount', iframeFormDiv, arrayAux)
+        const iframeRecaptchaSection = arrayAux[0]
+        arrayAux = []
+
+        filterElementsById('g-recaptcha-lkn-input', iframeRecaptchaSection, arrayAux)
+        const iframeRecaptchaInput = arrayAux[0]
+        arrayAux = []
+
+        lknPrepareRecaptcha(iframeForm, iframeRecaptchaInput)
+      }
     }
   })
 
@@ -76,9 +76,9 @@
   *
   * @return Boolean
   **/
-  function lknPrepareRecaptcha (element) {
+  function lknPrepareRecaptcha (element, recInput) {
     $(element).one('click', function () {
-      $('#g-recaptcha-lkn-input').val('10')
+      $(recInput).val('10')
       // eslint-disable-next-line no-undef
       grecaptcha.ready(function () {
         // eslint-disable-next-line no-undef
@@ -90,12 +90,41 @@
     })
   }
 
+  // Functions for search HTML elements in iframe.
   /**
-  * Filter equals elements in an HTML element.
+  * Filter elements by ID in an HTML element.
   *
   * @return
   **/
-  function filterElements (elementType, parentElement, elementsArray) {
+  function filterElementsById (elementId, parentElement, elementsArray) {
+    for (let i = 0; i < parentElement.childNodes.length; i++) {
+      const node = parentElement.childNodes[i]
+      if (node.nodeType === 1 && node.id === elementId) {
+        elementsArray.push(node)
+      }
+    }
+  }
+
+  /**
+  * Filter elements by Class in an HTML element.
+  *
+  * @return
+  **/
+  function filterElementsByClass (elementClass, parentElement, elementsArray) {
+    for (let i = 0; i < parentElement.childNodes.length; i++) {
+      const node = parentElement.childNodes[i]
+      if (node.classList && node.classList.value === elementClass) {
+        elementsArray.push(node)
+      }
+    }
+  }
+
+  /**
+  * Filter elements by type in an HTML element.
+  *
+  * @return
+  **/
+  function filterElementsByType (elementType, parentElement, elementsArray) {
     for (let i = 0; i < parentElement.childNodes.length; i++) {
       const node = parentElement.childNodes[i]
       if (node.nodeType === 1 && node.nodeName === elementType) {

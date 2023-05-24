@@ -112,3 +112,6 @@ msgstr ""
 
 msgid "The email you are using has been flagged as being used in SPAM comments or donations by our system. Please contact the site administrator for more information."
 msgstr ""
+
+msgid "The reCAPTCHA was not verified, try again."
+msgstr ""

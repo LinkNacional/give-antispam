@@ -112,3 +112,6 @@ msgstr "O e-mail que você está usando foi sinalizado como sendo usado em comen
 
 msgid "The email you are using has been flagged as being used in SPAM comments or donations by our system. Please contact the site administrator for more information."
 msgstr "O e-mail que você está usando foi sinalizado como sendo usado em comentários de SPAM ou doações por nosso sistema. Entre em contato com o administrador do site para mais informações."
+
+msgid "The reCAPTCHA was not verified, try again."
+msgstr "O reCAPTCHA não foi verificado, tente novamente"

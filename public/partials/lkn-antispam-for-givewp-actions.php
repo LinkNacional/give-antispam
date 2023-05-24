@@ -232,12 +232,12 @@ final class Lkn_Antispam_Actions
                     // User must have validated the reCAPTCHA to proceed with donation.
                     if ( ! isset($data['g-recaptcha-response']) || empty($data['g-recaptcha-response'])) {
                         // give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Please contact the site administrator for more information.', 'antispam-donation-for-givewp'));
-                        give_set_error('g-recaptcha-response', 'The reCAPTCHA was not verified');
+                        give_set_error('g-recaptcha-response', __('The reCAPTCHA was not verified, try again.', 'antispam-donation-for-givewp'));
                     }
                 } elseif ( ! isset($recaptcha_data->score) || $recaptcha_data->score < $configs['scoreRec']) {
                     // If the score is lower than the defined value, display an error message.
                     // give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Please contact the site administrator for more information.', 'antispam-donation-for-givewp'));
-                    give_set_error('g-recaptcha-response', 'The reCAPTCHA was not verified (score)');
+                    give_set_error('g-recaptcha-response', __('The reCAPTCHA was not verified, try again.', 'antispam-donation-for-givewp'));
                 }
             }
         }
