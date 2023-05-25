@@ -1,0 +1,114 @@
+#: Antispam Donation For GiveWP tradução pt_BR
+msgid "Performs verification and prevention of malicious donations."
+msgstr "Faz a verificação e prevenção de doações mal intencionadas."
+
+msgid "Enable spam donation protection"
+msgstr "Habilitar a proteção de doações spam"
+
+msgid "Activate or deactivate the Antispam plugin, which will block suspicious donations."
+msgstr "Ative ou desative o plugin Antispam, esse plugin fará o bloqueio de doações suspeitas."
+
+msgid "Enabled"
+msgstr "Habilitado"
+
+msgid "Disabled"
+msgstr "Desabilitado"
+
+msgid "Enable debug"
+msgstr "Habilitar debug"
+
+msgid "Enable logs."
+msgstr "Habilita o registro de logs."
+
+msgid "Banned IPs"
+msgstr "IPs banidos"
+
+msgid "Separete the IPs by jumping a line with the Enter key."
+msgstr "Separar os IPs pulando uma linha com a tecla Enter."
+
+msgid "Limit on donations within a time interval"
+msgstr "Limite de doações no intervalo de tempo"
+
+msgid "Number of donations a customer can make in a certain period of time."
+msgstr "Número de doações que um cliente pode fazer em determinado período de tempo."
+
+msgid "Interval between donations"
+msgstr "Intervalo entre doações"
+
+msgid "Time interval between donations a customer can make (in minutes)."
+msgstr "Intervalo de tempo entre doações que um cliente pode fazer (em minutos)."
+
+msgid "Limit donations to the same payment method"
+msgstr "Limitar doações para a mesma forma de pagamento"
+
+msgid "Enable to limit consecutive doantions that have the same payment methods."
+msgstr "Ative para limitar doações em sequência que tenham os mesmos métodos de pagamento."
+
+msgid "Save antispam report"
+msgstr "Salvar relatório anti-spam"
+
+msgid "Enable to save a report containing blocked spam donations."
+msgstr "Ative para salvar um relatório contendo as doações de spam bloqueadas."
+
+msgid "Blocked spam report."
+msgstr "Relatório de spam bloqueado."
+
+msgid "Recaptcha donation form"
+msgstr "Formulário de doação Recaptcha"
+
+msgid "Enable to activate recaptcha on donation forms."
+msgstr "Ative para habilitar o recaptcha nos formulários de doação."
+
+msgid "Generate Recaptcha V3 keys here."
+msgstr "Gere as chaves do Recaptcha V3 aqui."
+
+msgid "Recaptcha site key"
+msgstr "Chave Recaptcha do site"
+
+msgid "Google Recaptcha V3 service key."
+msgstr "Chave do serviço Google Recaptcha V3."
+
+msgid "Recaptcha secret key"
+msgstr "Chave Recaptcha secreta"
+
+msgid "Google Recaptcha V3 secret key."
+msgstr "Chave secreta do Google Recaptcha V3."
+
+msgid "Minimum score"
+msgstr "Score mínimo"
+
+msgid "The minimum score validated by Recaptcha for donations to be accepted. Varies between 0 and 10."
+msgstr "O score mínimo validado pelo Recaptcha para que as doações sejam aceitas. Varia entre 0 e 10."
+
+msgid "Activation Error:"
+msgstr "Erro de Ativação:"
+
+msgid "You must have"
+msgstr "Você deve ter o"
+
+msgid "Give"
+msgstr "Give"
+
+msgid "version"
+msgstr "versão"
+
+msgid "for the Give Antispam to activate"
+msgstr "para ativar o Give Antispam"
+
+msgid "plugin installed and activated for the Give Antispam"
+msgstr "plugin instalado e ativado para ativar o Give Antispam"
+
+msgid "Settings"
+msgstr "Configurações"
+
+msgid "Antispam"
+msgstr "Antispam"
+
+msgid "Your IP address is banned."
+msgstr "O seu endereço IP está banido."
+
+msgid "The email you are using has been flagged as being used in SPAM donations by our system. Contact the site administrator if you have any questions."
+msgstr "O e-mail que você está usando foi sinalizado como sendo usado em doações de SPAM pelo nosso sistema. Entre em contato com o administrador do site se tiver alguma dúvida."
+
+msgid "The reCAPTCHA was not verified, try again."
+msgstr "O reCAPTCHA não foi verificado, tente novamente"
