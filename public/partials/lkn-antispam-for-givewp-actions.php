@@ -14,16 +14,14 @@ if ( ! defined('WPINC')) {
     exit;
 }
 
-final class Lkn_Antispam_Actions
-{
+final class Lkn_Antispam_Actions {
     /**
      * Makes a .log file for each spam report.
      *
      * @param string $message
      * @param array  $configs
      */
-    public static function reg_report($message, $configs): void
-    {
+    public static function reg_report($message, $configs): void {
         if ('enabled' === $configs['reportSpam']) {
             error_log($message, 3, $configs['baseReport']);
 
@@ -43,8 +41,7 @@ final class Lkn_Antispam_Actions
      * @param string|array $log
      * @param array        $configs
      */
-    public static function reg_log($log, $configs): void
-    {
+    public static function reg_log($log, $configs): void {
         if ('enabled' === $configs['debug']) {
             $jsonLog = json_encode($log, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE) . "\n";
 
@@ -58,8 +55,7 @@ final class Lkn_Antispam_Actions
      *
      * @return float
      */
-    public static function get_recaptcha_score()
-    {
+    public static function get_recaptcha_score() {
         $score = give_get_option('lkn_antispam_score_re_setting_field');
 
         if ($score < 0 || $score > 10) {
@@ -74,8 +70,7 @@ final class Lkn_Antispam_Actions
      *
      * @return int
      */
-    public static function get_time_interval()
-    {
+    public static function get_time_interval() {
         $timeInterval = give_get_option('lkn_antispam_time_interval_setting_field');
 
         if ($timeInterval < 0) {
@@ -93,8 +88,7 @@ final class Lkn_Antispam_Actions
      *
      * @return array
      */
-    public static function validate_donation($valid_data, $data)
-    {
+    public static function validate_donation($valid_data, $data) {
         $configs = Lkn_Antispam_Helper::get_configs();
 
         // Verify if plugin is active
@@ -163,7 +157,7 @@ final class Lkn_Antispam_Actions
                                     ++$donationCounter;
                                 } else {
                                     Lkn_Antispam_Actions::reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, TOO MANY ATTEMPTS  <br> ' . \PHP_EOL, $configs);
-                                    give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Try using a different email address or contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
+                                    give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM donations by our system. Contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
                                 }
                             }
                         } else {
@@ -172,7 +166,7 @@ final class Lkn_Antispam_Actions
                                 ++$donationCounter;
                             } else {
                                 Lkn_Antispam_Actions::reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, TOO MANY ATTEMPTS  <br> ' . \PHP_EOL, $configs);
-                                give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Try using a different email address or contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
+                                give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM donations by our system. Contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
                             }
                         }
                     }
@@ -208,8 +202,7 @@ final class Lkn_Antispam_Actions
      *
      * @return array
      */
-    public static function validate_recaptcha($valid_data, $data)
-    {
+    public static function validate_recaptcha($valid_data, $data) {
         $configs = Lkn_Antispam_Helper::get_configs();
         // Verify if the plugin is enabled and ensure that it only runs once.
         if ('enabled' === $configs['antispamEnabled'] && ! isset($data['give_ajax'])) {
@@ -231,12 +224,10 @@ final class Lkn_Antispam_Actions
                 if ( ! isset($recaptcha_data->success) || false == $recaptcha_data->success) {
                     // User must have validated the reCAPTCHA to proceed with donation.
                     if ( ! isset($data['g-recaptcha-response']) || empty($data['g-recaptcha-response'])) {
-                        // give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Please contact the site administrator for more information.', 'antispam-donation-for-givewp'));
                         give_set_error('g-recaptcha-response', __('The reCAPTCHA was not verified, try again.', 'antispam-donation-for-givewp'));
                     }
                 } elseif ( ! isset($recaptcha_data->score) || $recaptcha_data->score < $configs['scoreRec']) {
                     // If the score is lower than the defined value, display an error message.
-                    // give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM comments or donations by our system. Please contact the site administrator for more information.', 'antispam-donation-for-givewp'));
                     give_set_error('g-recaptcha-response', __('The reCAPTCHA was not verified, try again.', 'antispam-donation-for-givewp'));
                 }
             }
@@ -252,8 +243,7 @@ final class Lkn_Antispam_Actions
      *
      * @param mixed $form_id
      */
-    public static function custom_form_fields($form_id): void
-    {
+    public static function custom_form_fields($form_id): void {
         $configs = Lkn_Antispam_Helper::get_configs();
         if ('enabled' === $configs['antispamEnabled']) {
             if ('enabled' === $configs['recEnabled']) {

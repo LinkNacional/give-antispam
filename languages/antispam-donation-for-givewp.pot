@@ -107,10 +107,7 @@ msgstr ""
 msgid "Your IP address is banned."
 msgstr ""
 
-msgid "The email you are using has been flagged as being used in SPAM comments or donations by our system. Try using a different email address or contact the site administrator if you have any questions."
-msgstr ""
-
-msgid "The email you are using has been flagged as being used in SPAM comments or donations by our system. Please contact the site administrator for more information."
+msgid "The email you are using has been flagged as being used in SPAM donations by our system. Contact the site administrator if you have any questions."
 msgstr ""
 
 msgid "The reCAPTCHA was not verified, try again."
