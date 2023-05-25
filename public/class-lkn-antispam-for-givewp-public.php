@@ -15,8 +15,7 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Antispam_For_GiveWP_Public
-{
+final class Lkn_Antispam_For_GiveWP_Public {
     /**
      * The ID of this plugin.
      *
@@ -43,16 +42,14 @@ final class Lkn_Antispam_For_GiveWP_Public
      * @param string $plugin_name the name of the plugin
      * @param string $version     the version of this plugin
      */
-    public function __construct($plugin_name, $version)
-    {
+    public function __construct($plugin_name, $version) {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
 
         add_action('init', array($this, 'init_actions'));
     }
 
-    public function init_actions(): void
-    {
+    public function init_actions(): void {
         add_action('give_checkout_error_checks', array('Lkn_Antispam_Actions', 'validate_donation'), 10, 2);
         add_action('give_after_donation_levels', array('Lkn_Antispam_Actions', 'custom_form_fields'), 9, 1);
         add_action('give_checkout_error_checks', array('Lkn_Antispam_Actions', 'validate_recaptcha'), 9, 2);
@@ -63,8 +60,7 @@ final class Lkn_Antispam_For_GiveWP_Public
      *
      * @since    1.0.0
      */
-    public function enqueue_styles(): void
-    {
+    public function enqueue_styles(): void {
         /*
          * This function is provided for demonstration purposes only.
          *
@@ -85,8 +81,7 @@ final class Lkn_Antispam_For_GiveWP_Public
      *
      * @since    1.0.0
      */
-    public function enqueue_scripts(): void
-    {
+    public function enqueue_scripts(): void {
         /*
          * This function is provided for demonstration purposes only.
          *
