@@ -1,5 +1,7 @@
 ### 1.2.1 - 14/04/2023
-- Code refactoring.
+- Code refactoring;
+- Removed plugin updater lib;
+- Automatically remove old logs.
 
 ### v1.2.0
 - Code refactoring and improvements;
