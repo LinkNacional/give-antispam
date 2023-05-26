@@ -77,7 +77,7 @@ The Antispam Donation for GiveWP is now activated.
 == Changelog ==
 
 = 1.2.1 = 
-**14/04/2023**
+**26/05/2023**
 * Code refactoring;
 * Removed plugin updater lib;
 * Automatically remove old logs.
