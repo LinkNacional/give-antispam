@@ -22,10 +22,6 @@
  * Text Domain:       antispam-donation-for-givewp
  * Domain Path:       /languages
  */
-
-// Require do plugin de update
-require_once __DIR__ . '/plugin-updater/plugin-update-checker.php';
-
 if ( ! defined( 'WPINC' ) ) {
     exit;
 }
