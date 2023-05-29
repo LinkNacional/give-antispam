@@ -171,7 +171,7 @@ final class Lkn_Antispam_For_GiveWP {
         require_once plugin_dir_path( __DIR__ ) . 'public/class-lkn-antispam-for-givewp-public.php';
 
         /**
-         * Load plugin files. (PROVISÓRIO) (PROVISÓRIO) (PROVISÓRIO) (PROVISÓRIO).
+         * Load plugin files.
          */
         require_once plugin_dir_path( __DIR__ ) . 'includes/class-lkn-antispam-for-givewp-helper.php';
 
