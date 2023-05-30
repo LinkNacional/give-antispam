@@ -101,19 +101,18 @@ final class Lkn_Antispam_For_GiveWP_Public {
                 if ('enabled' === $configs['recEnabled']) {
                     $siteKey = $configs['siteRec'];
                     wp_register_script('give-recaptcha-element', 'https://www.google.com/recaptcha/api.js?render=' . $siteKey);
-                    // If you only want to enqueue on single form pages then uncomment if statement
 
                     wp_enqueue_script('give-recaptcha-element');
+
+                    wp_enqueue_script( 'lkn-antispam-for-givewp-recaptcha', plugin_dir_url( __FILE__ ) . 'js/lkn-antispam-for-givewp-recaptcha.js', array('jquery', 'give-recaptcha-element'), $this->version, false );
+
+                    $siteKeyData = array(
+                        'sitekey' => $configs['siteRec'],
+                    );
+
+                    wp_localize_script('lkn-antispam-for-givewp-recaptcha', 'skData', $siteKeyData);
                 }
             }
-
-            wp_enqueue_script( 'lkn-antispam-for-givewp-public-js', plugin_dir_url( __FILE__ ) . 'js/lkn-antispam-for-givewp-public.js', array('jquery', 'give-recaptcha-element'), $this->version, false );
-
-            $siteKeyData = array(
-                'sitekey' => $configs['siteRec'],
-            );
-
-            wp_localize_script('lkn-antispam-for-givewp-public-js', 'skData', $siteKeyData);
         }
 
         // Uncomment if statement to control output
