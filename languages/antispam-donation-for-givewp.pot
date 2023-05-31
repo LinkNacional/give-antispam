@@ -1,0 +1,114 @@
+#: Antispam Donation For GiveWP en_US translation
+msgid "Performs verification and prevention of malicious donations."
+msgstr ""
+
+msgid "Enable spam donation protection"
+msgstr ""
+
+msgid "Activate or deactivate the Antispam plugin, which will block suspicious donations."
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
+msgid "Disabled"
+msgstr ""
+
+msgid "Enable debug"
+msgstr ""
+
+msgid "Enable logs."
+msgstr ""
+
+msgid "Banned IPs"
+msgstr ""
+
+msgid "Separete the IPs by jumping a line with the Enter key."
+msgstr ""
+
+msgid "Limit on donations within a time interval"
+msgstr ""
+
+msgid "Number of donations a customer can make in a certain period of time."
+msgstr ""
+
+msgid "Interval between donations"
+msgstr ""
+
+msgid "Time interval between donations a customer can make (in minutes)."
+msgstr ""
+
+msgid "Limit donations to the same payment method"
+msgstr ""
+
+msgid "Enable to limit consecutive doantions that have the same payment methods."
+msgstr ""
+
+msgid "Save antispam report"
+msgstr ""
+
+msgid "Enable to save a report containing blocked spam donations."
+msgstr ""
+
+msgid "Blocked spam report."
+msgstr ""
+
+msgid "Recaptcha donation form"
+msgstr ""
+
+msgid "Enable to activate recaptcha on donation forms."
+msgstr ""
+
+msgid "Generate Recaptcha V3 keys here."
+msgstr ""
+
+msgid "Recaptcha site key"
+msgstr ""
+
+msgid "Google Recaptcha V3 service key."
+msgstr ""
+
+msgid "Recaptcha secret key"
+msgstr ""
+
+msgid "Google Recaptcha V3 secret key."
+msgstr ""
+
+msgid "Minimum score"
+msgstr ""
+
+msgid "The minimum score validated by Recaptcha for donations to be accepted. Varies between 0 and 10."
+msgstr ""
+
+msgid "Activation Error:"
+msgstr ""
+
+msgid "You must have"
+msgstr ""
+
+msgid "Give"
+msgstr ""
+
+msgid "version"
+msgstr ""
+
+msgid "for the Give Antispam to activate"
+msgstr ""
+
+msgid "plugin installed and activated for the Give Antispam"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Antispam"
+msgstr ""
+
+msgid "Your IP address is banned."
+msgstr ""
+
+msgid "The email you are using has been flagged as being used in SPAM donations by our system. Contact the site administrator if you have any questions."
+msgstr ""
+
+msgid "The reCAPTCHA was not verified, try again."
+msgstr ""

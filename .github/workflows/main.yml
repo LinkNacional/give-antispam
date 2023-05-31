@@ -30,12 +30,13 @@ jobs:
         filename: '${{ env.PLUGIN_NAME }}.zip'
         exclusions: '*.git* /*node_modules/* .editorconfig'
 
-    # Update version tag
+    # Update version tag // TODO remove custom_tag
     - name: Bump version and push tag
       id: tag_version
       uses: mathieudutour/github-tag-action@v6.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+        custom_tag: '1.2.1'
 
     # Generate new release
     - name: Generate new Release
@@ -44,5 +45,6 @@ jobs:
         artifacts: "${{ env.PLUGIN_NAME }}.zip"
         token: ${{ secrets.GITHUB_TOKEN }}
         commit: "main"
+        draft: true
         tag: ${{ steps.tag_version.outputs.new_tag }}
         name: Release ${{ steps.tag_version.outputs.new_tag }}
