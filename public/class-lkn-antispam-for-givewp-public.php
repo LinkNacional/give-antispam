@@ -52,7 +52,6 @@ final class Lkn_Antispam_For_GiveWP_Public {
     public function init_actions(): void {
         add_action('give_checkout_error_checks', array('Lkn_Antispam_Actions', 'validate_donation'), 10, 2);
         add_action('give_after_donation_levels', array('Lkn_Antispam_Actions', 'custom_form_fields'), 9, 1);
-        add_action('give_checkout_error_checks', array('Lkn_Antispam_Actions', 'validate_recaptcha'), 9, 2);
     }
 
     /**

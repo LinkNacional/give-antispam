@@ -92,7 +92,7 @@ final class Lkn_Antispam_Actions {
         $configs = Lkn_Antispam_Helper::get_configs();
 
         // Verify if plugin is active
-        if ('enabled' === $configs['antispamEnabled']) {
+        if ('enabled' === $configs['antispamEnabled'] && ! isset($data['give_ajax'])) {
             // Get the save spam-log option
             $reportSpam = $configs['reportSpam'];
 
@@ -102,9 +102,13 @@ final class Lkn_Antispam_Actions {
             $userIp = give_get_ip();
 
             if (in_array($userIp, $bannedIps, true)) {
-                Lkn_Antispam_Actions::reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, BANNED IP  <br> ' . \PHP_EOL, $configs);
+                if ('enabled' === $reportSpam) {
+                    Lkn_Antispam_Actions::reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, BANNED IP  <br> ' . \PHP_EOL, $configs);
+                }
 
-                return give_set_error('g-recaptcha-response', __('Your IP address is banned.', 'antispam-donation-for-givewp'));
+                give_set_error('g-recaptcha-response', __('Your IP address is banned.', 'antispam-donation-for-givewp'));
+
+                return $valid_data;
             }
 
             // Get givewp payment data
@@ -156,8 +160,13 @@ final class Lkn_Antispam_Actions {
                                 if ($donationLimit > $donationCounter) {
                                     ++$donationCounter;
                                 } else {
-                                    Lkn_Antispam_Actions::reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, TOO MANY ATTEMPTS  <br> ' . \PHP_EOL, $configs);
+                                    if ('enabled' === $reportSpam) {
+                                        Lkn_Antispam_Actions::reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, TOO MANY ATTEMPTS  <br> ' . \PHP_EOL, $configs);
+                                    }
+
                                     give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM donations by our system. Contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
+
+                                    return $valid_data;
                                 }
                             }
                         } else {
@@ -165,20 +174,22 @@ final class Lkn_Antispam_Actions {
                             if ($donationLimit > $donationCounter) {
                                 ++$donationCounter;
                             } else {
-                                Lkn_Antispam_Actions::reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, TOO MANY ATTEMPTS  <br> ' . \PHP_EOL, $configs);
+                                if ('enabled' === $reportSpam) {
+                                    Lkn_Antispam_Actions::reg_report(date('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) . ' [Payment] ' . var_export($valid_data['gateway'], true) . ' - PAYMENT DENIED, TOO MANY ATTEMPTS  <br> ' . \PHP_EOL, $configs);
+                                }
+
                                 give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM donations by our system. Contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
+
+                                return $valid_data;
                             }
                         }
                     }
                 }
             }
 
-            return Lkn_Antispam_Actions::reg_log(array(
-                'ip' => $userIp,
-                'donation_ip' => $donationIp,
-                'timestamp_interval' => $minutes,
-                'form_id' => $data['give-form-id'],
-            ), $configs);
+            Lkn_Antispam_Actions::validate_recaptcha($valid_data, $data);
+
+            return $valid_data;
         }
 
         return $valid_data;
@@ -232,8 +243,6 @@ final class Lkn_Antispam_Actions {
                 }
             }
         }
-
-        return $valid_data;
     }
 
     /**
