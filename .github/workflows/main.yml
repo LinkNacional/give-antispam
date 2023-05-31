@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 env:
-  PLUGIN_NAME: give-antispam
+  PLUGIN_NAME: antispam-for-givewp
 
 jobs:
   release-build:
@@ -18,7 +18,7 @@ jobs:
 
     # Add plugin files to a root directory
     - name: Make plugin root directory
-      run: "mkdir $PLUGIN_NAME && mv -t ./$PLUGIN_NAME ./plugin-updater ./includes ./logs *.php && ls -lah"
+      run: "mkdir $PLUGIN_NAME && mv -t ./$PLUGIN_NAME ./public ./admin ./languages ./includes ./logs *.php && ls -lah"
 
     # Compact plugin as .zip
     - name: Archive Release
