@@ -76,6 +76,10 @@ The Antispam Donation for GiveWP is now activated.
 
 == Changelog ==
 
+= 1.2.2 =
+**31/05/2023**
+* Fixed error message not showing in legacy template.
+
 = 1.2.1 = 
 **26/05/2023**
 * Code refactoring;
