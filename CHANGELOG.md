@@ -1,10 +1,11 @@
-### 1.3.2 - 30/05/2023
+### 1.3.2 - 24/05/2024
 
-- Corrigido bug de mensagem de erro não sendo mostrada no template de formulário legado.
+- Added feature in admin panel: Enable/disable donation blocking based on user donation count.
+- Addition of translation for the new feature.
 
 ### 1.2.2 - 30/05/2023
 
-- Corrigido bug de mensagem de erro não sendo mostrada no template de formulário legado.
+- Fixed a bug that prevented error messages from showing in the legacy form template.
 
 ### 1.2.1 - 26/05/2023
 
