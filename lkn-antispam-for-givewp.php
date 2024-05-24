@@ -22,11 +22,11 @@
  * Text Domain:       antispam-donation-for-givewp
  * Domain Path:       /languages
  */
-if ( ! defined( 'WPINC' ) ) {
+if ( ! defined('WPINC')) {
     exit;
 }
 
-define('LKN_ANTISPAM_FOR_GIVEWP_VERSION', '1.2.2');
+define('LKN_ANTISPAM_FOR_GIVEWP_VERSION', '1.3.2');
 
 define('LKN_ANTISPAM_FOR_GIVEWP_MIN_GIVE_VERSION', '2.3.0');
 
@@ -44,8 +44,9 @@ define('LKN_ANTISPAM_FOR_GIVEWP_BASENAME', plugin_basename(LKN_ANTISPAM_FOR_GIVE
  * The code that runs during plugin activation.
  * This action is documented in includes/class-lkn-antispam-for-givewp-activator.php.
  */
-function activate_lkn_antispam_for_givewp(): void {
-    require_once plugin_dir_path( __FILE__ ) . 'includes/class-lkn-antispam-for-givewp-activator.php';
+function activate_lkn_antispam_for_givewp(): void
+{
+    require_once plugin_dir_path(__FILE__) . 'includes/class-lkn-antispam-for-givewp-activator.php';
     Lkn_Antispam_For_GiveWP_Activator::activate();
 }
 
@@ -53,19 +54,20 @@ function activate_lkn_antispam_for_givewp(): void {
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-lkn-antispam-for-givewp-deactivator.php.
  */
-function deactivate_lkn_antispam_for_givewp(): void {
-    require_once plugin_dir_path( __FILE__ ) . 'includes/class-lkn-antispam-for-givewp-deactivator.php';
+function deactivate_lkn_antispam_for_givewp(): void
+{
+    require_once plugin_dir_path(__FILE__) . 'includes/class-lkn-antispam-for-givewp-deactivator.php';
     Lkn_Antispam_For_GiveWP_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_lkn_antispam_for_givewp' );
-register_deactivation_hook( __FILE__, 'deactivate_lkn_antispam_for_givewp' );
+register_activation_hook(__FILE__, 'activate_lkn_antispam_for_givewp');
+register_deactivation_hook(__FILE__, 'deactivate_lkn_antispam_for_givewp');
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-lkn-antispam-for-givewp.php';
+require plugin_dir_path(__FILE__) . 'includes/class-lkn-antispam-for-givewp.php';
 
 /**
  * Begins execution of the plugin.
@@ -76,7 +78,8 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-lkn-antispam-for-givewp.ph
  *
  * @since    1.0.0
  */
-function run_lkn_antispam_for_givewp(): void {
+function run_lkn_antispam_for_givewp(): void
+{
     $plugin = new Lkn_Antispam_For_GiveWP();
     $plugin->run();
 }

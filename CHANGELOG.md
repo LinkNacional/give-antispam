@@ -1,3 +1,7 @@
+### 1.3.2 - 30/05/2023
+
+- Corrigido bug de mensagem de erro não sendo mostrada no template de formulário legado.
+
 ### 1.2.2 - 30/05/2023
 
 - Corrigido bug de mensagem de erro não sendo mostrada no template de formulário legado.
