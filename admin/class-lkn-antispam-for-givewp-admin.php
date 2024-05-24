@@ -15,7 +15,8 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Antispam_For_GiveWP_Admin {
+final class Lkn_Antispam_For_GiveWP_Admin
+{
     /**
      * The ID of this plugin.
      *
@@ -42,7 +43,8 @@ final class Lkn_Antispam_For_GiveWP_Admin {
      * @param string $plugin_name the name of this plugin
      * @param string $version     the version of this plugin
      */
-    public function __construct($plugin_name, $version) {
+    public function __construct($plugin_name, $version)
+    {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
 
@@ -58,7 +60,8 @@ final class Lkn_Antispam_For_GiveWP_Admin {
      *
      * @return array
      */
-    public function lkn_antispam_for_givewp_add_setting_into_existing_tab($settings) {
+    public function lkn_antispam_for_givewp_add_setting_into_existing_tab($settings)
+    {
         if ( ! Give_Admin_Settings::is_setting_page('general', 'access-control')) {
             return $settings;
         }
@@ -73,6 +76,17 @@ final class Lkn_Antispam_For_GiveWP_Admin {
                     'desc' => __('Activate or deactivate the Antispam plugin, which will block suspicious donations.', 'antispam-donation-for-givewp'),
                     'type' => 'radio',
                     'default' => 'disabled',
+                    'options' => array(
+                        'enabled' => __('Enabled', 'antispam-donation-for-givewp'),
+                        'disabled' => __('Disabled', 'antispam-donation-for-givewp'),
+                    ),
+                );
+                $newSetting[] = array(
+                    'name' => __('Blocking due to donation quantity:', 'antispam-donation-for-givewp'),
+                    'id' => 'lkn_antispam_blocking_donation_amount_setting_field',
+                    'desc' => __('It is a mechanism that restricts the number of donations allowed per donor to prevent abuse.', 'antispam-donation-for-givewp'),
+                    'default' => 'disabled',
+                    'type' => 'radio',
                     'options' => array(
                         'enabled' => __('Enabled', 'antispam-donation-for-givewp'),
                         'disabled' => __('Disabled', 'antispam-donation-for-givewp'),
@@ -192,7 +206,8 @@ final class Lkn_Antispam_For_GiveWP_Admin {
     }
 
     // Insert settings on GiveWP settings
-    public function include_settings(): void {
+    public function include_settings(): void
+    {
         add_filter('give_get_settings_general', array($this, 'lkn_antispam_for_givewp_add_setting_into_existing_tab'), 10, 1);
     }
 
@@ -201,7 +216,8 @@ final class Lkn_Antispam_For_GiveWP_Admin {
      *
      * @since    1.0.0
      */
-    public function enqueue_styles(): void {
+    public function enqueue_styles(): void
+    {
         /*
          * This function is provided for demonstration purposes only.
          *
@@ -214,7 +230,7 @@ final class Lkn_Antispam_For_GiveWP_Admin {
          * class.
          */
 
-        wp_enqueue_style( 'lkn-antispam-for-givewp-admin-css', plugin_dir_url( __FILE__ ) . '/css/lkn-antispam-for-givewp-admin.css', $this->version, 'all' );
+        wp_enqueue_style('lkn-antispam-for-givewp-admin-css', plugin_dir_url(__FILE__) . '/css/lkn-antispam-for-givewp-admin.css', $this->version, 'all');
     }
 
     /**
@@ -222,7 +238,8 @@ final class Lkn_Antispam_For_GiveWP_Admin {
      *
      * @since    1.0.0
      */
-    public function enqueue_scripts(): void {
+    public function enqueue_scripts(): void
+    {
         /*
          * This function is provided for demonstration purposes only.
          *
@@ -235,6 +252,6 @@ final class Lkn_Antispam_For_GiveWP_Admin {
          * class.
          */
 
-        wp_enqueue_script( 'lkn-antispam-for-givewp-admin-js', plugin_dir_url( __FILE__ ) . '/js/lkn-antispam-for-givewp-admin.js', array('jquery'), $this->version, false );
+        wp_enqueue_script('lkn-antispam-for-givewp-admin-js', plugin_dir_url(__FILE__) . '/js/lkn-antispam-for-givewp-admin.js', array('jquery'), $this->version, false);
     }
 }

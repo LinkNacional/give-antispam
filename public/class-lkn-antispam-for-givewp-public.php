@@ -15,7 +15,8 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Antispam_For_GiveWP_Public {
+final class Lkn_Antispam_For_GiveWP_Public
+{
     /**
      * The ID of this plugin.
      *
@@ -42,14 +43,15 @@ final class Lkn_Antispam_For_GiveWP_Public {
      * @param string $plugin_name the name of the plugin
      * @param string $version     the version of this plugin
      */
-    public function __construct($plugin_name, $version) {
+    public function __construct($plugin_name, $version)
+    {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
-
         add_action('init', array($this, 'init_actions'));
     }
 
-    public function init_actions(): void {
+    public function init_actions(): void
+    {
         add_action('give_checkout_error_checks', array('Lkn_Antispam_Actions', 'validate_donation'), 10, 2);
         add_action('give_after_donation_levels', array('Lkn_Antispam_Actions', 'custom_form_fields'), 9, 1);
     }
@@ -59,7 +61,8 @@ final class Lkn_Antispam_For_GiveWP_Public {
      *
      * @since    1.0.0
      */
-    public function enqueue_styles(): void {
+    public function enqueue_styles(): void
+    {
         /*
          * This function is provided for demonstration purposes only.
          *
@@ -72,7 +75,7 @@ final class Lkn_Antispam_For_GiveWP_Public {
          * class.
          */
 
-        wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/lkn-antispam-for-givewp-public.css', $this->version, 'all' );
+        wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/lkn-antispam-for-givewp-public.css', $this->version, 'all');
     }
 
     /**
@@ -80,7 +83,8 @@ final class Lkn_Antispam_For_GiveWP_Public {
      *
      * @since    1.0.0
      */
-    public function enqueue_scripts(): void {
+    public function enqueue_scripts(): void
+    {
         /*
          * This function is provided for demonstration purposes only.
          *
@@ -103,7 +107,7 @@ final class Lkn_Antispam_For_GiveWP_Public {
 
                     wp_enqueue_script('give-recaptcha-element');
 
-                    wp_enqueue_script( 'lkn-antispam-for-givewp-recaptcha', plugin_dir_url( __FILE__ ) . 'js/lkn-antispam-for-givewp-recaptcha.js', array('jquery', 'give-recaptcha-element'), $this->version, false );
+                    wp_enqueue_script('lkn-antispam-for-givewp-recaptcha', plugin_dir_url(__FILE__) . 'js/lkn-antispam-for-givewp-recaptcha.js', array('jquery', 'give-recaptcha-element'), $this->version, false);
 
                     $siteKeyData = array(
                         'sitekey' => $configs['siteRec'],

@@ -1,4 +1,5 @@
 #: Antispam Donation For GiveWP tradução pt_BR
+
 msgid "Performs verification and prevention of malicious donations."
 msgstr "Faz a verificação e prevenção de doações mal intencionadas."
 
@@ -112,3 +113,9 @@ msgstr "O e-mail que você está usando foi sinalizado como sendo usado em doaç
 
 msgid "The reCAPTCHA was not verified, try again."
 msgstr "O reCAPTCHA não foi verificado, tente novamente"
+
+msgid "It is a mechanism that restricts the number of donations allowed per donor to prevent abuse."
+msgstr "É um mecanismo que restringe o número de doações permitidas por doador para evitar abusos."
+
+msgid "Blocking due to donation quantity:"
+msgstr "Bloqueio por quantidade de doação:"   
