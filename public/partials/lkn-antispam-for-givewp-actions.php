@@ -95,131 +95,22 @@ final class Lkn_Antispam_Actions
      */
     public static function validate_donation($valid_data, $data)
     {
-        // Get plugin configurations
         $configs = Lkn_Antispam_Helper::get_configs();
 
-        // Check if the plugin is active and not running in AJAX mode
-        if ('enabled' === $configs['antispamEnabled'] && ! isset($data['give_ajax'])) {
-            // Get spam reporting setting
-            $reportSpam = $configs['reportSpam'];
-
-            // Get banned IPs
-            $bannedIps = explode(\PHP_EOL, $configs['bannedIps']);
-
-            // Get current user IP
+        if (self::is_plugin_active_and_not_ajax($configs, $data)) {
             $userIp = give_get_ip();
 
-            // Check if user IP is banned
-            if (in_array($userIp, $bannedIps, true)) {
-                if ('enabled' === $reportSpam) {
-                    // Report spam if enabled
-                    Lkn_Antispam_Actions::reg_report(
-                        gmdate('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) .
-                            ' [Payment] ' . var_export($valid_data['gateway'], true) .
-                            ' - PAYMENT DENIED, BANNED IP  <br> ' . \PHP_EOL,
-                        $configs
-                    );
-                }
-
-                // Set error message for banned IP
-                give_set_error('g-recaptcha-response', __('Your IP address is banned.', 'antispam-donation-for-givewp'));
+            if (self::is_ip_banned($configs, $userIp)) {
+                self::handle_banned_ip($configs, $valid_data, $userIp);
 
                 return $valid_data;
             }
 
-            // Get GiveWP payment data
-            $payments = give_get_payments();
-
-            // Get current date and time limit in minutes
-            $actualDate = new DateTime(current_time('mysql'));
-            $timeLimit = absint($configs['interval']);
-
-            // Get donation limit and donation counter
-            $donationLimit = absint($configs['donationLimit']) - 1;
-            $donationCounter = 0;
-
-            // Check if donations should be blocked
-            $blockDonations = 'enabled' === $configs['blockDonation'] ? true : false;
-
-            // Arrays to store donation IP and dates
-            $donationIp = array();
-            $dates = array();
-
-            // Loop through the last 20 payments
-            for ($c = 0; $c < count($payments) && $c < 20; ++$c) {
-                // Get GiveWP payment info
-                $payment = $payments[$c];
-                $paymentId = $payment->ID;
-                $dates[] = $payment->post_date;
-                $donationIp[] = give_get_payment_user_ip($paymentId);
-                $paymentInfo[] = give_get_payment_by('id', $paymentId);
-
-                // Check if the saved donation IP matches the current user IP
-                if ($donationIp[$c] === $userIp) {
-                    // Initialize a DateTime object with the saved donation date
-                    $donationDate = new DateTime($dates[$c]);
-                    // Check the time interval between the current date and the saved date
-                    $dateInterval = $actualDate->diff($donationDate);
-
-                    // Convert time to minutes
-                    $minutes = ($dateInterval->days * 24 * 60) + ($dateInterval->h * 60) + $dateInterval->i;
-
-                    // Check if the donation interval is less than the time limit specified in the admin settings
-                    if ($minutes < $timeLimit) {
-                        // Check if the gateway verification is enabled and compare the current gateway with the donation gateway
-                        if ($paymentInfo[$c]->gateway === $valid_data['gateway']) {
-                            // Check if donations should be blocked
-                            if ($blockDonations) {
-                                // Verify if the user has made another donation in the time interval
-                                if ($donationLimit > $donationCounter) {
-                                    ++$donationCounter;
-                                } else {
-                                    // Report spam if enabled
-                                    if ('enabled' === $reportSpam) {
-                                        Lkn_Antispam_Actions::reg_report(
-                                            gmdate('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) .
-                                                ' [Payment] ' . var_export($valid_data['gateway'], true) .
-                                                ' - PAYMENT DENIED, TOO MANY ATTEMPTS <br> ' . \PHP_EOL,
-                                            $configs
-                                        );
-                                    }
-
-                                    // Set error message for too many attempts
-                                    give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM donations by our system. Contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
-
-                                    return $valid_data;
-                                }
-                            }
-                        } else {
-                            // Check if donations should be blocked
-                            if ($blockDonations) {
-                                // Verify if the user has made another donation in the time interval
-                                if ($donationLimit > $donationCounter) {
-                                    ++$donationCounter;
-                                } else {
-                                    // Report spam if enabled
-                                    if ('enabled' === $reportSpam) {
-                                        Lkn_Antispam_Actions::reg_report(
-                                            gmdate('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) .
-                                                ' [Payment] ' . var_export($valid_data['gateway'], true) .
-                                                ' - PAYMENT DENIED, TOO MANY ATTEMPTS <br> ' . \PHP_EOL,
-                                            $configs
-                                        );
-                                    }
-
-                                    // Set error message for too many attempts
-                                    give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM donations by our system. Contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
-
-                                    return $valid_data;
-                                }
-                            }
-                        }
-                    }
-                }
+            if (self::has_too_many_donations($configs, $valid_data, $userIp)) {
+                return $valid_data;
             }
         }
 
-        // Validate reCAPTCHA
         Lkn_Antispam_Actions::validate_recaptcha($valid_data, $data);
 
         return $valid_data;
@@ -246,32 +137,13 @@ final class Lkn_Antispam_Actions
     public static function validate_recaptcha($valid_data, $data)
     {
         $configs = Lkn_Antispam_Helper::get_configs();
-        // Verify if the plugin is enabled and ensure that it only runs once.
-        if ('enabled' === $configs['antispamEnabled'] && ! isset($data['give_ajax'])) {
-            // Verify if the Recaptcha option is enabled.
-            if ('enabled' === $configs['recEnabled']) {
-                $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
-                $recaptcha_secret_key = $configs['secretRec']; // Replace with your own key here.
-                // Request for Recaptcha verification.
-                $recaptcha_response = wp_remote_post($recaptcha_url . '?secret=' . $recaptcha_secret_key . '&response=' . $data['g-recaptcha-response'] . '&remoteip=' . $_SERVER['REMOTE_ADDR']);
-                // Format the received response into an object.
-                $recaptcha_data = json_decode(wp_remote_retrieve_body($recaptcha_response));
 
-                Lkn_Antispam_Actions::reg_log(array(
-                    'give_ajax' => $data['give_ajax'],
-                    'recaptcha_response' => $recaptcha_data,
-                ), $configs);
+        if (self::is_plugin_active_and_not_ajax($configs, $data) && self::is_recaptcha_enabled($configs)) {
+            $recaptcha_response = self::get_recaptcha_response($configs, $data);
+            self::log_recaptcha_response($recaptcha_response, $data, $configs);
 
-                // Verify if the request was completed successfully.
-                if ( ! isset($recaptcha_data->success) || false == $recaptcha_data->success) {
-                    // User must have validated the reCAPTCHA to proceed with donation.
-                    if ( ! isset($data['g-recaptcha-response']) || empty($data['g-recaptcha-response'])) {
-                        give_set_error('g-recaptcha-response', __('The reCAPTCHA was not verified, try again.', 'antispam-donation-for-givewp'));
-                    }
-                } elseif ( ! isset($recaptcha_data->score) || $recaptcha_data->score < $configs['scoreRec']) {
-                    // If the score is lower than the defined value, display an error message.
-                    give_set_error('g-recaptcha-response', __('The reCAPTCHA was not verified, try again.', 'antispam-donation-for-givewp'));
-                }
+            if ( ! self::is_recaptcha_valid($recaptcha_response, $configs, $data)) {
+                give_set_error('g-recaptcha-response', __('The reCAPTCHA was not verified, try again.', 'antispam-donation-for-givewp'));
             }
         }
     }
@@ -303,5 +175,134 @@ HTML;
                 echo esc_html($html);
             }
         }
+    }
+
+    // lkn_give_antispam_timeout_for_spam_detected function
+
+    public static function reset_time_for_spam_detected(): void
+    {
+        // Código para ser executado quando o spam for detectado e um tempo limite for acionado
+        error_log('Spam detectado e tempo limite acionado pelo plugin de antispam!');
+    }
+
+    // Geral function
+    private static function is_plugin_active_and_not_ajax($configs, $data)
+    {
+        return 'enabled' === $configs['antispamEnabled'] && ! isset($data['give_ajax']);
+    }
+
+    // Validate donation functions
+    private static function is_ip_banned($configs, $userIp)
+    {
+        $bannedIps = explode(\PHP_EOL, $configs['bannedIps']);
+
+        return in_array($userIp, $bannedIps, true);
+    }
+
+    private static function handle_banned_ip($configs, $valid_data, $userIp): void
+    {
+        if ('enabled' === $configs['reportSpam']) {
+            self::report_spam($configs, $valid_data, $userIp, 'BANNED IP');
+        }
+
+        give_set_error('g-recaptcha-response', __('Your IP address is banned.', 'antispam-donation-for-givewp'));
+    }
+
+    private static function has_too_many_donations($configs, $valid_data, $userIp)
+    {
+        $payments = give_get_payments();
+        $actualDate = new DateTime(current_time('mysql'));
+        $timeLimit = absint($configs['interval']);
+        $donationLimit = absint($configs['donationLimit']) - 1;
+        $donationCounter = 0;
+        $blockDonations = 'enabled' === $configs['blockDonation'];
+
+        for ($c = 0; $c < count($payments) && $c < 20; ++$c) {
+            $payment = $payments[$c];
+            $paymentId = $payment->ID;
+            $donationIp = give_get_payment_user_ip($paymentId);
+
+            if ($donationIp === $userIp) {
+                if (self::is_donation_within_time_limit($actualDate, $payment->post_date, $timeLimit)) {
+                    if ($blockDonations && ! self::can_accept_donation($configs, $valid_data, $donationCounter, $donationLimit, $payment)) {
+                        return true;
+                    }
+                    ++$donationCounter;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static function is_donation_within_time_limit($actualDate, $donationDate, $timeLimit)
+    {
+        $donationDate = new DateTime($donationDate);
+        $dateInterval = $actualDate->diff($donationDate);
+
+        $minutes = ($dateInterval->days * 24 * 60) + ($dateInterval->h * 60) + $dateInterval->i;
+
+        return $minutes < $timeLimit;
+    }
+
+    private static function can_accept_donation($configs, $valid_data, $donationCounter, $donationLimit, $payment)
+    {
+        if ($donationLimit > $donationCounter) {
+            return true;
+        }
+
+        self::report_spam($configs, $valid_data, give_get_ip(), 'TOO MANY ATTEMPTS');
+        give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM donations by our system. Contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
+        do_action('lkn_give_antispam_spam_detected');
+        add_action('lkn_give_antispam_timeout_for_spam_detected', array('Lkn_Antispam_Actions', 'reset_time_for_spam_detected'));
+
+        return false;
+    }
+
+    private static function report_spam($configs, $valid_data, $userIp, $reason): void
+    {
+        Lkn_Antispam_Actions::reg_report(
+            gmdate('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) .
+                ' [Payment] ' . var_export($valid_data['gateway'], true) .
+                ' - PAYMENT DENIED, ' . $reason . ' <br> ' . \PHP_EOL,
+            $configs
+        );
+    }
+
+    // Recaptcha functions
+    private static function is_recaptcha_enabled($configs)
+    {
+        return 'enabled' === $configs['recEnabled'];
+    }
+
+    private static function get_recaptcha_response($configs, $data)
+    {
+        $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
+        $recaptcha_secret_key = $configs['secretRec'];
+
+        $response = wp_remote_post($recaptcha_url . '?secret=' . $recaptcha_secret_key . '&response=' . $data['g-recaptcha-response'] . '&remoteip=' . $_SERVER['REMOTE_ADDR']);
+
+        return json_decode(wp_remote_retrieve_body($response));
+    }
+
+    private static function log_recaptcha_response($recaptcha_response, $data, $configs): void
+    {
+        Lkn_Antispam_Actions::reg_log(array(
+            'give_ajax' => $data['give_ajax'],
+            'recaptcha_response' => $recaptcha_response,
+        ), $configs);
+    }
+
+    private static function is_recaptcha_valid($recaptcha_response, $configs, $data)
+    {
+        if ( ! isset($recaptcha_response->success) || ! $recaptcha_response->success) {
+            return false;
+        }
+
+        if ( ! isset($recaptcha_response->score) || $recaptcha_response->score < $configs['scoreRec']) {
+            return false;
+        }
+
+        return true;
     }
 }
