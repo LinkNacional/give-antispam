@@ -102,11 +102,14 @@ final class Lkn_Antispam_Actions
 
             if (self::is_ip_banned($configs, $userIp)) {
                 self::handle_banned_ip($configs, $valid_data, $userIp);
+                do_action('lkn_give_antispam_spam_detected');
 
                 return $valid_data;
             }
 
             if (self::has_too_many_donations($configs, $valid_data, $userIp)) {
+                do_action('lkn_give_antispam_spam_detected');
+
                 return $valid_data;
             }
         }
@@ -179,10 +182,29 @@ HTML;
 
     // lkn_give_antispam_timeout_for_spam_detected function
 
-    public static function reset_time_for_spam_detected(): void
+    public static function time_for_spam_detected(): void
     {
-        // Código para ser executado quando o spam for detectado e um tempo limite for acionado
-        error_log('Spam detectado e tempo limite acionado pelo plugin de antispam!');
+        // Verificar se o cron job já está agendado
+        $timestamp = wp_next_scheduled('lkn_give_antispam_spam_detected_hook');
+
+        // Se o cron job já estiver agendado
+        if (false !== $timestamp) {
+            // Se estiver agendado, mantenha o mesmo horário de execução
+            wp_unschedule_event($timestamp, 'lkn_give_antispam_spam_detected_hook');
+        }
+
+        // Agendar o cron job
+        wp_schedule_event(time(), 'hourly', 'lkn_give_antispam_spam_detected_hook');
+        give_update_option('lkn_give_antispam_spam_detected', true);
+    }
+
+    public static function alter_status_spam(): void
+    {
+        give_update_option('lkn_give_antispam_spam_detected', false);
+
+        // Depois que a ação for executada, remova o cron job
+        $cron_hook = 'lkn_give_antispam_spam_detected_hook';
+        wp_unschedule_event(wp_next_scheduled($cron_hook), $cron_hook);
     }
 
     // Geral function
@@ -253,8 +275,6 @@ HTML;
 
         self::report_spam($configs, $valid_data, give_get_ip(), 'TOO MANY ATTEMPTS');
         give_set_error('g-recaptcha-response', __('The email you are using has been flagged as being used in SPAM donations by our system. Contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
-        do_action('lkn_give_antispam_spam_detected');
-        add_action('lkn_give_antispam_timeout_for_spam_detected', array('Lkn_Antispam_Actions', 'reset_time_for_spam_detected'));
 
         return false;
     }

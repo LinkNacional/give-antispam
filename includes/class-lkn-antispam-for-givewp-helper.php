@@ -58,8 +58,7 @@ abstract class Lkn_Antispam_Helper
         // Deactivate plugin.
         if ($is_deactivate_plugin) {
             deactivate_plugins($lkn_antispam_path);
-
-            if (isset($_GET['activate'])) {
+            if (isset($_GET['activate']) && wp_verify_nonce($_GET['activate'])) {
                 unset($_GET['activate']);
             }
         }
