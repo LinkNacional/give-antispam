@@ -88,7 +88,7 @@ final class Lkn_Antispam_For_GiveWP_Admin
                     'default' => 'disabled',
                     'type' => 'radio',
                     'options' => array(
-                        'enabled' => __('Enabled', 'antispam-donation-for-givewp'),
+                        'enabled' => __('Enabled', 'antispam-donatpaymention-for-givewp'),
                         'disabled' => __('Disabled', 'antispam-donation-for-givewp'),
                     ),
                 );
@@ -105,6 +105,12 @@ final class Lkn_Antispam_For_GiveWP_Admin
                             'enabled' => __('Enabled', 'antispam-donation-for-givewp'),
                             'disabled' => __('Disabled', 'antispam-donation-for-givewp'),
                         ),
+                    );
+                    $newSetting[] = array(
+                        'name' => __('Time for form unlocking:', 'antispam-donation-for-givewp'),
+                        'id' => 'lkn_give_antispam_timestamp_in_minuts',
+                        'desc' => __('Enter the time in minutes for the form unlocking', 'antispam-donation-for-givewp'),
+                        'type' => 'number',
                     );
 
                     $newSetting[] = array(

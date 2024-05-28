@@ -131,6 +131,20 @@ final class Lkn_Antispam_For_GiveWP
         add_action('lkn_antispam_delete_old_logs_cron_hook', array('Lkn_Antispam_Helper', 'delete_old_logs'));
     }
 
+    public function custom_cron_schedules($schedules)
+    {
+        $timestampGive = give_get_option('lkn_give_antispam_timestamp_in_minuts');
+        if ( ! empty($timestampGive)) {
+            $newTime = $timestampGive * 60;
+            $schedules['custom_interval'] = array(
+                'interval' => $newTime, // Intervalo em segundos (600 segundos = 10 minutos)
+                'display' => __('Custom interval from giveantispam', 'antispam-donation-for-givewp'),
+            );
+        }
+
+        return $schedules;
+    }
+
     private function define_event_delete_old_logs(): void
     {
         if ( ! wp_next_scheduled('lkn_antispam_delete_old_logs_cron_hook')) {
@@ -234,6 +248,7 @@ final class Lkn_Antispam_For_GiveWP
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
         $this->loader->add_action('lkn_give_antispam_timeout_for_spam_detected_cron', 'Lkn_Antispam_Actions', 'time_for_spam_detected');
+        $this->loader->add_filter('cron_schedules', $this, 'custom_cron_schedules');
 
         add_filter('plugin_action_links_give-antispam/lkn-antispam-for-givewp.php', array('Lkn_Antispam_Helper', 'plugin_row_meta'), 10, 2);
         add_action('give_init', array($this, 'define_cron_hook'), 10, 1);

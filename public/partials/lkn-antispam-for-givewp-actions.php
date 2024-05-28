@@ -103,12 +103,14 @@ final class Lkn_Antispam_Actions
             if (self::is_ip_banned($configs, $userIp)) {
                 self::handle_banned_ip($configs, $valid_data, $userIp);
                 do_action('lkn_give_antispam_spam_detected');
+                Lkn_Antispam_Actions::time_for_spam_detected();
 
                 return $valid_data;
             }
 
             if (self::has_too_many_donations($configs, $valid_data, $userIp)) {
                 do_action('lkn_give_antispam_spam_detected');
+                Lkn_Antispam_Actions::time_for_spam_detected();
 
                 return $valid_data;
             }
@@ -184,18 +186,28 @@ HTML;
 
     public static function time_for_spam_detected(): void
     {
+        $hook = 'lkn_give_antispam_spam_detected_hook';
         // Verificar se o cron job já está agendado
-        $timestamp = wp_next_scheduled('lkn_give_antispam_spam_detected_hook');
+        $timestamp = wp_next_scheduled($hook);
 
-        // Se o cron job já estiver agendado
+        // Se o cron job já estiver agendado, desagende-o
         if (false !== $timestamp) {
-            // Se estiver agendado, mantenha o mesmo horário de execução
-            wp_unschedule_event($timestamp, 'lkn_give_antispam_spam_detected_hook');
+            wp_unschedule_event($timestamp, $hook);
         }
 
-        // Agendar o cron job
-        wp_schedule_event(time(), 'hourly', 'lkn_give_antispam_spam_detected_hook');
+        // Obter o valor da opção customizada
+        $custom_cron = give_get_option('lkn_give_antispam_timestamp_in_minuts');
+
+        // Agendar o evento cron de acordo com o valor da opção customizada
+        $schedule = ($custom_cron > 0) ? 'custom_cron' : 'hourly';
+        wp_schedule_event(time(), $schedule, $hook);
+
+        // Atualizar a opção indicando que o cron job foi agendado
         give_update_option('lkn_give_antispam_spam_detected', true);
+        $disable_form = give_get_option('lkn_give_antispam_disable_form');
+        if ($disable_form) {
+            do_action('lkn_give_antispam_disable_form');
+        }
     }
 
     public static function alter_status_spam(): void

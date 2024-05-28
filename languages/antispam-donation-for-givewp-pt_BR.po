@@ -118,4 +118,10 @@ msgid "It is a mechanism that restricts the number of donations allowed per dono
 msgstr "É um mecanismo que restringe o número de doações permitidas por doador para evitar abusos."
 
 msgid "Blocking due to donation quantity:"
-msgstr "Bloqueio por quantidade de doação:"   
+msgstr "Bloqueio por quantidade de doação:"  
+
+msgid "Time for form unlocking:"
+msgstr "Tempo para o formulario desbloquear:" 
+
+msgid "Enter the time in minutes for the form unlocking"
+msgstr "Digite o tempo em minutos para o formulario desbloquear"
