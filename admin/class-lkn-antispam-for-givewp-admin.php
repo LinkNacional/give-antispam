@@ -147,6 +147,17 @@ final class Lkn_Antispam_For_GiveWP_Admin
                             'disabled' => __('Disabled', 'antispam-donation-for-givewp'),
                         ),
                     );
+                    $newSetting[] = array(
+                        'name' => __('Limit donations to the same payment method', 'antispam-donation-for-givewp'),
+                        'id' => 'lkn_antispam_same_gateway_setting_field',
+                        'desc' => __('Enable to limit consecutive doantions that have the same payment methods.', 'antispam-donation-for-givewp'),
+                        'type' => 'radio',
+                        'default' => 'disabled',
+                        'options' => array(
+                            'enabled' => __('Enabled', 'antispam-donation-for-givewp'),
+                            'disabled' => __('Disabled', 'antispam-donation-for-givewp'),
+                        ),
+                    );
 
                     $newSetting[] = array(
                         'name' => __('Save antispam report', 'antispam-donation-for-givewp'),
@@ -193,6 +204,18 @@ final class Lkn_Antispam_For_GiveWP_Admin
                             'default' => '5',
                         );
                     }
+
+                    $newSetting[] = array(
+                        'name' => __('Disable All Donations', 'antispam-donation-for-givewp'),
+                        'id' => 'lkn_antispam_disable_all_donations',
+                        'desc' => __('Enable this option to block all donations once the global donation limit is reached...', 'antispam-donation-for-givewp'),
+                        'type' => 'radio',
+                        'default' => 'disabled',
+                        'options' => array(
+                            'enabled' => __('Enabled', 'antispam-donation-for-givewp'),
+                            'disabled' => __('Disabled', 'antispam-donation-for-givewp'),
+                        ),
+                    );
 
                     // Options only apears if the plugin option is 'enabled'
                     if (give_get_option('lkn_antispam_save_log_setting_field') === 'enabled') {

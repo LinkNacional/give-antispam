@@ -219,6 +219,31 @@ HTML;
         wp_unschedule_event(wp_next_scheduled($cron_hook), $cron_hook);
     }
 
+    private static function many_donations_in_top_200($configs, $data, $userIp)
+    {
+        $payments = give_get_payments();
+        $actualDate = new DateTime(current_time('mysql'));
+        $timeLimit = absint($configs['interval']);
+        $donationLimit = absint($configs['donationLimit']) - 1;
+        $donationCounter = 0;
+        $blockDonations = 'enabled' === $configs['blockDonation'];
+
+        for ($c = 0; $c < count($payments) && $c < 20; ++$c) {
+            $payment = $payments[$c];
+            $paymentId = $payment->ID;
+            $donationIp = give_get_payment_user_ip($paymentId);
+
+            if ($donationIp === $userIp) {
+                if (self::is_donation_within_time_limit($actualDate, $payment->post_date, $timeLimit)) {
+                    if ($blockDonations && ! self::can_accept_donation($configs, $data, $donationCounter, $donationLimit, $payment)) {
+                        return true;
+                    }
+                    ++$donationCounter;
+                }
+            }
+        }
+    }
+
     // Geral function
     private static function is_plugin_active_and_not_ajax($configs, $data)
     {
