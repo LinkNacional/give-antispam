@@ -125,3 +125,7 @@ msgstr "Tempo para o formulario desbloquear:"
 
 msgid "Enter the time in minutes for the form unlocking"
 msgstr "Digite o tempo em minutos para o formulario desbloquear"
+
+msgid "The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked.<br><strong>Activate to customize fields</strong>."
+msgstr "A funcionalidade permite ao usuário bloquear todos os formulários do site por um período personalizado. Quando ativada, monitora a atividade do site, como doações. Se um limite definido pelo usuário for ultrapassado, os formulários são bloqueados temporariamente. Após o tempo configurado, os formulários são desbloqueados automaticamente.<br><strong>Ative para personalizar os campos</strong>."
+

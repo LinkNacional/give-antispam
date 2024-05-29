@@ -195,4 +195,24 @@ abstract class Lkn_Antispam_Helper
     {
         add_action('admin_notices', array('Lkn_Antispam_Helper', 'inactive_notice'));
     }
+
+    final public static function custom_cron_schedules($schedules)
+    {
+        $timestampGive = give_get_option('lkn_give_antispam_timestamp_in_minuts');
+        $timestampGiveDisableAllDonations = give_get_option('lkn_antispam_disable_all_interval');
+        if ( ! empty($timestampGive)) {
+            // Adiciona um novo intervalo personalizado
+            $schedules['lkn_antispam_custom_interval'] = array(
+                'interval' => $timestampGive * 60, // Valor depende do que o usuario por nas configurações do plugin
+                'display' => __('Intervalo Personalizado', 'seu-text-domain'),
+            );
+        }
+        if ( ! empty($timestampGiveDisableAllDonations)) {
+            $schedules['lkn_antispam_disable_all_interval'] = array(
+                'interval' => $timestampGiveDisableAllDonations * 60, // Valor depende do que o usuario por nas configurações do plugin
+            );
+        }
+
+        return $schedules;
+    }
 }

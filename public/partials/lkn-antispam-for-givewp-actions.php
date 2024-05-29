@@ -219,29 +219,31 @@ HTML;
         wp_unschedule_event(wp_next_scheduled($cron_hook), $cron_hook);
     }
 
-    private static function many_donations_in_top_200($configs, $data, $userIp)
+    private static function many_donations_in_top($configs, $data): bool
     {
         $payments = give_get_payments();
         $actualDate = new DateTime(current_time('mysql'));
-        $timeLimit = absint($configs['interval']);
         $donationLimit = absint($configs['donationLimit']) - 1;
-        $donationCounter = 0;
         $blockDonations = 'enabled' === $configs['blockDonation'];
+        $userDefineRepeat = ! empty(give_get_option('lkn_antispam_disable_all_suspect_number')) ? give_get_option('lkn_antispam_disable_all_suspect_number') : 30;
 
-        for ($c = 0; $c < count($payments) && $c < 20; ++$c) {
+        for ($c = 0; $c < count($payments) && $c < $userDefineRepeat; ++$c) {
             $payment = $payments[$c];
-            $paymentId = $payment->ID;
-            $donationIp = give_get_payment_user_ip($paymentId);
 
-            if ($donationIp === $userIp) {
-                if (self::is_donation_within_time_limit($actualDate, $payment->post_date, $timeLimit)) {
-                    if ($blockDonations && ! self::can_accept_donation($configs, $data, $donationCounter, $donationLimit, $payment)) {
-                        return true;
-                    }
-                    ++$donationCounter;
-                }
+            if (self::is_donation_within_time_limit_global($actualDate, $payment->post_date)) {
+                return true;
             }
         }
+
+        return false;
+    }
+
+    private static function is_donation_within_time_limit_global($actualDate, $compareDate): bool
+    {
+        $actual = new DateTime($actualDate);
+        $compare = new DateTime($compareDate);
+
+        return (($actual->getTimestamp() - $compare->getTimestamp()) / 60) > 60;
     }
 
     // Geral function
