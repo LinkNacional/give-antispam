@@ -223,8 +223,6 @@ HTML;
     {
         $payments = give_get_payments();
         $actualDate = new DateTime(current_time('mysql'));
-        $donationLimit = absint($configs['donationLimit']) - 1;
-        $blockDonations = 'enabled' === $configs['blockDonation'];
         $userDefineRepeat = ! empty(give_get_option('lkn_antispam_disable_all_suspect_number')) ? give_get_option('lkn_antispam_disable_all_suspect_number') : 30;
 
         for ($c = 0; $c < count($payments) && $c < $userDefineRepeat; ++$c) {
