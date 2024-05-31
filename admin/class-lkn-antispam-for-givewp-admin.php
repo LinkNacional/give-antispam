@@ -208,12 +208,11 @@ final class Lkn_Antispam_For_GiveWP_Admin
                     }
 
                     $newSetting[] = array(
-                        'name' => __('Disable All Donations', 'antispam-donation-for-givewp'),
+                        'name' => __('Block All Donations', 'antispam-donation-for-givewp'),
                         'id' => 'lkn_antispam_disable_all_donations',
                         'desc' => __('The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked.<br><strong>Activate to customize fields</strong>.', 'antispam-donation-for-givewp'),
                         'type' => 'radio',
                         'default' => 'disabled',
-                        'desc_tip' => 'tre',
                         'options' => array(
                             'enabled' => __('Enabled', 'antispam-donation-for-givewp'),
                             'disabled' => __('Disabled', 'antispam-donation-for-givewp'),
@@ -221,7 +220,7 @@ final class Lkn_Antispam_For_GiveWP_Admin
                     );
                     if (give_get_option('lkn_antispam_disable_all_donations') === 'enabled') {
                         $newSetting[] = array(
-                            'name' => __('The time it takes for forms to return to normal.', 'antispam-donation-for-givewp'),
+                            'name' => __('Time for forms to normalize.', 'antispam-donation-for-givewp'),
                             'id' => 'lkn_antispam_disable_all_interval',
                             'desc' => __('Defines the time in minutes during which forms will be disabled after a submission to prevent spam.', 'antispam-donation-for-givewp'),
                             'type' => 'number',

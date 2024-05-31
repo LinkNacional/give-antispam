@@ -215,4 +215,19 @@ abstract class Lkn_Antispam_Helper
 
         return $schedules;
     }
+
+    final public static function block_all_payments($gateway_list)
+    {
+        $option = give_get_option('lkn_give_antispam_spam_detected_block_all');
+        if ($option) {
+            return array();
+        }
+
+        return $gateway_list;
+    }
+
+    final public static function remove_status_block_all_payments(): void
+    {
+        give_update_option('lkn_give_antispam_spam_detected_block_all', false);
+    }
 }

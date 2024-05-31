@@ -101,6 +101,7 @@ final class Lkn_Antispam_Actions
             $userIp = give_get_ip();
 
             if (self::is_ip_banned($configs, $userIp)) {
+                // teste
                 self::handle_banned_ip($configs, $valid_data, $userIp);
                 do_action('lkn_give_antispam_spam_detected');
                 Lkn_Antispam_Actions::time_for_spam_detected();
@@ -110,9 +111,17 @@ final class Lkn_Antispam_Actions
 
             if (self::has_too_many_donations($configs, $valid_data, $userIp)) {
                 do_action('lkn_give_antispam_spam_detected');
-                Lkn_Antispam_Actions::time_for_spam_detected();
+                self::time_for_spam_detected();
 
                 return $valid_data;
+            }
+            if (give_get_option('lkn_antispam_disable_all_donations') == 'enabled') {
+                if (self::many_donations_in_top($configs, $data)) {
+                    self::spam_detected_block_all();
+                    self::report_spam($configs, $valid_data, give_get_ip(), 'TOO MANY ATTEMPTS');
+
+                    return $valid_data;
+                }
             }
         }
 
@@ -182,8 +191,6 @@ HTML;
         }
     }
 
-    // lkn_give_antispam_timeout_for_spam_detected function
-
     public static function time_for_spam_detected(): void
     {
         $hook = 'lkn_give_antispam_spam_detected_hook';
@@ -206,7 +213,7 @@ HTML;
         give_update_option('lkn_give_antispam_spam_detected', true);
         $disable_form = give_get_option('lkn_give_antispam_disable_form');
         if ($disable_form) {
-            do_action('lkn_give_antispam_disable_form');
+            self::alter_status_spam();
         }
     }
 
@@ -219,29 +226,59 @@ HTML;
         wp_unschedule_event(wp_next_scheduled($cron_hook), $cron_hook);
     }
 
-    private static function many_donations_in_top($configs, $data): bool
+    private static function spam_detected_block_all(): void
     {
-        $payments = give_get_payments();
-        $actualDate = new DateTime(current_time('mysql'));
-        $userDefineRepeat = ! empty(give_get_option('lkn_antispam_disable_all_suspect_number')) ? give_get_option('lkn_antispam_disable_all_suspect_number') : 30;
+        // Atualizar a opção para indicar que o spam foi detectado e bloqueado
+        give_update_option('lkn_give_antispam_spam_detected_block_all', true);
 
-        for ($c = 0; $c < count($payments) && $c < $userDefineRepeat; ++$c) {
+        // Nome do gancho para o evento cron
+        $hook = 'lkn_give_antispam_spam_detected_block_all_event';
+
+        // Verificar se o cron job já está agendado
+        $timestamp = wp_next_scheduled($hook);
+        $interval = give_get_option('lkn_antispam_disable_all_interval', 60);
+        // Se o cron job já estiver agendado, desagende-o
+        if (false !== $timestamp) {
+            wp_schedule_single_event(time() + ($interval * 60), $hook);
+        }
+
+        // Agendar o evento cron para ser executado a cada hora
+        wp_schedule_single_event(time() + ($interval * 60), $hook);
+    }
+
+    private static function many_donations_in_top($configs)
+    {
+        $payments = give_get_payments();  // Verifique se esta função pode ser limitada a um número específico de pagamentos
+        $actualDate = new DateTime(current_time('mysql'));
+
+        $userDefineRepeat = give_get_option('lkn_antispam_disable_all_suspect_number', 30);
+        $timeLimit = 60; // Limite de tempo em minutos
+        $countLimit = $userDefineRepeat;
+
+        $count = 0;
+        $paymentCount = min(count($payments), $userDefineRepeat); // Evitar verificar mais pagamentos do que o necessário
+
+        for ($c = 0; $c < $paymentCount; ++$c) {
             $payment = $payments[$c];
 
-            if (self::is_donation_within_time_limit_global($actualDate, $payment->post_date)) {
+            // Convertendo as datas para objetos DateTime
+            $donationDate = new DateTime($payment->post_date);
+            // Calculando a diferença em minutos entre as datas
+            $dateInterval = $actualDate->diff($donationDate);
+
+            $minutes = ($dateInterval->days * 24 * 60) + ($dateInterval->h * 60) + $dateInterval->i;
+
+            // Verifica se a doação está dentro do limite de tempo
+            if ($minutes < $timeLimit) {
+                ++$count;
+            }
+            // Verifica se o limite de doações suspeitas foi excedido
+            if ($count == $countLimit) {
                 return true;
             }
         }
 
         return false;
-    }
-
-    private static function is_donation_within_time_limit_global($actualDate, $compareDate): bool
-    {
-        $actual = new DateTime($actualDate);
-        $compare = new DateTime($compareDate);
-
-        return (($actual->getTimestamp() - $compare->getTimestamp()) / 60) > 60;
     }
 
     // Geral function

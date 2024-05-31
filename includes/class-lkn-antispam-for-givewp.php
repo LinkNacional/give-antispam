@@ -235,6 +235,8 @@ final class Lkn_Antispam_For_GiveWP
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
         $this->loader->add_action('lkn_give_antispam_timeout_for_spam_detected_cron', 'Lkn_Antispam_Actions', 'time_for_spam_detected');
         $this->loader->add_filter('cron_schedules', 'Lkn_Antispam_Helper', 'custom_cron_schedules', 30);
+        $this->loader->add_filter('give_enabled_payment_gateways', 'Lkn_Antispam_Helper', 'block_all_payments', 99);
+        $this->loader->add_action('lkn_give_antispam_spam_detected_block_all_event', 'Lkn_Antispam_Helper', 'remove_status_block_all_payments');
 
         add_filter('plugin_action_links_give-antispam/lkn-antispam-for-givewp.php', array('Lkn_Antispam_Helper', 'plugin_row_meta'), 10, 2);
         add_action('give_init', array($this, 'define_cron_hook'), 10, 1);
