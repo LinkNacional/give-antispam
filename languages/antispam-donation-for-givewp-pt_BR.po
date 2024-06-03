@@ -126,6 +126,20 @@ msgstr "Tempo para o formulario desbloquear:"
 msgid "Enter the time in minutes for the form unlocking"
 msgstr "Digite o tempo em minutos para o formulario desbloquear"
 
-msgid "The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked.<br><strong>Activate to customize fields</strong>."
-msgstr "A funcionalidade permite ao usuário bloquear todos os formulários do site por um período personalizado. Quando ativada, monitora a atividade do site, como doações. Se um limite definido pelo usuário for ultrapassado, os formulários são bloqueados temporariamente. Após o tempo configurado, os formulários são desbloqueados automaticamente.<br><strong>Ative para personalizar os campos</strong>."
+msgid "The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked.<br><strong>Activate to customize fields</strong>.<br><a id=\"lkn-antispam-link\" href=\"#\">Activate your forms manually here.</a>"
+msgstr "A funcionalidade permite ao usuário bloquear todos os formulários do site por um período personalizado. Quando ativada, monitora a atividade do site, como doações. Se um limite definido pelo usuário for ultrapassado, os formulários são bloqueados temporariamente. Após o tempo configurado, os formulários são desbloqueados automaticamente.<br><strong>Ative para personalizar os campos</strong>.<br><a id=\"lkn-antispam-link\" href=\"#\">Ative seus formulários manualmente aqui.</a>"
 
+msgid "Block All Donations"
+msgstr "Bloquear todas doações"
+
+msgid "Time for forms to normalize."
+msgstr "Tempo para normalização dos formulários."
+
+msgid "Defines the time in minutes during which forms will be disabled after a submission to prevent spam."
+msgstr "Define o tempo em minutos durante o qual os formulários serão desativados após um envio para prevenir spam."
+
+msgid "Donations limit for spam detection"
+msgstr "Limite de doações para detectar o spam"
+
+msgid "Set the minimum number of donations within one hour to consider as suspicious spam activity."
+msgstr "Defina o número mínimo de doações dentro de uma hora para considerar como atividade de spam suspeita."
