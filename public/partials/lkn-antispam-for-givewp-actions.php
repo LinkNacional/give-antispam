@@ -101,27 +101,23 @@ final class Lkn_Antispam_Actions
             $userIp = give_get_ip();
 
             if (self::is_ip_banned($configs, $userIp)) {
-                // teste
                 self::handle_banned_ip($configs, $valid_data, $userIp);
-                do_action('lkn_give_antispam_spam_detected');
+                do_action('lkn__antispam_spam_detected');
                 Lkn_Antispam_Actions::time_for_spam_detected();
 
                 return $valid_data;
             }
 
             if (self::has_too_many_donations($configs, $valid_data, $userIp)) {
-                do_action('lkn_give_antispam_spam_detected');
+                do_action('lkn__antispam_spam_detected');
                 self::time_for_spam_detected();
 
                 return $valid_data;
             }
-            if (give_get_option('lkn_antispam_disable_all_donations') == 'enabled') {
-                if (self::many_donations_in_top($configs, $data)) {
-                    self::spam_detected_block_all();
-                    self::report_spam($configs, $valid_data, give_get_ip(), 'TOO MANY ATTEMPTS');
+            if (self::many_donations_in_top($configs, $data)) {
+                self::spam_detected_block_all();
 
-                    return $valid_data;
-                }
+                return $valid_data;
             }
         }
 
@@ -193,7 +189,7 @@ HTML;
 
     public static function time_for_spam_detected(): void
     {
-        $hook = 'lkn_give_antispam_spam_detected_hook';
+        $hook = 'lkn__antispam_spam_detected_hook';
         // Verificar se o cron job já está agendado
         $timestamp = wp_next_scheduled($hook);
 
@@ -203,15 +199,15 @@ HTML;
         }
 
         // Obter o valor da opção customizada
-        $custom_cron = give_get_option('lkn_give_antispam_timestamp_in_minuts');
+        $custom_cron = give_get_option('lkn_antispam_timestamp_in_minuts');
 
         // Agendar o evento cron de acordo com o valor da opção customizada
         $schedule = ($custom_cron > 0) ? 'custom_cron' : 'hourly';
         wp_schedule_event(time(), $schedule, $hook);
 
         // Atualizar a opção indicando que o cron job foi agendado
-        give_update_option('lkn_give_antispam_spam_detected', true);
-        $disable_form = give_get_option('lkn_give_antispam_disable_form');
+        give_update_option('lkn__antispam_spam_detected', true);
+        $disable_form = give_get_option('lkn__antispam_disable_form');
         if ($disable_form) {
             self::alter_status_spam();
         }
@@ -219,20 +215,20 @@ HTML;
 
     public static function alter_status_spam(): void
     {
-        give_update_option('lkn_give_antispam_spam_detected', false);
+        give_update_option('lkn_antispam_spam_detected', false);
 
         // Depois que a ação for executada, remova o cron job
-        $cron_hook = 'lkn_give_antispam_spam_detected_hook';
+        $cron_hook = 'lkn__antispam_spam_detected_hook';
         wp_unschedule_event(wp_next_scheduled($cron_hook), $cron_hook);
     }
 
     private static function spam_detected_block_all(): void
     {
         // Atualizar a opção para indicar que o spam foi detectado e bloqueado
-        give_update_option('lkn_give_antispam_spam_detected_block_all', true);
+        give_update_option('lkn_antispam_spam_detected_block_all', true);
 
         // Nome do gancho para o evento cron
-        $hook = 'lkn_give_antispam_spam_detected_block_all_event';
+        $hook = 'lkn__antispam_spam_detected_block_all_event';
 
         // Verificar se o cron job já está agendado
         $timestamp = wp_next_scheduled($hook);
@@ -248,33 +244,35 @@ HTML;
 
     private static function many_donations_in_top($configs)
     {
-        $payments = give_get_payments();  // Verifique se esta função pode ser limitada a um número específico de pagamentos
-        $actualDate = new DateTime(current_time('mysql'));
+        if (give_get_option('lkn_antispam_disable_all_donations') == 'enabled') {
+            $payments = give_get_payments();  // Verifique se esta função pode ser limitada a um número específico de pagamentos
+            $actualDate = new DateTime(current_time('mysql'));
 
-        $userDefineRepeat = give_get_option('lkn_antispam_disable_all_suspect_number', 30);
-        $timeLimit = 60; // Limite de tempo em minutos
-        $countLimit = $userDefineRepeat;
+            $userDefineRepeat = give_get_option('lkn_antispam_disable_all_suspect_number', 30);
+            $timeLimit = 60; // Limite de tempo em minutos
+            $countLimit = $userDefineRepeat;
 
-        $count = 0;
-        $paymentCount = min(count($payments), $userDefineRepeat); // Evitar verificar mais pagamentos do que o necessário
+            $count = 0;
+            $paymentCount = min(count($payments), $userDefineRepeat); // Evitar verificar mais pagamentos do que o necessário
 
-        for ($c = 0; $c < $paymentCount; ++$c) {
-            $payment = $payments[$c];
+            for ($c = 0; $c < $paymentCount; ++$c) {
+                $payment = $payments[$c];
 
-            // Convertendo as datas para objetos DateTime
-            $donationDate = new DateTime($payment->post_date);
-            // Calculando a diferença em minutos entre as datas
-            $dateInterval = $actualDate->diff($donationDate);
+                // Convertendo as datas para objetos DateTime
+                $donationDate = new DateTime($payment->post_date);
+                // Calculando a diferença em minutos entre as datas
+                $dateInterval = $actualDate->diff($donationDate);
 
-            $minutes = ($dateInterval->days * 24 * 60) + ($dateInterval->h * 60) + $dateInterval->i;
+                $minutes = ($dateInterval->days * 24 * 60) + ($dateInterval->h * 60) + $dateInterval->i;
 
-            // Verifica se a doação está dentro do limite de tempo
-            if ($minutes < $timeLimit) {
-                ++$count;
-            }
-            // Verifica se o limite de doações suspeitas foi excedido
-            if ($count == $countLimit) {
-                return true;
+                // Verifica se a doação está dentro do limite de tempo
+                if ($minutes < $timeLimit) {
+                    ++$count;
+                }
+                // Verifica se o limite de doações suspeitas foi excedido
+                if ($count == $countLimit) {
+                    return true;
+                }
             }
         }
 

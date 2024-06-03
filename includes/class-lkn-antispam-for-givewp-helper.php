@@ -198,7 +198,7 @@ abstract class Lkn_Antispam_Helper
 
     final public static function custom_cron_schedules($schedules)
     {
-        $timestampGive = give_get_option('lkn_give_antispam_timestamp_in_minuts');
+        $timestampGive = give_get_option('lkn_antispam_timestamp_in_minuts');
         $timestampGiveDisableAllDonations = give_get_option('lkn_antispam_disable_all_interval');
         if ( ! empty($timestampGive)) {
             // Adiciona um novo intervalo personalizado
@@ -218,7 +218,7 @@ abstract class Lkn_Antispam_Helper
 
     final public static function block_all_payments($gateway_list)
     {
-        $option = give_get_option('lkn_give_antispam_spam_detected_block_all');
+        $option = give_get_option('lkn__antispam_spam_detected_block_all');
         if ($option) {
             return array();
         }
@@ -228,6 +228,61 @@ abstract class Lkn_Antispam_Helper
 
     final public static function remove_status_block_all_payments(): void
     {
-        give_update_option('lkn_give_antispam_spam_detected_block_all', false);
+        give_update_option('lkn_antispam_spam_detected_block_all', false);
+    }
+
+    final public static function create_custom_page(): int
+    {
+        // Título do template
+        $template_title = 'Meu Template';
+
+        // Define os argumentos da consulta WP_Query para verificar se o template já existe
+        $args = array(
+            'post_type' => 'page',
+            'post_status' => 'any', // Verificar em todos os status de postagem
+            'posts_per_page' => 1,
+            'title' => $template_title,
+        );
+
+        // Executa a consulta WP_Query
+        $query = new WP_Query($args);
+
+        // Verifica se a consulta retornou alguma página
+        if ($query->have_posts()) {
+            // Se o template já existe, retorna o ID
+            $template_id = $query->posts[0]->ID;
+        } else {
+            // Se o template não existir, cria um novo
+            $new_template_args = array(
+                'post_type' => 'page',
+                'post_title' => $template_title,
+                'post_status' => 'publish',
+            );
+
+            // Insere a postagem no banco de dados
+            $template_id = wp_insert_post($new_template_args);
+        }
+
+        // Restaura as informações da consulta original
+
+        // Retorna o ID do template
+        return $template_id;
+    }
+
+    final public static function add_php_custom_page($content)
+    {
+        // Verifica se é a página desejada (substitua 'page-slug' pelo slug da página)
+        if (is_page('Meu Template')) {
+            // Adiciona o código PHP ao conteúdo da página
+            ob_start(); // Inicia o buffer de saída
+
+            include_once LKN_ANTISPAM_FOR_GIVEWP_DIR . 'public/templates/lkn-antispam-custom-page.php';
+            $php_output = ob_get_clean(); // Captura a saída do buffer e limpa o buffer
+
+            // Adiciona o código PHP ao conteúdo da página
+            $content = $php_output;
+        }
+
+        return $content;
     }
 }

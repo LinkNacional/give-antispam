@@ -102,13 +102,13 @@ final class Lkn_Antispam_For_GiveWP_Admin
                         'default' => 'disabled',
                         'type' => 'radio',
                         'options' => array(
-                            'enabled' => __('Enabled', 'antispam-donatpaymention-for-givewp'),
+                            'enabled' => __('Enabled', 'antispam-donation-for-givewp'),
                             'disabled' => __('Disabled', 'antispam-donation-for-givewp'),
                         ),
                     );
                     $newSetting[] = array(
                         'name' => __('Time for form unlocking:', 'antispam-donation-for-givewp'),
-                        'id' => 'lkn_give_antispam_timestamp_in_minuts',
+                        'id' => 'lkn_antispam_timestamp_in_minuts',
                         'desc_tip' => true,
                         'desc' => __('Enter the time in minutes for the form unlocking', 'antispam-donation-for-givewp'),
                         'type' => 'number',
@@ -138,17 +138,6 @@ final class Lkn_Antispam_For_GiveWP_Admin
                         'default' => '10',
                     );
 
-                    $newSetting[] = array(
-                        'name' => __('Limit donations to the same payment method', 'antispam-donation-for-givewp'),
-                        'id' => 'lkn_antispam_same_gateway_setting_field',
-                        'desc' => __('Enable to limit consecutive doantions that have the same payment methods.', 'antispam-donation-for-givewp'),
-                        'type' => 'radio',
-                        'default' => 'disabled',
-                        'options' => array(
-                            'enabled' => __('Enabled', 'antispam-donation-for-givewp'),
-                            'disabled' => __('Disabled', 'antispam-donation-for-givewp'),
-                        ),
-                    );
                     $newSetting[] = array(
                         'name' => __('Limit donations to the same payment method', 'antispam-donation-for-givewp'),
                         'id' => 'lkn_antispam_same_gateway_setting_field',
@@ -210,7 +199,7 @@ final class Lkn_Antispam_For_GiveWP_Admin
                     $newSetting[] = array(
                         'name' => __('Block All Donations', 'antispam-donation-for-givewp'),
                         'id' => 'lkn_antispam_disable_all_donations',
-                        'desc' => __('The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked.<br><strong>Activate to customize fields</strong>.', 'antispam-donation-for-givewp'),
+                        'desc' => __('The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked.<br><strong>Activate to customize fields</strong>.<br><a id="lkn-antispam-link" href="#">Activate your forms manually here.</a>', 'antispam-donation-for-givewp'),
                         'type' => 'radio',
                         'default' => 'disabled',
                         'options' => array(
@@ -222,14 +211,14 @@ final class Lkn_Antispam_For_GiveWP_Admin
                         $newSetting[] = array(
                             'name' => __('Time for forms to normalize.', 'antispam-donation-for-givewp'),
                             'id' => 'lkn_antispam_disable_all_interval',
-                            'desc' => __('Defines the time in minutes during which forms will be disabled after a submission to prevent spam.', 'antispam-donation-for-givewp'),
+                            'desc' => __('Set the minimum number of donations within one hour to consider as suspicious spam activity.', 'antispam-donation-for-givewp'),
                             'type' => 'number',
                             'default' => 60,
                         );
                         $newSetting[] = array(
-                            'name' => __('Submission limit for spam detection', 'antispam-donation-for-givewp'),
+                            'name' => __('Donations limit for spam detection', 'antispam-donation-for-givewp'),
                             'id' => 'lkn_antispam_disable_all_suspect_number',
-                            'desc' => __('Set the minimum number of submissions within one hour to consider as suspicious spam activity.', 'antispam-donation-for-givewp'),
+                            'desc' => __('Set the minimum number of donations within one hour to consider as suspicious spam activity.', 'antispam-donation-for-givewp'),
                             'type' => 'number',
                             'default' => 30,
                         );
@@ -300,5 +289,8 @@ final class Lkn_Antispam_For_GiveWP_Admin
          */
 
         wp_enqueue_script('lkn-antispam-for-givewp-admin-js', plugin_dir_url(__FILE__) . '/js/lkn-antispam-for-givewp-admin.js', array('jquery'), $this->version, false);
+        wp_enqueue_script('lkn-antispam-for-givewp-link.js', plugin_dir_url(__FILE__) . '/js/lkn-antispam-for-givewp-link.js');
+
+        wp_localize_script('lkn-antispam-for-givewp-link.js', 'link', array('href' => get_permalink(Lkn_Antispam_Helper::create_custom_page())));
     }
 }
