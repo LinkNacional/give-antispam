@@ -143,3 +143,6 @@ msgstr "Limite de doações para detectar o spam"
 
 msgid "Set the minimum number of donations within one hour to consider as suspicious spam activity."
 msgstr "Defina o número mínimo de doações dentro de uma hora para considerar como atividade de spam suspeita."
+
+msgid "Set the time for the forms to be normalized again"
+msgstr "Defina o tempo para que os formulários voltem a ser normalizados."

@@ -211,7 +211,7 @@ final class Lkn_Antispam_For_GiveWP_Admin
                         $newSetting[] = array(
                             'name' => __('Time for forms to normalize.', 'antispam-donation-for-givewp'),
                             'id' => 'lkn_antispam_disable_all_interval',
-                            'desc' => __('Set the minimum number of donations within one hour to consider as suspicious spam activity.', 'antispam-donation-for-givewp'),
+                            'desc' => __('Set the time for the forms to be normalized again','antispam-donation-for-givewp'),
                             'type' => 'number',
                             'default' => 60,
                         );
