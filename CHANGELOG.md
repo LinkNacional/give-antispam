@@ -1,4 +1,4 @@
-### 1.3.2  03/06/2024 
+### 1.3.0 - 03/06/2024 
 * Added feature in admin panel: Enable/disable donation blocking based on user donation count.
 * Addition of translation for the new feature.
 * Implementation of global donation blocking when the global donation limit is exceeded.

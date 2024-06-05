@@ -76,7 +76,7 @@ The Antispam Donation for GiveWP is now activated.
 
 == Changelog ==
 
-= 1.3.2 =
+= 1.3.0 =
 ** 03/06/2024 **
 * Added feature in admin panel: Enable/disable donation blocking based on user donation count.
 * Addition of translation for the new feature.

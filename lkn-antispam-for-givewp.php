@@ -26,7 +26,7 @@ if ( ! defined('WPINC')) {
     exit;
 }
 
-define('LKN_ANTISPAM_FOR_GIVEWP_VERSION', '1.3.2');
+define('LKN_ANTISPAM_FOR_GIVEWP_VERSION', '1.3.0');
 
 define('LKN_ANTISPAM_FOR_GIVEWP_MIN_GIVE_VERSION', '2.3.0');
 
