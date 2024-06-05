@@ -199,7 +199,7 @@ final class Lkn_Antispam_For_GiveWP_Admin
                     $newSetting[] = array(
                         'name' => __('Block All Donations', 'antispam-donation-for-givewp'),
                         'id' => 'lkn_antispam_disable_all_donations',
-                        'desc' => __('The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked.<br><strong>Activate to customize fields</strong>.<br><a id="lkn-antispam-link" href="#">Activate your forms manually here.</a>', 'antispam-donation-for-givewp'),
+                        'desc' => __('The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked.', 'antispam-donation-for-givewp'),
                         'type' => 'radio',
                         'default' => 'disabled',
                         'options' => array(
@@ -207,18 +207,29 @@ final class Lkn_Antispam_For_GiveWP_Admin
                             'disabled' => __('Disabled', 'antispam-donation-for-givewp'),
                         ),
                     );
+                    $form = give_get_option('lkn_antispam_spam_detected_block_all', false);
+                    $blockAll = give_get_option('lkn_antispam_disable_all_donations', false) === 'enabled' ? true : false;
+
+                    if ($blockAll && $form) {
+                        $newSetting[count($newSetting) - 1]['desc'] = __('The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked. <a id="lkn-antispam-link" href="#">Forms blocked, unlock now.</a>', 'antispam-donation-for-givewp');
+                    }
+
+                    if ( ! $form && $blockAll) {
+                        $newSetting[count($newSetting) - 1]['desc'] = __('The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked. <strong>Enabled forms</strong>', 'antispam-donation-for-givewp');
+                    }
+
                     if (give_get_option('lkn_antispam_disable_all_donations') === 'enabled') {
                         $newSetting[] = array(
                             'name' => __('Time for forms to normalize.', 'antispam-donation-for-givewp'),
                             'id' => 'lkn_antispam_disable_all_interval',
-                            'desc' => __('Set the time for the forms to be normalized again','antispam-donation-for-givewp'),
+                            'desc' => __('Set the time for the forms to be normalized again. <strong>Default value: 60</strong>', 'antispam-donation-for-givewp'),
                             'type' => 'number',
                             'default' => 60,
                         );
                         $newSetting[] = array(
                             'name' => __('Donations limit for spam detection', 'antispam-donation-for-givewp'),
                             'id' => 'lkn_antispam_disable_all_suspect_number',
-                            'desc' => __('Set the minimum number of donations within one hour to consider as suspicious spam activity.', 'antispam-donation-for-givewp'),
+                            'desc' => __('Set the minimum number of donations within one hour to consider as suspicious spam activity. <strong>Default value: 30</strong>', 'antispam-donation-for-givewp'),
                             'type' => 'number',
                             'default' => 30,
                         );

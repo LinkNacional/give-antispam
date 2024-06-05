@@ -126,8 +126,14 @@ msgstr "Tempo para o formulario desbloquear:"
 msgid "Enter the time in minutes for the form unlocking"
 msgstr "Digite o tempo em minutos para o formulario desbloquear"
 
-msgid "The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked.<br><strong>Activate to customize fields</strong>.<br><a id=\"lkn-antispam-link\" href=\"#\">Activate your forms manually here.</a>"
-msgstr "A funcionalidade permite ao usuário bloquear todos os formulários do site por um período personalizado. Quando ativada, monitora a atividade do site, como doações. Se um limite definido pelo usuário for ultrapassado, os formulários são bloqueados temporariamente. Após o tempo configurado, os formulários são desbloqueados automaticamente.<br><strong>Ative para personalizar os campos</strong>.<br><a id=\"lkn-antispam-link\" href=\"#\">Ative seus formulários manualmente aqui.</a>"
+msgid "The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked."
+msgstr "A funcionalidade permite aos usuários bloquear todos os formulários do site por um período personalizado. Quando ativada, monitora a atividade do site, como doações. Se um limite definido pelo usuário for excedido, os formulários são temporariamente bloqueados. Após o tempo determinado, os formulários são desbloqueados automaticamente."
+
+msgid "The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked. <a id=\"lkn-antispam-link\" href=\"#\">Forms blocked, unlock now.</a>"
+msgstr "A funcionalidade permite aos usuários bloquear todos os formulários do site por um período personalizado. Quando ativada, monitora a atividade do site, como doações. Se um limite definido pelo usuário for excedido, os formulários são temporariamente bloqueados. Após o tempo determinado, os formulários são desbloqueados automaticamente. <a id=\"lkn-antispam-link\" href=\"#\">Formularios bloqueados, desbloquear agora.</a>"
+
+msgid "The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked. <strong>Enabled forms</strong>"
+msgstr "A funcionalidade permite aos usuários bloquear todos os formulários do site por um período personalizado. Quando ativada, monitora a atividade do site, como doações. Se um limite definido pelo usuário for excedido, os formulários são temporariamente bloqueados. Após o tempo determinado, os formulários são desbloqueados automaticamente. <strong>Formulários desbloqueados</strong>"
 
 msgid "Block All Donations"
 msgstr "Bloquear todas doações"
@@ -141,8 +147,8 @@ msgstr "Define o tempo em minutos durante o qual os formulários serão desativa
 msgid "Donations limit for spam detection"
 msgstr "Limite de doações para detectar o spam"
 
-msgid "Set the minimum number of donations within one hour to consider as suspicious spam activity."
-msgstr "Defina o número mínimo de doações dentro de uma hora para considerar como atividade de spam suspeita."
+msgid "Set the minimum number of donations within one hour to consider as suspicious spam activity. <strong>Default value: 30</strong>"
+msgstr "Defina o número mínimo de doações dentro de uma hora para considerar como atividade de spam suspeita. <strong>Valor padrão: 30</strong>"
 
-msgid "Set the time for the forms to be normalized again"
-msgstr "Defina o tempo para que os formulários voltem a ser normalizados."
+msgid "Set the time for the forms to be normalized again. <strong>Default value: 60</strong>"
+msgstr "Defina o tempo para que os formulários voltem a ser normalizados. <strong>Valor padrão: 60</strong>"
