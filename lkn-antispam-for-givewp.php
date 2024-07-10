@@ -14,7 +14,7 @@
  * Plugin Name:       Antispam Donation for GiveWP
  * Plugin URI:        https://www.linknacional.com/wordpress/plugins/
  * Description:       Performs verification and prevention of malicious donations.
- * Version:           1.2.2
+ * Version:           1.3.0
  * Author:            Link Nacional
  * Author URI:        https://www.linknacional.com/
  * License:           GPL-3.0+
