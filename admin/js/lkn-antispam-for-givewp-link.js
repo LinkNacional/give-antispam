@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
   const linkA = document.getElementById('lkn-antispam-link')
-  const links = link.href + '?unlock=true'
+  if(linkA){
+    const links = link.href + '?unlock=true'
+    linkA.href = links
 
-  linkA.href = links
+  }
+
 })
