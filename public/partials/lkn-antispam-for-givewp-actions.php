@@ -173,7 +173,7 @@ final class Lkn_Antispam_Actions
                 $siteKey = $configs['siteRec'];
                 // Add you own google API Site key.
                 // $recResponse = sanitize_text_field($_POST['g-recaptcha-lkn-input']);
-                $html = <<<'HTML'
+                $html = '
             
 			<div id="g-notice-wrapper" class="gNotice">
                 This site is protected by reCAPTCHA and the <a href="https://policies.google.com/privacy" target="_blank">Privacy Policy</a> and Google <a href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.
@@ -181,7 +181,7 @@ final class Lkn_Antispam_Actions
             
             <input type="hidden" id="g-recaptcha-lkn-input" name="g-recaptcha-response" />
 
-HTML;
+';
                 echo esc_html($html);
             }
         }
@@ -222,42 +222,20 @@ HTML;
         wp_unschedule_event(wp_next_scheduled($cron_hook), $cron_hook);
     }
 
-    private static function spam_detected_block_all(): void
-    {
-        // Atualizar a opção para indicar que o spam foi detectado e bloqueado
-        give_update_option('lkn_antispam_spam_detected_block_all', true);
-
-        // Nome do gancho para o evento cron
-        $hook = 'lkn__antispam_spam_detected_block_all_event';
-
-        // Verificar se o cron job já está agendado
-        $timestamp = wp_next_scheduled($hook);
-        $interval = give_get_option('lkn_antispam_disable_all_interval', 60);
-        // Se o cron job já estiver agendado, desagende-o
-        if (false !== $timestamp) {
-            wp_schedule_single_event(time() + ($interval * 60), $hook);
-        }
-
-        // Agendar o evento cron para ser executado a cada hora
-        wp_schedule_single_event(time() + ($interval * 60), $hook);
-    }
-
     private static function many_donations_in_top($configs)
     {
         if (give_get_option('lkn_antispam_disable_all_donations') == 'enabled') {
             $payments = give_get_payments();  // Verifique se esta função pode ser limitada a um número específico de pagamentos
             $actualDate = new DateTime(current_time('mysql'));
-
-            $userDefineRepeat = give_get_option('lkn_antispam_disable_all_suspect_number', 30);
+            $userDefineRepeat = give_get_option('lkn_antispam_disable_all_suspect_number');
             $timeLimit = 60; // Limite de tempo em minutos
             $countLimit = $userDefineRepeat;
 
             $count = 0;
-            $paymentCount = min(count($payments), $userDefineRepeat); // Evitar verificar mais pagamentos do que o necessário
+            $paymentCountLimit = count(array_slice($payments, -60));
 
-            for ($c = 0; $c < $paymentCount; ++$c) {
+            for ($c = 0; $c < $paymentCountLimit; ++$c) {
                 $payment = $payments[$c];
-
                 // Convertendo as datas para objetos DateTime
                 $donationDate = new DateTime($payment->post_date);
                 // Calculando a diferença em minutos entre as datas
@@ -277,6 +255,26 @@ HTML;
         }
 
         return false;
+    }
+
+    private static function spam_detected_block_all(): void
+    {
+        // Atualizar a opção para indicar que o spam foi detectado e bloqueado
+        give_update_option('lkn_antispam_spam_detected_block_all', true);
+
+        // Nome do gancho para o evento cron
+        $hook = 'lkn_antispam_spam_detected_block_all_event';
+
+        // Verificar se o cron job já está agendado
+        $timestamp = wp_next_scheduled($hook);
+        $interval = give_get_option('lkn_antispam_disable_all_interval', 60);
+        // Se o cron job já estiver agendado, desagende-o
+        if (false !== $timestamp) {
+            wp_schedule_single_event(time() + ($interval * 60), $hook);
+        }
+
+        // Agendar o evento cron para ser executado a cada hora
+        wp_schedule_single_event(time() + ($interval * 60), $hook);
     }
 
     // Geral function
