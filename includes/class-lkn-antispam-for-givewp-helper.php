@@ -204,14 +204,16 @@ abstract class Lkn_Antispam_Helper
             // Adiciona um novo intervalo personalizado
             $schedules['lkn_antispam_custom_interval'] = array(
                 'interval' => $timestampGive * 60, // Valor depende do que o usuario por nas configurações do plugin
-                'display' => __('Intervalo Personalizado', 'seu-text-domain'),
+                'display' => __('Intervalo Personalizado'),
             );
+
+            return $schedules;
         }
-        if ( ! empty($timestampGiveDisableAllDonations)) {
-            $schedules['lkn_antispam_disable_all_interval'] = array(
-                'interval' => $timestampGiveDisableAllDonations * 60, // Valor depende do que o usuario por nas configurações do plugin
-            );
-        }
+
+        $schedules['lkn_antispam_disable_all_interval'] = array(
+            'interval' => 3600, // Valor depende do que o usuario por nas configurações do plugin
+            'display' => 'Intervalo Padrão',
+        );
 
         return $schedules;
     }
