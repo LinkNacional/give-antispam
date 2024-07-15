@@ -219,6 +219,17 @@ final class Lkn_Antispam_For_GiveWP
 
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
+        $this->loader->add_action('give_init', $this, 'updater_init');
+    }
+
+    public function updater_init() {
+        include_once plugin_dir_path(__DIR__) . 'includes/plugin-updater/plugin-update-checker.php';
+
+        return new Lkn_Puc_Plugin_UpdateChecker(
+            'https://api.linknacional.com.br/v2/u/?slug=give-antispam',
+            LKN_ANTISPAM_FOR_GIVEWP_FILE,// (caso o plugin não precise de compatibilidade com ioncube utilize: __FILE__), //Full path to the main plugin file or functions.php.
+            'give-antispam'
+        );
     }
 
     /**
