@@ -14,7 +14,7 @@
  * Plugin Name:       Give - Antispam
  * Plugin URI:        https://www.linknacional.com/wordpress/plugins/
  * Description:       Performs verification and prevention of malicious donations.
- * Version:           1.3.0
+ * Version:           1.3.1
  * Author:            Link Nacional
  * Author URI:        https://www.linknacional.com/
  * License:           GPL-3.0+
@@ -26,7 +26,7 @@ if ( ! defined('WPINC')) {
     exit;
 }
 
-define('LKN_ANTISPAM_FOR_GIVEWP_VERSION', '1.3.0');
+define('LKN_ANTISPAM_FOR_GIVEWP_VERSION', '1.3.1');
 
 define('LKN_ANTISPAM_FOR_GIVEWP_MIN_GIVE_VERSION', '2.3.0');
 

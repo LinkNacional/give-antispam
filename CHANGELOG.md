@@ -1,3 +1,6 @@
+# 1.3.1 - 15/07/2024 
+* Correção de bugs
+
 # 1.3.0 - 15/07/2024 
 * Adicionada funcionalidade no painel administrativo: Habilitar/desabilitar bloqueio de doações com base na contagem de doações do usuário.
 * Adição de tradução para a nova funcionalidade.
