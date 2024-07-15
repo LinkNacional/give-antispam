@@ -1,4 +1,5 @@
 #: Antispam Donation For GiveWP tradução pt_BR
+
 msgid "Performs verification and prevention of malicious donations."
 msgstr "Faz a verificação e prevenção de doações mal intencionadas."
 
@@ -112,3 +113,40 @@ msgstr "O e-mail que você está usando foi sinalizado como sendo usado em doaç
 
 msgid "The reCAPTCHA was not verified, try again."
 msgstr "O reCAPTCHA não foi verificado, tente novamente"
+
+msgid "It is a mechanism that restricts the number of donations allowed per donor to prevent abuse."
+msgstr "É um mecanismo que restringe o número de doações permitidas por doador para evitar abusos."
+
+msgid "Blocking due to donation quantity:"
+msgstr "Bloqueio por quantidade de doação:"  
+
+msgid "Time for form unlocking:"
+msgstr "Tempo para o formulario desbloquear:" 
+
+msgid "Enter the time in minutes for the form unlocking"
+msgstr "Digite o tempo em minutos para o formulario desbloquear"
+
+msgid "The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked."
+msgstr "A funcionalidade permite aos usuários bloquear todos os formulários do site por um período personalizado. Quando ativada, monitora a atividade do site, como doações. Se um limite definido pelo usuário for excedido, os formulários são temporariamente bloqueados. Após o tempo determinado, os formulários são desbloqueados automaticamente."
+
+msgid "The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked. <a id=\"lkn-antispam-link\" href=\"#\">Forms blocked, unlock now.</a>"
+msgstr "A funcionalidade permite aos usuários bloquear todos os formulários do site por um período personalizado. Quando ativada, monitora a atividade do site, como doações. Se um limite definido pelo usuário for excedido, os formulários são temporariamente bloqueados. Após o tempo determinado, os formulários são desbloqueados automaticamente. <a id=\"lkn-antispam-link\" href=\"#\">Formularios bloqueados, desbloquear agora.</a>"
+
+msgid "The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked. <strong>Enabled forms</strong>"
+msgstr "A funcionalidade permite aos usuários bloquear todos os formulários do site por um período personalizado. Quando ativada, monitora a atividade do site, como doações. Se um limite definido pelo usuário for excedido, os formulários são temporariamente bloqueados. Após o tempo determinado, os formulários são desbloqueados automaticamente. <strong>Formulários desbloqueados</strong>"
+
+msgid "Block All Donations"
+msgstr "Bloquear todas doações"
+
+msgid "Lockout time in minutes"
+msgstr "Tempo de bloqueio em minutos"
+
+msgid "Set the lockout time for forms in minutes. <strong>Default value: 60</strong>"
+msgstr "Defina o tempo em minutos para que os formulários fiquem bloqueados. <strong>Default value: 60</strong>"
+
+msgid "Donation lockout per hour"
+msgstr "Bloqueio de doações por hora"
+
+msgid "Limit the maximum number of donations per hour. <strong>Default value: 30</strong>"
+msgstr "Limitar o número máximo de doações por hora. <strong>Valor padrão: 30</strong>"
+

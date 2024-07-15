@@ -5,3 +5,7 @@
 #lkn_log_new_tab {
     cursor: pointer;
 }
+
+#lkn_antispam_none .give-input-field {
+    display: none;
+}

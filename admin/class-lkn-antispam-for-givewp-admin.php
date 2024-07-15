@@ -15,7 +15,8 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Antispam_For_GiveWP_Admin {
+final class Lkn_Antispam_For_GiveWP_Admin
+{
     /**
      * The ID of this plugin.
      *
@@ -42,7 +43,8 @@ final class Lkn_Antispam_For_GiveWP_Admin {
      * @param string $plugin_name the name of this plugin
      * @param string $version     the version of this plugin
      */
-    public function __construct($plugin_name, $version) {
+    public function __construct($plugin_name, $version)
+    {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
 
@@ -58,7 +60,8 @@ final class Lkn_Antispam_For_GiveWP_Admin {
      *
      * @return array
      */
-    public function lkn_antispam_for_givewp_add_setting_into_existing_tab($settings) {
+    public function lkn_antispam_for_givewp_add_setting_into_existing_tab($settings)
+    {
         if ( ! Give_Admin_Settings::is_setting_page('general', 'access-control')) {
             return $settings;
         }
@@ -92,6 +95,25 @@ final class Lkn_Antispam_For_GiveWP_Admin {
                             'disabled' => __('Disabled', 'antispam-donation-for-givewp'),
                         ),
                     );
+                    $newSetting[] = array(
+                        'name' => __('Blocking due to donation quantity:', 'antispam-donation-for-givewp'),
+                        'id' => 'lkn_antispam_blocking_donation_amount_setting_field',
+                        'desc' => __('It is a mechanism that restricts the number of donations allowed per donor to prevent abuse.', 'antispam-donation-for-givewp'),
+                        'default' => 'disabled',
+                        'type' => 'radio',
+                        'options' => array(
+                            'enabled' => __('Enabled', 'antispam-donation-for-givewp'),
+                            'disabled' => __('Disabled', 'antispam-donation-for-givewp'),
+                        ),
+                    );
+                    $newSetting[] = array(
+                        'name' => __('Time for form unlocking:', 'antispam-donation-for-givewp'),
+                        'id' => 'lkn_antispam_timestamp_in_minuts',
+                        'desc_tip' => true,
+                        'desc' => __('Enter the time in minutes for the form unlocking', 'antispam-donation-for-givewp'),
+                        'type' => 'number',
+                        'default' => null,
+                    );
 
                     $newSetting[] = array(
                         'name' => __('Banned IPs', 'antispam-donation-for-givewp'),
@@ -107,7 +129,7 @@ final class Lkn_Antispam_For_GiveWP_Admin {
                         'type' => 'number',
                         'default' => '2',
                     );
-
+                        
                     $newSetting[] = array(
                         'name' => __('Interval between donations', 'antispam-donation-for-givewp'),
                         'id' => 'lkn_antispam_time_interval_setting_field',
@@ -174,6 +196,45 @@ final class Lkn_Antispam_For_GiveWP_Admin {
                         );
                     }
 
+                    $newSetting[] = array(
+                        'name' => __('Block All Donations', 'antispam-donation-for-givewp'),
+                        'id' => 'lkn_antispam_disable_all_donations',
+                        'desc' => __('The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked.', 'antispam-donation-for-givewp'),
+                        'type' => 'radio',
+                        'default' => 'disabled',
+                        'options' => array(
+                            'enabled' => __('Enabled', 'antispam-donation-for-givewp'),
+                            'disabled' => __('Disabled', 'antispam-donation-for-givewp'),
+                        ),
+                    );
+                    $form = give_get_option('lkn_antispam_spam_detected_block_all', false);
+                    $blockAll = give_get_option('lkn_antispam_disable_all_donations', false) === 'enabled' ? true : false;
+
+                    if ($blockAll && $form) {
+                        $newSetting[count($newSetting) - 1]['desc'] = __('The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked. <a id="lkn-antispam-link" href="#">Forms blocked, unlock now.</a>', 'antispam-donation-for-givewp');
+                    }
+
+                    if ( ! $form && $blockAll) {
+                        $newSetting[count($newSetting) - 1]['desc'] = __('The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked. <strong>Enabled forms</strong>', 'antispam-donation-for-givewp');
+                    }
+
+                    if (give_get_option('lkn_antispam_disable_all_donations') === 'enabled') {
+                        $newSetting[] = array(
+                            'name' => __('Lockout time in minutes', 'antispam-donation-for-givewp'),
+                            'id' => 'lkn_antispam_disable_all_interval',
+                            'desc' => __('Set the lockout time for forms in minutes. <strong>Default value: 60</strong>', 'antispam-donation-for-givewp'),
+                            'type' => 'number',
+                            'default' => 60,
+                        );
+                        $newSetting[] = array(
+                            'name' => __('Donation lockout per hour', 'antispam-donation-for-givewp'),
+                            'id' => 'lkn_antispam_disable_all_suspect_number',
+                            'desc' => __('Limit the maximum number of donations per hour. <strong>Default value: 30</strong>', 'antispam-donation-for-givewp'),
+                            'type' => 'number',
+                            'default' => 30,
+                        );
+                    }
+
                     // Options only apears if the plugin option is 'enabled'
                     if (give_get_option('lkn_antispam_save_log_setting_field') === 'enabled') {
                     }
@@ -192,7 +253,8 @@ final class Lkn_Antispam_For_GiveWP_Admin {
     }
 
     // Insert settings on GiveWP settings
-    public function include_settings(): void {
+    public function include_settings(): void
+    {
         add_filter('give_get_settings_general', array($this, 'lkn_antispam_for_givewp_add_setting_into_existing_tab'), 10, 1);
     }
 
@@ -201,7 +263,8 @@ final class Lkn_Antispam_For_GiveWP_Admin {
      *
      * @since    1.0.0
      */
-    public function enqueue_styles(): void {
+    public function enqueue_styles(): void
+    {
         /*
          * This function is provided for demonstration purposes only.
          *
@@ -214,7 +277,7 @@ final class Lkn_Antispam_For_GiveWP_Admin {
          * class.
          */
 
-        wp_enqueue_style( 'lkn-antispam-for-givewp-admin-css', plugin_dir_url( __FILE__ ) . '/css/lkn-antispam-for-givewp-admin.css', $this->version, 'all' );
+        wp_enqueue_style('lkn-antispam-for-givewp-admin-css', plugin_dir_url(__FILE__) . '/css/lkn-antispam-for-givewp-admin.css', $this->version, 'all');
     }
 
     /**
@@ -222,7 +285,8 @@ final class Lkn_Antispam_For_GiveWP_Admin {
      *
      * @since    1.0.0
      */
-    public function enqueue_scripts(): void {
+    public function enqueue_scripts(): void
+    {
         /*
          * This function is provided for demonstration purposes only.
          *
@@ -235,6 +299,10 @@ final class Lkn_Antispam_For_GiveWP_Admin {
          * class.
          */
 
-        wp_enqueue_script( 'lkn-antispam-for-givewp-admin-js', plugin_dir_url( __FILE__ ) . '/js/lkn-antispam-for-givewp-admin.js', array('jquery'), $this->version, false );
+        wp_enqueue_script('lkn-antispam-for-givewp-admin-js', plugin_dir_url(__FILE__) . '/js/lkn-antispam-for-givewp-admin.js', array('jquery'), $this->version, false);
+        wp_enqueue_script('lkn-antispam-for-givewp-link.js', plugin_dir_url(__FILE__) . '/js/lkn-antispam-for-givewp-link.js');
+        wp_enqueue_script('lkn-antispam-for-givewp-message.js', plugin_dir_url(__FILE__) . 'js/lkn-antispam-for-givewp-message.js');
+
+        wp_localize_script('lkn-antispam-for-givewp-link.js', 'link', array('href' => get_permalink(Lkn_Antispam_Helper::create_custom_page())));
     }
 }

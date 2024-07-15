@@ -16,7 +16,8 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Antispam_For_GiveWP_Deactivator {
+final class Lkn_Antispam_For_GiveWP_Deactivator
+{
     /**
      * Short Description. (use period).
      *
@@ -24,6 +25,5 @@ final class Lkn_Antispam_For_GiveWP_Deactivator {
      *
      * @since    1.0.0
      */
-    public static function deactivate(): void {
-    }
+    public static function deactivate(): void {}
 }
