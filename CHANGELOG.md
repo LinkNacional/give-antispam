@@ -1,42 +1,34 @@
-### 1.3.0 - 03/06/2024 
-* Added feature in admin panel: Enable/disable donation blocking based on user donation count.
-* Addition of translation for the new feature.
-* Implementation of global donation blocking when the global donation limit is exceeded.
+# 1.3.0 - 15/07/2024 
+* Adicionada funcionalidade no painel administrativo: Habilitar/desabilitar bloqueio de doações com base na contagem de doações do usuário.
+* Adição de tradução para a nova funcionalidade.
+* Implementação de bloqueio global de doações quando o limite global de doações for excedido.
 
+# 1.2.2 - 30/05/2023
+* Corrigido um bug que impedia a exibição de mensagens de erro no template de formulário legado.
 
-### 1.2.2 - 30/05/2023
+# 1.2.1 - 26/05/2023
+* Refatoração de código;
+* Removida a biblioteca de atualização do plugin;
+* Remoção automática de logs antigos.
 
-- Fixed a bug that prevented error messages from showing in the legacy form template.
+# 1.2.0
+* Refatoração e melhorias no código;
+* Adicionada configuração para habilitar ou desabilitar a geração de logs;
+* Adicionada configuração para inserção de IPs banidos de fazer doações.
 
-### 1.2.1 - 26/05/2023
+# 1.1.2
+* Corrigido bug de aviso do Google Recaptcha para formulários de valor fixo;
+* Ajustada lógica para deletar logs antigos;
+* Ajustados logs de antispam.
 
-- Code refactoring;
-- Removed plugin updater lib;
-- Automatically remove old logs.
+# 1.1.1
+* Agora há um link na descrição das configurações que redireciona para a página de administração do Recaptcha V3;
+* Ajustado título da configuração do Recaptcha.
 
-### v1.2.0
+# 1.1.0
+* O Antispam Donation para GiveWP agora tem a opção de habilitar e configurar o Recaptcha V3;
+* Ajustes e correções nas configurações do plugin;
+* Ajustes na formatação das configurações.
 
-- Code refactoring and improvements;
-- Add configuration to enable or disable generation of .logs;
-- Add configuration for insertion of IP's banned from making donations.
-
-### v1.1.2
-
-- Fixed Google Recaptcha notice bug for fixed value forms;
-- Adjusted logic to delete old logs;
-- Adjusted antispam logs.
-
-### v1.1.1
-
-- There is now a link in the settings description that redirects to the Recaptcha V3 admin page;
-- Adjusted title of Recaptcha setting.
-
-### v1.1.0
-
-- Antispam Donation for GiveWP now has option to enable and configure Recaptcha V3;
-- Tweaks and fixes in plugin settings;
-- Settings formatting tweaks.
-
-### v1.0.0
-
-- Plugin with the functionality to verify the IP's of donations and, if they are the same, block payment attempts.
+# 1.0.0
+* Plugin com a funcionalidade de verificar os IPs das doações e, se forem os mesmos, bloquear tentativas de pagamento.
