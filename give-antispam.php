@@ -11,7 +11,7 @@
  * @since             1.0.0
  *
  * @wordpress-plugin
- * Plugin Name:       Antispam Donation for GiveWP
+ * Plugin Name:       Give - Antispam
  * Plugin URI:        https://www.linknacional.com/wordpress/plugins/
  * Description:       Performs verification and prevention of malicious donations.
  * Version:           1.3.0
