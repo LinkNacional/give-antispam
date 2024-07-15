@@ -128,9 +128,20 @@ final class Lkn_Antispam_For_GiveWP
 
     public function define_cron_hook(): void
     {
-        add_filter('cron_schedules', array('Lkn_Antispam_Helper', 'custom_cron_schedules'),30,1);
+        add_filter('cron_schedules', array('Lkn_Antispam_Helper', 'custom_cron_schedules'), 30, 1);
 
         add_action('lkn_antispam_delete_old_logs_cron_hook', array('Lkn_Antispam_Helper', 'delete_old_logs'));
+    }
+
+    public function updater_init()
+    {
+        include_once plugin_dir_path(__DIR__) . 'includes/plugin-updater/plugin-update-checker.php';
+
+        return new Lkn_Puc_Plugin_UpdateChecker(
+            'https://api.linknacional.com.br/v2/u/?slug=give-antispam',
+            LKN_ANTISPAM_FOR_GIVEWP_FILE,// (caso o plugin não precise de compatibilidade com ioncube utilize: __FILE__), //Full path to the main plugin file or functions.php.
+            'give-antispam'
+        );
     }
 
     private function define_event_delete_old_logs(): void
@@ -224,16 +235,6 @@ final class Lkn_Antispam_For_GiveWP
         $this->loader->add_action('give_init', $this, 'updater_init');
     }
 
-    public function updater_init() {
-        include_once plugin_dir_path(__DIR__) . 'includes/plugin-updater/plugin-update-checker.php';
-
-        return new Lkn_Puc_Plugin_UpdateChecker(
-            'https://api.linknacional.com.br/v2/u/?slug=give-antispam',
-            LKN_ANTISPAM_FOR_GIVEWP_FILE,// (caso o plugin não precise de compatibilidade com ioncube utilize: __FILE__), //Full path to the main plugin file or functions.php.
-            'give-antispam'
-        );
-    }
-
     /**
      * Register all of the hooks related to the public-facing functionality
      * of the plugin.
@@ -247,7 +248,6 @@ final class Lkn_Antispam_For_GiveWP
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
         $this->loader->add_action('lkn_antispam_timeout_for_spam_detected_cron', 'Lkn_Antispam_Actions', 'time_for_spam_detected');
-        // add_action('plugins_loaded', function (): void {});
         $this->loader->add_filter('give_enabled_payment_gateways', 'Lkn_Antispam_Helper', 'block_all_payments', 99);
         $this->loader->add_action('lkn_antispam_spam_detected_block_all_event', 'Lkn_Antispam_Helper', 'remove_status_block_all_payments');
         $this->loader->add_filter('the_content', 'Lkn_Antispam_Helper', 'add_php_custom_page');
