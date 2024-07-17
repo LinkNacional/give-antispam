@@ -252,7 +252,7 @@ final class Lkn_Antispam_For_GiveWP
         $this->loader->add_action('lkn_antispam_spam_detected_block_all_event', 'Lkn_Antispam_Helper', 'remove_status_block_all_payments');
         $this->loader->add_filter('the_content', 'Lkn_Antispam_Helper', 'add_php_custom_page');
 
-        add_filter('plugin_action_links_give-antispam/lkn-antispam-for-givewp.php', array('Lkn_Antispam_Helper', 'plugin_row_meta'), 10, 2);
+        add_filter('plugin_action_links_give-antispam/give-antispam.php', array('Lkn_Antispam_Helper', 'plugin_row_meta'), 10, 2);
         add_action('give_init', array($this, 'define_cron_hook'), 10, 1);
     }
 }
