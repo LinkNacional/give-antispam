@@ -128,8 +128,6 @@ final class Lkn_Antispam_For_GiveWP
 
     public function define_cron_hook(): void
     {
-        add_filter('cron_schedules', array('Lkn_Antispam_Helper', 'custom_cron_schedules'), 30, 1);
-
         add_action('lkn_antispam_delete_old_logs_cron_hook', array('Lkn_Antispam_Helper', 'delete_old_logs'));
     }
 
