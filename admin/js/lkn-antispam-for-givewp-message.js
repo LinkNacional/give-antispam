@@ -6,21 +6,19 @@ window.addEventListener('load', function () {
 
   if (page === 'give-settings' && tab === 'general' && section === 'access-control') {
     // Setting max length option for pagseguro description field.
-    const wcForm = document.querySelector('.give-docs-link');
+    const wcForm = document.querySelector('.give-docs-link')
 
     if (wcForm) {
-      const noticeDiv = document.createElement('div');
+      const noticeDiv = document.createElement('div')
 
       noticeDiv.innerHTML = `
           <div style='background-color: #fcf9e8;color: #646970;border: solid 1px #d3d3d3;border-left: 4px #dba617 solid;font-size: 16px;margin-top: 10px;'>
             <a  target="_blank" style="text-decoration:none; display: block;padding: 10px;">AntiSpam não esta compatível com formulários 3.0 do GiveWP.</a>
         </div>
-            `;
-      wcForm.insertAdjacentElement('beforebegin', noticeDiv);
+            `
+      wcForm.insertAdjacentElement('beforebegin', noticeDiv)
     } else {
-      console.error('O formulário de configurações do gateway não foi encontrado.');
+      console.error('O formulário de configurações do gateway não foi encontrado.')
     }
   }
-
-
 })

@@ -1,4 +1,8 @@
-# 1.3.0 - 15/07/2024 
+# 1.3.1 - 07/08/2024
+* Correção de evento recorrente não disparado;
+* Correção de função com erro fatal ao reabilitar o plugin.
+
+# 1.3.0 - 15/07/2024
 * Adicionada funcionalidade no painel administrativo: Habilitar/desabilitar bloqueio de doações com base na contagem de doações do usuário.
 * Adição de tradução para a nova funcionalidade.
 * Implementação de bloqueio global de doações quando o limite global de doações for excedido.
