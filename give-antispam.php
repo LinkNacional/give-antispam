@@ -22,7 +22,7 @@
  * Text Domain:       antispam-donation-for-givewp
  * Domain Path:       /languages
  */
-if ( ! defined('WPINC')) {
+if ( ! defined('ABSPATH')) {
     exit;
 }
 
@@ -44,8 +44,7 @@ define('LKN_ANTISPAM_FOR_GIVEWP_BASENAME', plugin_basename(LKN_ANTISPAM_FOR_GIVE
  * The code that runs during plugin activation.
  * This action is documented in includes/class-lkn-antispam-for-givewp-activator.php.
  */
-function activate_lkn_antispam_for_givewp(): void
-{
+function activate_lkn_antispam_for_givewp(): void {
     require_once plugin_dir_path(__FILE__) . 'includes/class-lkn-antispam-for-givewp-activator.php';
     Lkn_Antispam_For_GiveWP_Activator::activate();
 }
@@ -54,8 +53,7 @@ function activate_lkn_antispam_for_givewp(): void
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-lkn-antispam-for-givewp-deactivator.php.
  */
-function deactivate_lkn_antispam_for_givewp(): void
-{
+function deactivate_lkn_antispam_for_givewp(): void {
     require_once plugin_dir_path(__FILE__) . 'includes/class-lkn-antispam-for-givewp-deactivator.php';
     Lkn_Antispam_For_GiveWP_Deactivator::deactivate();
 }
@@ -78,8 +76,7 @@ require plugin_dir_path(__FILE__) . 'includes/class-lkn-antispam-for-givewp.php'
  *
  * @since    1.0.0
  */
-function run_lkn_antispam_for_givewp(): void
-{
+function run_lkn_antispam_for_givewp(): void {
     $plugin = new Lkn_Antispam_For_GiveWP();
     $plugin->run();
 }
