@@ -13,7 +13,7 @@ window.addEventListener('load', function () {
 
       noticeDiv.innerHTML = `
           <div style='background-color: #fcf9e8;color: #646970;border: solid 1px #d3d3d3;border-left: 4px #dba617 solid;font-size: 16px;margin-top: 10px;'>
-            <a  target="_blank" style="text-decoration:none; display: block;padding: 10px;">AntiSpam não esta compatível com formulários 3.0 do GiveWP.</a>
+            <a  target="_blank" style="text-decoration:none; display: block;padding: 10px;">AntiSpam não é compatível com formulários 3.0 do GiveWP.</a>
         </div>
             `
       wcForm.insertAdjacentElement('beforebegin', noticeDiv)
