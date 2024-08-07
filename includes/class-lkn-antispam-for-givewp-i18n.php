@@ -20,15 +20,13 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Antispam_For_GiveWP_i18n
-{
+final class Lkn_Antispam_For_GiveWP_i18n {
     /**
      * Load the plugin text domain for translation.
      *
      * @since    1.0.0
      */
-    public function load_plugin_textdomain(): void
-    {
+    public function load_plugin_textdomain(): void {
         load_plugin_textdomain(
             'antispam-donation-for-givewp',
             false,

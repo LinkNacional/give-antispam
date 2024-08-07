@@ -14,16 +14,14 @@ if ( ! defined('WPINC')) {
     exit;
 }
 
-final class Lkn_Antispam_Actions
-{
+final class Lkn_Antispam_Actions {
     /**
      * Makes a .log file for each spam report.
      *
      * @param string $message
      * @param array  $configs
      */
-    public static function reg_report($message, $configs): void
-    {
+    public static function reg_report($message, $configs): void {
         if ('enabled' === $configs['reportSpam']) {
             error_log($message, 3, $configs['baseReport']);
 
@@ -43,8 +41,7 @@ final class Lkn_Antispam_Actions
      * @param string|array $log
      * @param array        $configs
      */
-    public static function reg_log($log, $configs): void
-    {
+    public static function reg_log($log, $configs): void {
         if ('enabled' === $configs['debug']) {
             $jsonLog = wp_json_encode($log, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE) . "\n";
 
@@ -58,8 +55,7 @@ final class Lkn_Antispam_Actions
      *
      * @return float
      */
-    public static function get_recaptcha_score()
-    {
+    public static function get_recaptcha_score() {
         $score = give_get_option('lkn_antispam_score_re_setting_field');
 
         if ($score < 0 || $score > 10) {
@@ -74,8 +70,7 @@ final class Lkn_Antispam_Actions
      *
      * @return int
      */
-    public static function get_time_interval()
-    {
+    public static function get_time_interval() {
         $timeInterval = give_get_option('lkn_antispam_time_interval_setting_field');
 
         if ($timeInterval < 0) {
@@ -93,8 +88,7 @@ final class Lkn_Antispam_Actions
      *
      * @return array
      */
-    public static function validate_donation($valid_data, $data)
-    {
+    public static function validate_donation($valid_data, $data) {
         $configs = Lkn_Antispam_Helper::get_configs();
 
         if (self::is_plugin_active_and_not_ajax($configs, $data)) {
@@ -144,8 +138,7 @@ final class Lkn_Antispam_Actions
      *
      * @return array
      */
-    public static function validate_recaptcha($valid_data, $data)
-    {
+    public static function validate_recaptcha($valid_data, $data) {
         $configs = Lkn_Antispam_Helper::get_configs();
 
         if (self::is_plugin_active_and_not_ajax($configs, $data) && self::is_recaptcha_enabled($configs)) {
@@ -165,8 +158,7 @@ final class Lkn_Antispam_Actions
      *
      * @param mixed $form_id
      */
-    public static function custom_form_fields($form_id): void
-    {
+    public static function custom_form_fields($form_id): void {
         $configs = Lkn_Antispam_Helper::get_configs();
         if ('enabled' === $configs['antispamEnabled']) {
             if ('enabled' === $configs['recEnabled']) {
@@ -187,8 +179,7 @@ final class Lkn_Antispam_Actions
         }
     }
 
-    public static function time_for_spam_detected(): void
-    {
+    public static function time_for_spam_detected(): void {
         $hook = 'lkn__antispam_spam_detected_hook';
         // Verificar se o cron job já está agendado
         $timestamp = wp_next_scheduled($hook);
@@ -213,8 +204,7 @@ final class Lkn_Antispam_Actions
         }
     }
 
-    public static function alter_status_spam(): void
-    {
+    public static function alter_status_spam(): void {
         give_update_option('lkn_antispam_spam_detected', false);
 
         // Depois que a ação for executada, remova o cron job
@@ -222,8 +212,7 @@ final class Lkn_Antispam_Actions
         wp_unschedule_event(wp_next_scheduled($cron_hook), $cron_hook);
     }
 
-    private static function many_donations_in_top($configs)
-    {
+    private static function many_donations_in_top($configs) {
         if (give_get_option('lkn_antispam_disable_all_donations') == 'enabled') {
             $payments = give_get_payments();  // Verifique se esta função pode ser limitada a um número específico de pagamentos
             $actualDate = new DateTime(current_time('mysql'));
@@ -257,8 +246,7 @@ final class Lkn_Antispam_Actions
         return false;
     }
 
-    private static function spam_detected_block_all(): void
-    {
+    private static function spam_detected_block_all(): void {
         // Atualizar a opção para indicar que o spam foi detectado e bloqueado
         give_update_option('lkn_antispam_spam_detected_block_all', true);
 
@@ -278,21 +266,18 @@ final class Lkn_Antispam_Actions
     }
 
     // Geral function
-    private static function is_plugin_active_and_not_ajax($configs, $data)
-    {
+    private static function is_plugin_active_and_not_ajax($configs, $data) {
         return 'enabled' === $configs['antispamEnabled'] && ! isset($data['give_ajax']);
     }
 
     // Validate donation functions
-    private static function is_ip_banned($configs, $userIp)
-    {
+    private static function is_ip_banned($configs, $userIp) {
         $bannedIps = explode(\PHP_EOL, $configs['bannedIps']);
 
         return in_array($userIp, $bannedIps, true);
     }
 
-    private static function handle_banned_ip($configs, $valid_data, $userIp): void
-    {
+    private static function handle_banned_ip($configs, $valid_data, $userIp): void {
         if ('enabled' === $configs['reportSpam']) {
             self::report_spam($configs, $valid_data, $userIp, 'BANNED IP');
         }
@@ -300,8 +285,7 @@ final class Lkn_Antispam_Actions
         give_set_error('g-recaptcha-response', __('Your IP address is banned.', 'antispam-donation-for-givewp'));
     }
 
-    private static function has_too_many_donations($configs, $valid_data, $userIp)
-    {
+    private static function has_too_many_donations($configs, $valid_data, $userIp) {
         $payments = give_get_payments();
         $actualDate = new DateTime(current_time('mysql'));
         $timeLimit = absint($configs['interval']);
@@ -327,8 +311,7 @@ final class Lkn_Antispam_Actions
         return false;
     }
 
-    private static function is_donation_within_time_limit($actualDate, $donationDate, $timeLimit)
-    {
+    private static function is_donation_within_time_limit($actualDate, $donationDate, $timeLimit) {
         $donationDate = new DateTime($donationDate);
         $dateInterval = $actualDate->diff($donationDate);
 
@@ -337,8 +320,7 @@ final class Lkn_Antispam_Actions
         return $minutes < $timeLimit;
     }
 
-    private static function can_accept_donation($configs, $valid_data, $donationCounter, $donationLimit, $payment)
-    {
+    private static function can_accept_donation($configs, $valid_data, $donationCounter, $donationLimit, $payment) {
         if ($donationLimit > $donationCounter) {
             return true;
         }
@@ -349,8 +331,7 @@ final class Lkn_Antispam_Actions
         return false;
     }
 
-    private static function report_spam($configs, $valid_data, $userIp, $reason): void
-    {
+    private static function report_spam($configs, $valid_data, $userIp, $reason): void {
         Lkn_Antispam_Actions::reg_report(
             gmdate('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) .
                 ' [Payment] ' . var_export($valid_data['gateway'], true) .
@@ -360,13 +341,11 @@ final class Lkn_Antispam_Actions
     }
 
     // Recaptcha functions
-    private static function is_recaptcha_enabled($configs)
-    {
+    private static function is_recaptcha_enabled($configs) {
         return 'enabled' === $configs['recEnabled'];
     }
 
-    private static function get_recaptcha_response($configs, $data)
-    {
+    private static function get_recaptcha_response($configs, $data) {
         $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
         $recaptcha_secret_key = $configs['secretRec'];
 
@@ -375,16 +354,14 @@ final class Lkn_Antispam_Actions
         return json_decode(wp_remote_retrieve_body($response));
     }
 
-    private static function log_recaptcha_response($recaptcha_response, $data, $configs): void
-    {
+    private static function log_recaptcha_response($recaptcha_response, $data, $configs): void {
         Lkn_Antispam_Actions::reg_log(array(
             'give_ajax' => $data['give_ajax'],
             'recaptcha_response' => $recaptcha_response,
         ), $configs);
     }
 
-    private static function is_recaptcha_valid($recaptcha_response, $configs, $data)
-    {
+    private static function is_recaptcha_valid($recaptcha_response, $configs, $data) {
         if ( ! isset($recaptcha_response->success) || ! $recaptcha_response->success) {
             return false;
         }
