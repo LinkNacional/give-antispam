@@ -1,10 +1,10 @@
 === Antispam Donation for GiveWP ===
 Contributors: linknacional
 Donate link: https://www.linknacional.com/wordpress/plugins/
-Tags: spam, antispam, givewp, give, donation.
+Tags: spam, antispam, givewp, give, donation
 Requires at least: 5.5
-Tested up to: 6.2
-Stable tag: 1.2.2
+Tested up to: 6.6
+Stable tag: 1.3.1
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -76,8 +76,13 @@ The Antispam Donation for GiveWP is now activated.
 
 == Changelog ==
 
+= 1.3.1 =
+**07/08/2024**
+* Fixed recurring event not triggered;
+* Fixed function with fatal error when re-enabling the plugin.
+
 = 1.3.0 =
-** 03/06/2024 **
+**03/06/2024**
 * Added feature in admin panel: Enable/disable donation blocking based on user donation count.
 * Addition of translation for the new feature.
 * Implementation of global donation blocking when the global donation limit is exceeded.
@@ -86,7 +91,7 @@ The Antispam Donation for GiveWP is now activated.
 **31/05/2023**
 * Fixed error message not showing in legacy template.
 
-= 1.2.1 = 
+= 1.2.1 =
 **26/05/2023**
 * Code refactoring;
 * Removed plugin updater lib;
