@@ -247,7 +247,7 @@ final class Lkn_Antispam_For_GiveWP_Admin {
         }
 
         return $newSetting;
-    }
+    } 
 
     // Insert settings on GiveWP settings
     public function include_settings(): void {
