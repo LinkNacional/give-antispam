@@ -174,7 +174,23 @@ final class Lkn_Antispam_Actions {
             <input type="hidden" id="g-recaptcha-lkn-input" name="g-recaptcha-response" />
 
 ';
-                echo esc_html($html);
+
+                $allowed_html = array(
+                    'div' => array(
+                        'id' => true,
+                        'class' => true
+                    ),
+                    'a' => array(
+                        'href' => true,
+                        'target' => true
+                    ),
+                    'input' => array(
+                        'type' => true,
+                        'id' => true,
+                        'name' => true
+                    )
+                );
+                echo wp_kses($html, $allowed_html);
             }
         }
     }

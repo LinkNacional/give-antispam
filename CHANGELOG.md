@@ -1,3 +1,6 @@
+# 1.3.2 - 08/08/2024
+* Correção de problemas de escapamento de HTML;
+
 # 1.3.1 - 07/08/2024
 * Correção de evento recorrente não disparado;
 * Correção de função com erro fatal ao reabilitar o plugin.
