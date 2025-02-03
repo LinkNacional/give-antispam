@@ -23,7 +23,8 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Antispam_For_GiveWP {
+final class Lkn_Antispam_For_GiveWP
+{
     /**
      * The loader that's responsible for maintaining and registering all hooks that power
      * the plugin.
@@ -61,7 +62,8 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @since    1.0.0
      */
-    public function __construct() {
+    public function __construct()
+    {
         if (defined('LKN_ANTISPAM_FOR_GIVEWP_VERSION')) {
             $this->version = LKN_ANTISPAM_FOR_GIVEWP_VERSION;
         } else {
@@ -82,7 +84,8 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @since    1.0.0
      */
-    public function run(): void {
+    public function run(): void
+    {
         $this->loader->run();
     }
 
@@ -94,7 +97,8 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @return string the name of the plugin
      */
-    public function get_plugin_name() {
+    public function get_plugin_name()
+    {
         return $this->plugin_name;
     }
 
@@ -105,7 +109,8 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @return Lkn_Antispam_For_GiveWP_Loader orchestrates the hooks of the plugin
      */
-    public function get_loader() {
+    public function get_loader()
+    {
         return $this->loader;
     }
 
@@ -116,15 +121,18 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @return string the version number of the plugin
      */
-    public function get_version() {
+    public function get_version()
+    {
         return $this->version;
     }
 
-    public function define_cron_hook(): void {
+    public function define_cron_hook(): void
+    {
         add_action('lkn_antispam_delete_old_logs_cron_hook', array('Lkn_Antispam_Helper', 'delete_old_logs'));
     }
 
-    public function updater_init() {
+    public function updater_init()
+    {
         include_once plugin_dir_path(__DIR__) . 'includes/plugin-updater/plugin-update-checker.php';
 
         return new Lkn_Puc_Plugin_UpdateChecker(
@@ -134,8 +142,9 @@ final class Lkn_Antispam_For_GiveWP {
         );
     }
 
-    private function define_event_delete_old_logs(): void {
-        if ( ! wp_next_scheduled('lkn_antispam_delete_old_logs_cron_hook')) {
+    private function define_event_delete_old_logs(): void
+    {
+        if (! wp_next_scheduled('lkn_antispam_delete_old_logs_cron_hook')) {
             $time = time() + ((7 * 24) * (60 * 60));
             wp_schedule_event($time, 'weekly', 'lkn_antispam_delete_old_logs_cron_hook');
         }
@@ -156,7 +165,8 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @since    1.0.0
      */
-    private function load_dependencies(): void {
+    private function load_dependencies(): void
+    {
         /**
          * The class responsible for orchestrating the actions and filters of the
          * core plugin.
@@ -201,7 +211,8 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @since    1.0.0
      */
-    private function set_locale(): void {
+    private function set_locale(): void
+    {
         $plugin_i18n = new Lkn_Antispam_For_GiveWP_i18n();
 
         $this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
@@ -213,12 +224,93 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @since    1.0.0
      */
-    private function define_admin_hooks(): void {
+    private function define_admin_hooks(): void
+    {
         $plugin_admin = new Lkn_Antispam_For_GiveWP_Admin($this->get_plugin_name(), $this->get_version());
 
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
         $this->loader->add_action('give_init', $this, 'updater_init');
+        $this->loader->add_action('admin_menu', $this, 'lkn_add_custom_menu');
+        $this->loader->add_action('wp_ajax_lkn_send_license_request', $this, 'lkn_send_license_request');
+    }
+
+    public function lkn_add_custom_menu()
+    {
+        add_menu_page(
+            'Configuração Link Nacional', // Título da página
+            'Link Nacional', // Nome do menu
+            'manage_options', // Permissão necessária
+            'lkn-settings', // Slug da página
+            array($this, 'lkn_render_settings_page'), // Função de callback
+            'dashicons-admin-generic', // Ícone do menu
+            99 // Posição no menu
+        );
+    }
+
+
+    public function lkn_render_settings_page()
+    {
+        ?>
+<div class="wrap">
+    <h1>Configuração Link Nacional</h1>
+    <button
+        id="lkn-send-request"
+        class="button button-primary"
+    >Enviar Requisição</button>
+    <div
+        id="lkn-response"
+        style="margin-top: 15px;"
+    ></div>
+</div>
+<script>
+    document.getElementById('lkn-send-request').addEventListener('click', function() {
+        var button = this;
+        button.disabled = true;
+        button.textContent = 'Enviando...';
+
+        fetch(ajaxurl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'action=lkn_send_license_request'
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('lkn-response').innerHTML = '<pre>' + JSON.stringify(data, null,
+                    2) + '</pre>';
+                button.disabled = false;
+                button.textContent = 'Enviar Requisição';
+            })
+            .catch(error => {
+                document.getElementById('lkn-response').innerHTML =
+                    '<p style="color: red;">Erro na requisição</p>';
+                button.disabled = false;
+                button.textContent = 'Enviar Requisição';
+            });
+    });
+</script>
+<?php
+    }
+
+    public function lkn_send_license_request()
+    {
+        $response = wp_remote_post('https://1dd6-2804-7f7-2683-492e-188-5da2-d820-e8a5.ngrok-free.app/v3/license/?lkn_force_license_verify=1', array(
+            'body'    => json_encode(array(
+                'license'    => 'Anuala30528e89d5a23a744f2',
+                'secret_key' => 'LinknacionalxVisaCheckout'
+            )),
+            'headers' => array('Content-Type' => 'application/json'),
+            'method'  => 'POST'
+        ));
+
+
+        if (is_wp_error($response)) {
+            wp_send_json_error(array('error' => $response->get_error_message()));
+        } else {
+            wp_send_json_success(wp_remote_retrieve_body($response));
+        }
     }
 
     /**
@@ -227,7 +319,8 @@ final class Lkn_Antispam_For_GiveWP {
      *
      * @since    1.0.0
      */
-    private function define_public_hooks(): void {
+    private function define_public_hooks(): void
+    {
         $plugin_public = new Lkn_Antispam_For_GiveWP_Public($this->get_plugin_name(), $this->get_version());
 
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
@@ -241,3 +334,4 @@ final class Lkn_Antispam_For_GiveWP {
         add_action('give_init', array($this, 'define_cron_hook'), 10, 1);
     }
 }
+?>

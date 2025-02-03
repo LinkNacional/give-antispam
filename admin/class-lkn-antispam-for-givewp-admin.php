@@ -15,7 +15,8 @@
  *
  * @author     Link Nacional
  */
-final class Lkn_Antispam_For_GiveWP_Admin {
+final class Lkn_Antispam_For_GiveWP_Admin
+{
     /**
      * The ID of this plugin.
      *
@@ -42,7 +43,8 @@ final class Lkn_Antispam_For_GiveWP_Admin {
      * @param string $plugin_name the name of this plugin
      * @param string $version     the version of this plugin
      */
-    public function __construct($plugin_name, $version) {
+    public function __construct($plugin_name, $version)
+    {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
 
@@ -58,8 +60,9 @@ final class Lkn_Antispam_For_GiveWP_Admin {
      *
      * @return array
      */
-    public function lkn_antispam_for_givewp_add_setting_into_existing_tab($settings) {
-        if ( ! Give_Admin_Settings::is_setting_page('general', 'access-control')) {
+    public function lkn_antispam_for_givewp_add_setting_into_existing_tab($settings)
+    {
+        if (! Give_Admin_Settings::is_setting_page('general', 'access-control')) {
             return $settings;
         }
 
@@ -211,7 +214,7 @@ final class Lkn_Antispam_For_GiveWP_Admin {
                         $newSetting[count($newSetting) - 1]['desc'] = __('The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked. <a id="lkn-antispam-link" href="#">Forms blocked, unlock now.</a>', 'antispam-donation-for-givewp');
                     }
 
-                    if ( ! $form && $blockAll) {
+                    if (! $form && $blockAll) {
                         $newSetting[count($newSetting) - 1]['desc'] = __('The feature enables users to block all site forms for a custom period. When activated, it monitors site activity, such as donations. If a user-defined limit is exceeded, forms are temporarily blocked. After the set time, forms are automatically unlocked. <strong>Enabled forms</strong>', 'antispam-donation-for-givewp');
                     }
 
@@ -247,10 +250,11 @@ final class Lkn_Antispam_For_GiveWP_Admin {
         }
 
         return $newSetting;
-    } 
+    }
 
     // Insert settings on GiveWP settings
-    public function include_settings(): void {
+    public function include_settings(): void
+    {
         add_filter('give_get_settings_general', array($this, 'lkn_antispam_for_givewp_add_setting_into_existing_tab'), 10, 1);
     }
 
@@ -259,7 +263,8 @@ final class Lkn_Antispam_For_GiveWP_Admin {
      *
      * @since    1.0.0
      */
-    public function enqueue_styles(): void {
+    public function enqueue_styles(): void
+    {
         /*
          * This function is provided for demonstration purposes only.
          *
@@ -280,7 +285,8 @@ final class Lkn_Antispam_For_GiveWP_Admin {
      *
      * @since    1.0.0
      */
-    public function enqueue_scripts(): void {
+    public function enqueue_scripts(): void
+    {
         /*
          * This function is provided for demonstration purposes only.
          *
@@ -298,5 +304,13 @@ final class Lkn_Antispam_For_GiveWP_Admin {
         wp_enqueue_script('lkn-antispam-for-givewp-message.js', plugin_dir_url(__FILE__) . 'js/lkn-antispam-for-givewp-message.js');
 
         wp_localize_script('lkn-antispam-for-givewp-link.js', 'link', array('href' => get_permalink(Lkn_Antispam_Helper::create_custom_page())));
+
+        wp_enqueue_script(
+            'lkn-givewp-form-builder',
+            plugin_dir_url(__FILE__) . 'js/lkn-givewp-custom-field.transpiled.js', // Substitua pelo caminho correto
+            ['wp-element'], // Dependências do React e GiveWP
+            $this->version,
+            true
+        );
     }
 }
