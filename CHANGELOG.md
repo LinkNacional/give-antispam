@@ -1,3 +1,7 @@
+# 1.4.0 - 17/02/2025
+* Componente de checkbox no givewp-form-builder;
+* Métodos de pagamentos personalizaveis através do givewp-form-builder;
+
 # 1.3.2 - 08/08/2024
 * Correção de problemas de escapamento de HTML;
 

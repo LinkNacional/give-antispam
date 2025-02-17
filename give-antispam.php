@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The plugin bootstrap file.
  *
@@ -14,7 +15,7 @@
  * Plugin Name:       Give - Antispam
  * Plugin URI:        https://www.linknacional.com/wordpress/plugins/
  * Description:       Performs verification and prevention of malicious donations.
- * Version:           1.3.2
+ * Version:           1.4.0
  * Author:            Link Nacional
  * Author URI:        https://www.linknacional.com/
  * License:           GPL-3.0+
@@ -22,11 +23,11 @@
  * Text Domain:       antispam-donation-for-givewp
  * Domain Path:       /languages
  */
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-define('LKN_ANTISPAM_FOR_GIVEWP_VERSION', '1.3.2');
+define('LKN_ANTISPAM_FOR_GIVEWP_VERSION', '1.4.0');
 
 define('LKN_ANTISPAM_FOR_GIVEWP_MIN_GIVE_VERSION', '2.3.0');
 
@@ -44,7 +45,8 @@ define('LKN_ANTISPAM_FOR_GIVEWP_BASENAME', plugin_basename(LKN_ANTISPAM_FOR_GIVE
  * The code that runs during plugin activation.
  * This action is documented in includes/class-lkn-antispam-for-givewp-activator.php.
  */
-function activate_lkn_antispam_for_givewp(): void {
+function activate_lkn_antispam_for_givewp(): void
+{
     require_once plugin_dir_path(__FILE__) . 'includes/class-lkn-antispam-for-givewp-activator.php';
     Lkn_Antispam_For_GiveWP_Activator::activate();
 }
@@ -53,7 +55,8 @@ function activate_lkn_antispam_for_givewp(): void {
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-lkn-antispam-for-givewp-deactivator.php.
  */
-function deactivate_lkn_antispam_for_givewp(): void {
+function deactivate_lkn_antispam_for_givewp(): void
+{
     require_once plugin_dir_path(__FILE__) . 'includes/class-lkn-antispam-for-givewp-deactivator.php';
     Lkn_Antispam_For_GiveWP_Deactivator::deactivate();
 }
@@ -76,7 +79,8 @@ require plugin_dir_path(__FILE__) . 'includes/class-lkn-antispam-for-givewp.php'
  *
  * @since    1.0.0
  */
-function run_lkn_antispam_for_givewp(): void {
+function run_lkn_antispam_for_givewp(): void
+{
     $plugin = new Lkn_Antispam_For_GiveWP();
     $plugin->run();
 }

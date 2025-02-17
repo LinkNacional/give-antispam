@@ -3,8 +3,8 @@ Contributors: linknacional
 Donate link: https://www.linknacional.com/wordpress/plugins/
 Tags: spam, antispam, givewp, give, donation
 Requires at least: 5.5
-Tested up to: 6.6
-Stable tag: 1.3.1
+Tested up to: 6.7
+Stable tag: 1.4.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
