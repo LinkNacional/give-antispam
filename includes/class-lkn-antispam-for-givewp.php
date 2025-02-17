@@ -10,6 +10,10 @@
  * @since      1.0.0
  */
 
+use Give\Framework\Blocks\BlockModel;
+use Give\Framework\FieldsAPI\Checkbox;
+use Give\Framework\FieldsAPI\Contracts\Node;
+
 /**
  * The core plugin class.
  *
@@ -231,86 +235,134 @@ final class Lkn_Antispam_For_GiveWP
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
         $this->loader->add_action('give_init', $this, 'updater_init');
-        $this->loader->add_action('admin_menu', $this, 'lkn_add_custom_menu');
-        $this->loader->add_action('wp_ajax_lkn_send_license_request', $this, 'lkn_send_license_request');
-    }
-
-    public function lkn_add_custom_menu()
-    {
-        add_menu_page(
-            'Configuração Link Nacional', // Título da página
-            'Link Nacional', // Nome do menu
-            'manage_options', // Permissão necessária
-            'lkn-settings', // Slug da página
-            array($this, 'lkn_render_settings_page'), // Função de callback
-            'dashicons-admin-generic', // Ícone do menu
-            99 // Posição no menu
-        );
+        $this->loader->add_action('givewp_form_builder_enqueue_scripts', $this, 'lkn_enqueue_givewp_block_editor_assets', 999, 1);
+        $this->loader->add_filter('givewp_donation_form_block_render', $this, 'lkn_render_field', 10, 4);
+        $this->loader->add_action('rest_api_init', $this, 'lkn_register_list_route');
+        $this->loader->add_filter('givewp_donation_form_enabled_gateways', $this, 'lkn_form_enable_gateways', 10, 2);
     }
 
 
-    public function lkn_render_settings_page()
+    public function lkn_register_list_route()
     {
-        ?>
-<div class="wrap">
-    <h1>Configuração Link Nacional</h1>
-    <button
-        id="lkn-send-request"
-        class="button button-primary"
-    >Enviar Requisição</button>
-    <div
-        id="lkn-response"
-        style="margin-top: 15px;"
-    ></div>
-</div>
-<script>
-    document.getElementById('lkn-send-request').addEventListener('click', function() {
-        var button = this;
-        button.disabled = true;
-        button.textContent = 'Enviando...';
-
-        fetch(ajaxurl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: 'action=lkn_send_license_request'
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('lkn-response').innerHTML = '<pre>' + JSON.stringify(data, null,
-                    2) + '</pre>';
-                button.disabled = false;
-                button.textContent = 'Enviar Requisição';
-            })
-            .catch(error => {
-                document.getElementById('lkn-response').innerHTML =
-                    '<p style="color: red;">Erro na requisição</p>';
-                button.disabled = false;
-                button.textContent = 'Enviar Requisição';
-            });
-    });
-</script>
-<?php
-    }
-
-    public function lkn_send_license_request()
-    {
-        $response = wp_remote_post('https://1dd6-2804-7f7-2683-492e-188-5da2-d820-e8a5.ngrok-free.app/v3/license/?lkn_force_license_verify=1', array(
-            'body'    => json_encode(array(
-                'license'    => 'Anuala30528e89d5a23a744f2',
-                'secret_key' => 'LinknacionalxVisaCheckout'
-            )),
-            'headers' => array('Content-Type' => 'application/json'),
-            'method'  => 'POST'
+        register_rest_route('lkn-antispam/v1', '/payment-gateways', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'lkn_get_enabled_payment_gateways'),
+            'permission_callback' => '__return_true',
         ));
 
+        register_rest_route('lkn-antispam/v1', '/update-gateways', [
+            'methods' => 'POST',
+            'callback' => array($this, 'lkn_update_gateways'),
+            'permission_callback' => '__return_true',
+        ]);
+    }
 
-        if (is_wp_error($response)) {
-            wp_send_json_error(array('error' => $response->get_error_message()));
-        } else {
-            wp_send_json_success(wp_remote_retrieve_body($response));
+    public function lkn_form_enable_gateways($gateways, $formId)
+    {
+        $savedGateways = get_option('_lkn_gateways_by_form', []);
+
+        if (!empty($savedGateways[$formId]) && is_array($savedGateways[$formId])) {
+            foreach ($savedGateways[$formId] as $gateway => $status) {
+                if ($status === false && isset($gateways[$gateway])) {
+                    unset($gateways[$gateway]);
+                }
+            }
         }
+
+        return $gateways;
+    }
+
+    public function lkn_update_gateways(WP_REST_Request $request)
+    {
+        $formId = $request->get_param('formId');
+        $disabledGateways = $request->get_param('gatewaysList');
+
+        if (!$formId || !is_array($disabledGateways)) {
+            return new WP_REST_Response(__('Invalid data.', 'antispam-donation-for-givewp'), 400);
+        }
+
+        $savedGateways = get_option('_lkn_gateways_by_form', []);
+
+        $savedGateways[$formId] = $disabledGateways;
+
+        update_option('_lkn_gateways_by_form', $savedGateways);
+
+        return new WP_REST_Response($savedGateways, 200);
+    }
+
+    public function lkn_get_enabled_payment_gateways()
+    {
+        $enabledGateways = array_keys(give_get_option('gateways_v3', []));
+
+        $allGateways = [];
+
+        foreach ($enabledGateways as $gatewayId) {
+            $label = give_get_gateway_checkout_label($gatewayId, 3);
+
+            if (!$label) {
+                $label = give_get_gateway_label($gatewayId);
+            }
+
+            $allGateways[] = [
+                'id' => $gatewayId,
+                'label' => $label,
+            ];
+        }
+
+        return $allGateways;
+    }
+
+
+    public function lkn_render_field(?Node $node, BlockModel $block, int $index)
+    {
+        switch ($block->name) {
+            case 'givewp/lkn-form-checkbox':
+                return Checkbox::make('lkn-form-checkbox-' . uniqid())
+                    ->label($block->getAttribute('label'))
+                    ->checked($block->getAttribute('isCheckedByDefault') == 1 ? true : '')
+                    ->value($block->getAttribute('isRequired') == 1 ? 1 : ($block->getAttribute('isCheckedByDefault') == 1 ? true : ''))
+                    ->helpText($block->getAttribute('description'))
+                    ->showInAdmin()
+                    ->showInReceipt()
+                    ->rules($block->getAttribute('isRequired') ? 'required' : 'boolean');
+        }
+
+        return $node;
+    }
+
+    public function lkn_enqueue_givewp_block_editor_assets()
+    {
+        wp_enqueue_script(
+            'classnames',
+            plugin_dir_url(__FILE__) . '../admin/js/lkn-antispam-for-givewp-classnames.js',
+            array(),
+            LKN_ANTISPAM_FOR_GIVEWP_VERSION,
+            true
+        );
+
+        wp_enqueue_script(
+            'lkn-givewp-checkbox-field',
+            plugin_dir_url(__FILE__) . '../admin/js/lkn-givewp-checkbox-field.js',
+            ['wp-blocks', 'wp-element', 'wp-editor'],
+            LKN_ANTISPAM_FOR_GIVEWP_VERSION,
+            true
+        );
+
+        wp_enqueue_script(
+            'lkn-givewp-blocks-payment-gateway-field',
+            plugin_dir_url(__FILE__) . '../admin/js/lkn-givewp-payment-gateway-field.js',
+            ['wp-blocks', 'wp-element', 'wp-editor'],
+            LKN_ANTISPAM_FOR_GIVEWP_VERSION,
+            true
+        );
+
+        wp_enqueue_style(
+            'lkn-antispam-for-givewp-form',
+            plugin_dir_url(__FILE__) . '../admin/css/lkn-antispam-for-givewp-form.css',
+            LKN_ANTISPAM_FOR_GIVEWP_VERSION,
+            'all'
+        );
+
     }
 
     /**
@@ -334,4 +386,3 @@ final class Lkn_Antispam_For_GiveWP
         add_action('give_init', array($this, 'define_cron_hook'), 10, 1);
     }
 }
-?>

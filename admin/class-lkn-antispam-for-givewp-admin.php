@@ -305,12 +305,5 @@ final class Lkn_Antispam_For_GiveWP_Admin
 
         wp_localize_script('lkn-antispam-for-givewp-link.js', 'link', array('href' => get_permalink(Lkn_Antispam_Helper::create_custom_page())));
 
-        wp_enqueue_script(
-            'lkn-givewp-form-builder',
-            plugin_dir_url(__FILE__) . 'js/lkn-givewp-custom-field.transpiled.js', // Substitua pelo caminho correto
-            ['wp-element'], // Dependências do React e GiveWP
-            $this->version,
-            true
-        );
     }
 }

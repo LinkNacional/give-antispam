@@ -18,16 +18,9 @@
   "bugs": {
     "url": "https://github.com/srbrunoferreira/docker-php-dev-container/issues"
   },
-  "scripts": {
-    "build": "npx babel admin/js/lkn-givewp-custom-field.js --out-file admin/js/lkn-givewp-custom-field.transpiled.js"
-  },
   "homepage": "https://github.com/srbrunoferreira/docker-php-dev-container#readme",
   "devDependencies": {
-    "@babel/cli": "^7.26.4",
-    "@babel/core": "^7.26.7",
-    "@babel/preset-env": "^7.26.7",
-    "@babel/preset-react": "^7.26.3",
-    "babel-loader": "^9.2.1",
+    "@wordpress/scripts": "^30.10.0",
     "eslint": "^8.34.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-standard": "^17.0.0",
