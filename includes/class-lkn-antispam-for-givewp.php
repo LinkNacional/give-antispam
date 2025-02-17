@@ -293,10 +293,14 @@ final class Lkn_Antispam_For_GiveWP
     public function lkn_get_enabled_payment_gateways()
     {
         $enabledGateways = array_keys(give_get_option('gateways_v3', []));
-
         $allGateways = [];
 
         foreach ($enabledGateways as $gatewayId) {
+            // Ignora o gateway "offline"
+            if ($gatewayId === 'offline') {
+                continue;
+            }
+
             $label = give_get_gateway_checkout_label($gatewayId, 3);
 
             if (!$label) {
@@ -311,7 +315,6 @@ final class Lkn_Antispam_For_GiveWP
 
         return $allGateways;
     }
-
 
     public function lkn_render_field(?Node $node, BlockModel $block, int $index)
     {
