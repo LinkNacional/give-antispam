@@ -320,13 +320,15 @@ final class Lkn_Antispam_For_GiveWP
     {
         switch ($block->name) {
             case 'givewp/lkn-form-checkbox':
-                return Checkbox::make('lkn-form-checkbox-' . uniqid())
+                $metaKey = 'lkn-form-checkbox-' . substr($block->clientId, 0, 8);
+
+                return Checkbox::make($metaKey, $block)
                     ->label($block->getAttribute('label'))
                     ->checked($block->getAttribute('isCheckedByDefault') == 1 ? true : '')
                     ->value($block->getAttribute('isRequired') == 1 ? 1 : ($block->getAttribute('isCheckedByDefault') == 1 ? true : ''))
                     ->helpText($block->getAttribute('description'))
-                    ->showInAdmin()
-                    ->showInReceipt()
+                    ->showInAdmin($block->getAttribute('showInAdmin'))
+                    ->showInReceipt($block->getAttribute('showInReceipt'))
                     ->rules($block->getAttribute('isRequired') ? 'required' : 'boolean');
         }
 
