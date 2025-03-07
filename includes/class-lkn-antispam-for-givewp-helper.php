@@ -75,7 +75,7 @@ abstract class Lkn_Antispam_Helper {
             __('for the Give Antispam to activate', 'antispam-donation-for-givewp')
         );
 
-        echo $message;
+        echo wp_kses_post($message);
     }
 
     /**
@@ -94,7 +94,7 @@ abstract class Lkn_Antispam_Helper {
             __('plugin installed and activated for the Give Antispam', 'antispam-donation-for-givewp')
         );
 
-        echo $message;
+        echo wp_kses_post($message);
     }
 
     /**

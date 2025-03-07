@@ -13,40 +13,26 @@
 if ( ! defined('WPINC')) {
     exit;
 }
+use Give\Log\LogFactory;
 
 final class Lkn_Antispam_Actions {
-    /**
-     * Makes a .log file for each spam report.
-     *
-     * @param string $message
-     * @param array  $configs
-     */
-    public static function reg_report($message, $configs): void {
-        if ('enabled' === $configs['reportSpam']) {
-            error_log($message, 3, $configs['baseReport']);
-
-            $size = filesize($configs['baseReport']);
-
-            chmod($configs['baseReport'], 0600);
-
-            if ($size > 2000) { // 2Kb
-                wp_delete_file($configs['baseReport']);
-            }
-        }
-    }
-
     /**
      * Makes a .log file for each donation.
      *
      * @param string|array $log
      * @param array        $configs
      */
-    public static function reg_log($log, $configs): void {
-        if ('enabled' === $configs['debug']) {
-            $jsonLog = wp_json_encode($log, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE) . "\n";
-
-            error_log($jsonLog, 3, $configs['base']);
-            chmod($configs['base'], 0600);
+    public static function regLog($logType, $category, $description, $data, $forceLog = false): void {
+        if (give_get_option('lkn_antispam_debug_setting_field') == 'enabled' || $forceLog) {
+            $logFactory = new LogFactory();
+            $log = $logFactory->make(
+                $logType,
+                $description,
+                $category,
+                'Give Antispam',
+                $data
+            );
+            $log->save();
         }
     }
 
@@ -348,11 +334,16 @@ final class Lkn_Antispam_Actions {
     }
 
     private static function report_spam($configs, $valid_data, $userIp, $reason): void {
-        Lkn_Antispam_Actions::reg_report(
-            gmdate('d.m.Y-H.i.s') . ' - [IP] ' . var_export($userIp, true) .
-                ' [Payment] ' . var_export($valid_data['gateway'], true) .
-                ' - PAYMENT DENIED, ' . $reason . ' <br> ' . \PHP_EOL,
-            $configs
+        Lkn_Antispam_Actions::regLog(
+            'info',
+            'Spam',
+            'Report Spam',
+            array(
+                'date' => gmdate('d.m.Y-H.i.s'),
+                'ip' => $userIp,
+                'payment' => $valid_data['gateway'],
+                'reason' => $reason
+            )
         );
     }
 
@@ -364,17 +355,22 @@ final class Lkn_Antispam_Actions {
     private static function get_recaptcha_response($configs, $data) {
         $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
         $recaptcha_secret_key = $configs['secretRec'];
-
-        $response = wp_remote_post($recaptcha_url . '?secret=' . $recaptcha_secret_key . '&response=' . $data['g-recaptcha-response'] . '&remoteip=' . $_SERVER['REMOTE_ADDR']);
+        $ip_address = sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR']));
+        $response = wp_remote_post($recaptcha_url . '?secret=' . $recaptcha_secret_key . '&response=' . $data['g-recaptcha-response'] . '&remoteip=' . $ip_address);
 
         return json_decode(wp_remote_retrieve_body($response));
     }
 
     private static function log_recaptcha_response($recaptcha_response, $data, $configs): void {
-        Lkn_Antispam_Actions::reg_log(array(
-            'give_ajax' => $data['give_ajax'],
-            'recaptcha_response' => $recaptcha_response,
-        ), $configs);
+        Lkn_Antispam_Actions::regLog(
+            'info',
+            'Recaptcha',
+            'Recaptcha response',
+            array(
+                'give_ajax' => $data['give_ajax'],
+                'recaptcha_response' => $recaptcha_response
+            )
+        );
     }
 
     private static function is_recaptcha_valid($recaptcha_response, $configs, $data) {

@@ -294,8 +294,8 @@ final class Lkn_Antispam_For_GiveWP_Admin {
          */
 
         wp_enqueue_script('lkn-antispam-for-givewp-admin-js', plugin_dir_url(__FILE__) . '/js/lkn-antispam-for-givewp-admin.js', array('jquery'), $this->version, false);
-        wp_enqueue_script('lkn-antispam-for-givewp-link.js', plugin_dir_url(__FILE__) . '/js/lkn-antispam-for-givewp-link.js');
-        wp_enqueue_script('lkn-antispam-for-givewp-message.js', plugin_dir_url(__FILE__) . 'js/lkn-antispam-for-givewp-message.js');
+        wp_enqueue_script('lkn-antispam-for-givewp-link.js', plugin_dir_url(__FILE__) . '/js/lkn-antispam-for-givewp-link.js', array(), $this->version, false);
+        wp_enqueue_script('lkn-antispam-for-givewp-message.js', plugin_dir_url(__FILE__) . 'js/lkn-antispam-for-givewp-message.js', array(), $this->version, false);
 
         wp_localize_script('lkn-antispam-for-givewp-link.js', 'link', array('href' => get_permalink(Lkn_Antispam_Helper::create_custom_page())));
     }

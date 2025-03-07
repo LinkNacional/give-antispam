@@ -98,7 +98,7 @@ final class Lkn_Antispam_For_GiveWP_Public {
             if ('enabled' === $configs['antispamEnabled']) {
                 if ('enabled' === $configs['recEnabled']) {
                     $siteKey = $configs['siteRec'];
-                    wp_register_script('give-recaptcha-element', 'https://www.google.com/recaptcha/api.js?render=' . $siteKey);
+                    wp_register_script('give-recaptcha-element', 'https://www.google.com/recaptcha/api.js?render=' . $siteKey, array(), LKN_ANTISPAM_FOR_GIVEWP_VERSION, false);
 
                     wp_enqueue_script('give-recaptcha-element');
 
