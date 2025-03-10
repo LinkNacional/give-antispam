@@ -21,6 +21,11 @@ The [Antispam Donation for GiveWP](https://www.linknacional.com/wordpress/plugin
 Antispam Donation for GiveWP plugin is dependent on GiveWP plugin, please make sure GiveWP is installed and properly configured before starting Antispam Donation for GiveWP installation.
 
 
+**Third party APIs usage**
+
+This plugin integrates with Google reCAPTCHA to prevent spam submissions. It uses the [Google reCAPTCHA API](https://www.google.com/recaptcha/api.js) to validate user interactions. For more details, see the [Google Privacy Policy](https://policies.google.com/privacy) and [Terms of Service](https://policies.google.com/terms).
+
+
 **User instructions**
 
 1. Now go to the Settings menu of the GiveWP;

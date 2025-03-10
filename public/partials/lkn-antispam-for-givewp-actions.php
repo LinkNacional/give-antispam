@@ -355,7 +355,7 @@ final class Lkn_Antispam_Actions {
     private static function get_recaptcha_response($configs, $data) {
         $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
         $recaptcha_secret_key = $configs['secretRec'];
-        $ip_address = sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR']));
+        $ip_address = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : '';
         $response = wp_remote_post($recaptcha_url . '?secret=' . $recaptcha_secret_key . '&response=' . $data['g-recaptcha-response'] . '&remoteip=' . $ip_address);
 
         return json_decode(wp_remote_retrieve_body($response));
