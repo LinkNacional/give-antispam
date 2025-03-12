@@ -13,22 +13,23 @@
 if ( ! defined('WPINC')) {
     exit;
 }
+use Give\Framework\PaymentGateways\Exceptions\PaymentGatewayException;
 use Give\Log\LogFactory;
 
 final class Lkn_Antispam_Actions {
     /**
-     * Makes a .log file for each donation.
+     * Makes a .log file for each spam report.
      *
-     * @param string|array $log
-     * @param array        $configs
+     * @param string $message
+     * @param array  $configs
      */
-    public static function regLog($logType, $category, $description, $data, $forceLog = false): void {
-        if (give_get_option('lkn_antispam_debug_setting_field') == 'enabled' || $forceLog) {
+    public static function regLog($configs, $data): void {
+        if ('enabled' == $configs['debug']) {
             $logFactory = new LogFactory();
             $log = $logFactory->make(
-                $logType,
-                $description,
-                $category,
+                'info',
+                'Give Antispam Log',
+                'Antispam',
                 'Give Antispam',
                 $data
             );
@@ -106,6 +107,34 @@ final class Lkn_Antispam_Actions {
         return $valid_data;
     }
 
+    public static function validate_donation_react_form($formData, $donation) {
+        $configs = Lkn_Antispam_Helper::get_configs();
+        
+        $userIp = give_get_ip();
+
+        if (self::is_ip_banned($configs, $userIp)) {
+            self::handle_banned_ip($configs, $formData, $userIp);
+            do_action('lkn__antispam_spam_detected');
+            Lkn_Antispam_Actions::time_for_spam_detected();
+
+            throw new PaymentGatewayException(__('Your IP address is banned.', 'antispam-donation-for-givewp'));
+        }
+        
+        if (self::has_too_many_donations($configs, $formData, $userIp)) {
+            do_action('lkn__antispam_spam_detected');
+            self::time_for_spam_detected();
+            
+            throw new PaymentGatewayException(__('The email you are using has been flagged as being used in SPAM donations by our system. Contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
+        }
+        if (self::many_donations_in_top($configs)) {
+            self::spam_detected_block_all();
+        }
+
+        if(Lkn_Antispam_Actions::validate_recaptcha($donation, $_POST)){
+            throw new PaymentGatewayException(__('The reCAPTCHA was not verified, try again.', 'antispam-donation-for-givewp'));
+        }
+    }
+
     /**
      * Implementing Google's ReCaptcha on All Give Forms V3.
      *
@@ -133,6 +162,7 @@ final class Lkn_Antispam_Actions {
 
             if ( ! self::is_recaptcha_valid($recaptcha_response, $configs, $data)) {
                 give_set_error('g-recaptcha-response', __('The reCAPTCHA was not verified, try again.', 'antispam-donation-for-givewp'));
+                return true;
             }
         }
     }
@@ -334,17 +364,12 @@ final class Lkn_Antispam_Actions {
     }
 
     private static function report_spam($configs, $valid_data, $userIp, $reason): void {
-        Lkn_Antispam_Actions::regLog(
-            'info',
-            'Spam',
-            'Report Spam',
-            array(
-                'date' => gmdate('d.m.Y-H.i.s'),
-                'ip' => $userIp,
-                'payment' => $valid_data['gateway'],
-                'reason' => $reason
-            )
-        );
+        Lkn_Antispam_Actions::regLog($configs, array(
+            'valid_data' => $valid_data,
+            'userIp' => $userIp,
+            'reason' => $reason,
+            'configs' => $configs
+        ));
     }
 
     // Recaptcha functions
@@ -362,15 +387,10 @@ final class Lkn_Antispam_Actions {
     }
 
     private static function log_recaptcha_response($recaptcha_response, $data, $configs): void {
-        Lkn_Antispam_Actions::regLog(
-            'info',
-            'Recaptcha',
-            'Recaptcha response',
-            array(
-                'give_ajax' => $data['give_ajax'],
-                'recaptcha_response' => $recaptcha_response
-            )
-        );
+        Lkn_Antispam_Actions::regLog($configs, array(
+            'give_ajax' => $data['give_ajax'] ?? '',
+            'recaptcha_response' => $recaptcha_response,
+        ));
     }
 
     private static function is_recaptcha_valid($recaptcha_response, $configs, $data) {

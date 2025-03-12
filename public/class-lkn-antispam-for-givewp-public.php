@@ -50,6 +50,7 @@ final class Lkn_Antispam_For_GiveWP_Public {
 
     public function init_actions(): void {
         add_action('give_checkout_error_checks', array('Lkn_Antispam_Actions', 'validate_donation'), 10, 2);
+        add_action('givewp_donate_controller_donation_created', array('Lkn_Antispam_Actions', 'validate_donation_react_form'), 10, 2);
         add_action('give_after_donation_levels', array('Lkn_Antispam_Actions', 'custom_form_fields'), 9, 1);
     }
 
@@ -98,17 +99,29 @@ final class Lkn_Antispam_For_GiveWP_Public {
             if ('enabled' === $configs['antispamEnabled']) {
                 if ('enabled' === $configs['recEnabled']) {
                     $siteKey = $configs['siteRec'];
-                    wp_register_script('give-recaptcha-element', 'https://www.google.com/recaptcha/api.js?render=' . $siteKey, array(), LKN_ANTISPAM_FOR_GIVEWP_VERSION, false);
+                    wp_register_script('give-recaptcha-element', 'https://www.google.com/recaptcha/api.js?render=' . $siteKey);
 
                     wp_enqueue_script('give-recaptcha-element');
 
                     wp_enqueue_script('lkn-antispam-for-givewp-recaptcha', plugin_dir_url(__FILE__) . 'js/lkn-antispam-for-givewp-recaptcha.js', array('jquery', 'give-recaptcha-element'), $this->version, false);
+                    wp_enqueue_script('lkn-antispam-for-givewp-recaptcha-react-form', plugin_dir_url(__FILE__) . 'js/lkn-antispam-for-givewp-recaptcha-react-form.js', array('jquery', 'give-recaptcha-element'), $this->version, false);
+
+                    $googleTermsText = sprintf(
+                        '<p>%s <a href="https://policies.google.com/privacy" target="_blank">%s</a> %s <a href="https://policies.google.com/terms" target="_blank">%s</a> %s</p>',
+                        __('This site is protected by reCAPTCHA and the', 'fraud-detection-for-woocommerce'),
+                        __('Privacy Policy', 'fraud-detection-for-woocommerce'),
+                        __('and Google', 'fraud-detection-for-woocommerce'),
+                        __('Terms of Service', 'fraud-detection-for-woocommerce'),
+                        __('apply.', 'fraud-detection-for-woocommerce'),
+                    );
 
                     $siteKeyData = array(
                         'sitekey' => $configs['siteRec'],
+                        'googleTermsText' => $googleTermsText,
                     );
 
                     wp_localize_script('lkn-antispam-for-givewp-recaptcha', 'skData', $siteKeyData);
+                    wp_localize_script('lkn-antispam-for-givewp-recaptcha-react-form', 'skData', $siteKeyData);
                 }
             }
         }
