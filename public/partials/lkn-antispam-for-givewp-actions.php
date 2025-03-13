@@ -87,14 +87,14 @@ final class Lkn_Antispam_Actions {
                     self::handle_banned_ip($configs, $valid_data, $userIp);
                     do_action('lkn__antispam_spam_detected');
                     Lkn_Antispam_Actions::time_for_spam_detected();
-                    throw new PaymentGatewayException(__('Your IP address is banned.', 'antispam-donation-for-givewp'));
+                    throw new PaymentGatewayException(esc_attr(__('Your IP address is banned.', 'antispam-donation-for-givewp')));
     
                 }
     
                 if (self::has_too_many_donations($configs, $valid_data, $userIp)) {
                     do_action('lkn__antispam_spam_detected');
                     self::time_for_spam_detected();
-                    throw new PaymentGatewayException(__('The email you are using has been flagged as being used in SPAM donations by our system. Contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
+                    throw new PaymentGatewayException(esc_attr(__('The email you are using has been flagged as being used in SPAM donations by our system. Contact the site administrator if you have any questions.', 'antispam-donation-for-givewp')));
     
                 }
                 if (self::many_donations_in_top($configs, $data)) {
@@ -103,7 +103,7 @@ final class Lkn_Antispam_Actions {
                 }
     
                 if(Lkn_Antispam_Actions::validate_recaptcha($valid_data, $_POST)){
-                    throw new PaymentGatewayException(__('The reCAPTCHA was not verified, try again.', 'antispam-donation-for-givewp'));
+                    throw new PaymentGatewayException(esc_attr(__('The reCAPTCHA was not verified, try again.', 'antispam-donation-for-givewp')));
                 }
             }
         } catch (Exception $exception) {
@@ -124,21 +124,21 @@ final class Lkn_Antispam_Actions {
             do_action('lkn__antispam_spam_detected');
             Lkn_Antispam_Actions::time_for_spam_detected();
 
-            throw new PaymentGatewayException(__('Your IP address is banned.', 'antispam-donation-for-givewp'));
+            throw new PaymentGatewayException(esc_attr(__('Your IP address is banned.', 'antispam-donation-for-givewp')));
         }
         
         if (self::has_too_many_donations($configs, $formData, $userIp)) {
             do_action('lkn__antispam_spam_detected');
             self::time_for_spam_detected();
             
-            throw new PaymentGatewayException(__('The email you are using has been flagged as being used in SPAM donations by our system. Contact the site administrator if you have any questions.', 'antispam-donation-for-givewp'));
+            throw new PaymentGatewayException(esc_attr(__('The email you are using has been flagged as being used in SPAM donations by our system. Contact the site administrator if you have any questions.', 'antispam-donation-for-givewp')));
         }
         if (self::many_donations_in_top($configs)) {
             self::spam_detected_block_all();
         }
 
         if(Lkn_Antispam_Actions::validate_recaptcha($donation, $_POST)){
-            throw new PaymentGatewayException(__('The reCAPTCHA was not verified, try again.', 'antispam-donation-for-givewp'));
+            throw new PaymentGatewayException(esc_attr(__('The reCAPTCHA was not verified, try again.', 'antispam-donation-for-givewp')));
         }
     }
 

@@ -99,7 +99,7 @@ final class Lkn_Antispam_For_GiveWP_Public {
             if ('enabled' === $configs['antispamEnabled']) {
                 if ('enabled' === $configs['recEnabled']) {
                     $siteKey = $configs['siteRec'];
-                    wp_register_script('give-recaptcha-element', 'https://www.google.com/recaptcha/api.js?render=' . $siteKey);
+                    wp_register_script('give-recaptcha-element', 'https://www.google.com/recaptcha/api.js?render=' . $siteKey, array(), LKN_ANTISPAM_FOR_GIVEWP_VERSION);
 
                     wp_enqueue_script('give-recaptcha-element');
 
@@ -108,11 +108,11 @@ final class Lkn_Antispam_For_GiveWP_Public {
 
                     $googleTermsText = sprintf(
                         '<p>%s <a href="https://policies.google.com/privacy" target="_blank">%s</a> %s <a href="https://policies.google.com/terms" target="_blank">%s</a> %s</p>',
-                        __('This site is protected by reCAPTCHA and the', 'fraud-detection-for-woocommerce'),
-                        __('Privacy Policy', 'fraud-detection-for-woocommerce'),
-                        __('and Google', 'fraud-detection-for-woocommerce'),
-                        __('Terms of Service', 'fraud-detection-for-woocommerce'),
-                        __('apply.', 'fraud-detection-for-woocommerce'),
+                        __('This site is protected by reCAPTCHA and the', 'antispam-donation-for-givewp'),
+                        __('Privacy Policy', 'antispam-donation-for-givewp'),
+                        __('and Google', 'antispam-donation-for-givewp'),
+                        __('Terms of Service', 'antispam-donation-for-givewp'),
+                        __('apply.', 'antispam-donation-for-givewp'),
                     );
 
                     $siteKeyData = array(
