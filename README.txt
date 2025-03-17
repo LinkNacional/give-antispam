@@ -3,8 +3,8 @@ Contributors: linknacional
 Donate link: https://www.linknacional.com/wordpress/plugins/
 Tags: spam, antispam, givewp, give, donation
 Requires at least: 5.5
-Tested up to: 6.6
-Stable tag: 1.3.1
+Tested up to: 6.7
+Stable tag: 1.4.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -19,6 +19,11 @@ The [Antispam Donation for GiveWP](https://www.linknacional.com/wordpress/plugin
 **Dependencies**
 
 Antispam Donation for GiveWP plugin is dependent on GiveWP plugin, please make sure GiveWP is installed and properly configured before starting Antispam Donation for GiveWP installation.
+
+
+**Third party APIs usage**
+
+This plugin integrates with Google reCAPTCHA to prevent spam submissions. It uses the [Google reCAPTCHA API](https://www.google.com/recaptcha/api.js) to validate user interactions. For more details, see the [Google Privacy Policy](https://policies.google.com/privacy) and [Terms of Service](https://policies.google.com/terms).
 
 
 **User instructions**
@@ -75,6 +80,14 @@ The Antispam Donation for GiveWP is now activated.
 1. Nothing;
 
 == Changelog ==
+= 1.4.0 =
+**13/03/2025**
+* Add compatibility with form 3.0.0;
+* Fix errors from plugin checker.
+
+= 1.3.2 =
+**08/08/2024**
+* Fix for HTML escaping issues.
 
 = 1.3.1 =
 **07/08/2024**

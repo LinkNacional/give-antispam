@@ -1,3 +1,7 @@
+# 1.4.0 - 13/03/2025
+* Adição de compatibilidade com o formulário 3.0.0;
+* Correção em erros do plugin checker.
+
 # 1.3.2 - 08/08/2024
 * Correção de problemas de escapamento de HTML;
 

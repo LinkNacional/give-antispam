@@ -112,3 +112,18 @@ msgstr ""
 
 msgid "The reCAPTCHA was not verified, try again."
 msgstr ""
+
+msgid "This site is protected by reCAPTCHA and the"
+msgstr ""
+
+msgid "Privacy Policy"
+msgstr ""
+
+msgid "and Google"
+msgstr ""
+
+msgid "Terms of Service"
+msgstr ""
+
+msgid "apply."
+msgstr ""
