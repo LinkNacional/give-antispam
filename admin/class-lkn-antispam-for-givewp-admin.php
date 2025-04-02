@@ -232,9 +232,6 @@ final class Lkn_Antispam_For_GiveWP_Admin {
                         );
                     }
 
-                    // Options only apears if the plugin option is 'enabled'
-                    if (give_get_option('lkn_antispam_save_log_setting_field') === 'enabled') {
-                    }
                 }
 
                 $newSetting[] = array(

@@ -84,7 +84,6 @@ final class Lkn_Antispam_Actions {
                 $userIp = give_get_ip();
     
                 if (self::is_ip_banned($configs, $userIp)) {
-                    self::handle_banned_ip($configs, $valid_data, $userIp);
                     do_action('lkn__antispam_spam_detected');
                     Lkn_Antispam_Actions::time_for_spam_detected();
                     throw new PaymentGatewayException(esc_attr(__('Your IP address is banned.', 'antispam-donation-for-givewp')));
@@ -120,7 +119,6 @@ final class Lkn_Antispam_Actions {
         $userIp = give_get_ip();
 
         if (self::is_ip_banned($configs, $userIp)) {
-            self::handle_banned_ip($configs, $formData, $userIp);
             do_action('lkn__antispam_spam_detected');
             Lkn_Antispam_Actions::time_for_spam_detected();
 
@@ -313,13 +311,6 @@ final class Lkn_Antispam_Actions {
         $bannedIps = explode(\PHP_EOL, $configs['bannedIps']);
 
         return in_array($userIp, $bannedIps, true);
-    }
-
-    private static function handle_banned_ip($configs, $valid_data, $userIp): void {
-        if ('enabled' === $configs['reportSpam']) {
-            self::report_spam($configs, $valid_data, $userIp, 'BANNED IP');
-        }
-
     }
 
     private static function has_too_many_donations($configs, $valid_data, $userIp) {
