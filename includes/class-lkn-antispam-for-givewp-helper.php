@@ -130,8 +130,6 @@ abstract class Lkn_Antispam_Helper {
 
         // Internal debug option
         $configs['debug'] = give_get_option('lkn_antispam_debug_setting_field');
-        // External report log option
-        $configs['reportSpam'] = give_get_option('lkn_antispam_save_log_setting_field');
 
         $configs['antispamEnabled'] = give_get_option('lkn_antispam_enabled_setting_field');
         $configs['interval'] = Lkn_Antispam_Actions::get_time_interval();
