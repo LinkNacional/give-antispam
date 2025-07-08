@@ -109,7 +109,8 @@ abstract class Lkn_Antispam_Helper {
     final public static function plugin_row_meta($plugin_meta) {
         $new_meta_links['setting'] = sprintf(
             '<a href="%1$s">%2$s</a>',
-            admin_url('edit.php?post_type=give_forms&page=give-settings&tab=general&section=access-control'),
+            admin_url('edit.php?post_type=give_forms&page=give-settings&tab=general&section=lkn_antispam'),
+
             __('Settings', 'antispam-donation-for-givewp')
         );
 
