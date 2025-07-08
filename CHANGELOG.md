@@ -1,3 +1,6 @@
+# 1.5.0 - 08/07/2025
+* Nova seção de configurações para Antispam.
+
 # 1.4.1 - 02/04/2025
 * Correção de erro na página de configurações.
 
