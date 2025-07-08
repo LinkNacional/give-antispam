@@ -59,14 +59,11 @@ final class Lkn_Antispam_For_GiveWP_Admin {
      * @return array
      */
     public function lkn_antispam_for_givewp_add_setting_into_existing_tab($settings) {
-        if ( ! Give_Admin_Settings::is_setting_page('general', 'access-control')) {
+        if ( ! Give_Admin_Settings::is_setting_page('general', 'lkn_antispam')) {
             return $settings;
         }
-
         // Make sure you will create your own section or add new setting before array with type 'sectionend' otherwise setting field with not align properly with other setting fields.
         $newSetting = array();
-        foreach ($settings as $key => $setting) {
-            if ('give_docs_link' === $setting['type']) { // You can use id to compare or create own sub section to add new setting.
                 $newSetting[] = array(
                     'name' => __('Enable spam donation protection', 'antispam-donation-for-givewp'),
                     'id' => 'lkn_antispam_enabled_setting_field',
@@ -238,16 +235,16 @@ final class Lkn_Antispam_For_GiveWP_Admin {
                     'id' => 'lkn_antispam',
                     'type' => 'sectionend',
                 );
-            }
 
             $newSetting[] = $setting;
-        }
 
         return $newSetting;
     } 
 
     // Insert settings on GiveWP settings
     public function include_settings(): void {
+        add_filter('give_get_sections_general', array( $this, 'create_new_section'));
+        
         add_filter('give_get_settings_general', array($this, 'lkn_antispam_for_givewp_add_setting_into_existing_tab'), 10, 1);
     }
 
@@ -293,5 +290,11 @@ final class Lkn_Antispam_For_GiveWP_Admin {
         wp_enqueue_script('lkn-antispam-for-givewp-link.js', plugin_dir_url(__FILE__) . '/js/lkn-antispam-for-givewp-link.js', array(), $this->version, false);
 
         wp_localize_script('lkn-antispam-for-givewp-link.js', 'link', array('href' => get_permalink(Lkn_Antispam_Helper::create_custom_page())));
+    }
+
+    public function create_new_section($sections) {
+
+        $sections['lkn_antispam'] = __('Antispam', 'antispam-donation-for-givewp');
+        return $sections;
     }
 }
