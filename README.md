@@ -22,7 +22,7 @@ The Antispam Donation for GiveWP is now activated.
 
 1) Now go to the Settings menu of the GiveWP;
 
-2) Select the 'Access Control' option;
+2) Select the 'Antispam' option;
 
 3) Look for the option 'Enable spam donation protection' and enable it;
 
