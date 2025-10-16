@@ -1,3 +1,6 @@
+# 1.4.2 - 16/10/2025
+* Correção em carregamento de script.
+
 # 1.4.1 - 02/04/2025
 * Correção de erro na página de configurações.
 
