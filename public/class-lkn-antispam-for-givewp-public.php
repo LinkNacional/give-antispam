@@ -93,36 +93,34 @@ final class Lkn_Antispam_For_GiveWP_Public {
          * class.
          */
 
-        if (is_singular('give_forms')) {
-            $configs = Lkn_Antispam_Helper::get_configs();
+        $configs = Lkn_Antispam_Helper::get_configs();
 
-            if ('enabled' === $configs['antispamEnabled']) {
-                if ('enabled' === $configs['recEnabled']) {
-                    $siteKey = $configs['siteRec'];
-                    wp_register_script('give-recaptcha-element', 'https://www.google.com/recaptcha/api.js?render=' . $siteKey, array(), LKN_ANTISPAM_FOR_GIVEWP_VERSION);
+        if ('enabled' === $configs['antispamEnabled']) {
+            if ('enabled' === $configs['recEnabled']) {
+                $siteKey = $configs['siteRec'];
+                wp_register_script('give-recaptcha-element', 'https://www.google.com/recaptcha/api.js?render=' . $siteKey, array(), LKN_ANTISPAM_FOR_GIVEWP_VERSION);
 
-                    wp_enqueue_script('give-recaptcha-element');
+                wp_enqueue_script('give-recaptcha-element');
 
-                    wp_enqueue_script('lkn-antispam-for-givewp-recaptcha', plugin_dir_url(__FILE__) . 'js/lkn-antispam-for-givewp-recaptcha.js', array('jquery', 'give-recaptcha-element'), $this->version, false);
-                    wp_enqueue_script('lkn-antispam-for-givewp-recaptcha-react-form', plugin_dir_url(__FILE__) . 'js/lkn-antispam-for-givewp-recaptcha-react-form.js', array('jquery', 'give-recaptcha-element'), $this->version, false);
+                wp_enqueue_script('lkn-antispam-for-givewp-recaptcha', plugin_dir_url(__FILE__) . 'js/lkn-antispam-for-givewp-recaptcha.js', array('jquery', 'give-recaptcha-element'), $this->version, false);
+                wp_enqueue_script('lkn-antispam-for-givewp-recaptcha-react-form', plugin_dir_url(__FILE__) . 'js/lkn-antispam-for-givewp-recaptcha-react-form.js', array('jquery', 'give-recaptcha-element'), $this->version, false);
 
-                    $googleTermsText = sprintf(
-                        '<p>%s <a href="https://policies.google.com/privacy" target="_blank">%s</a> %s <a href="https://policies.google.com/terms" target="_blank">%s</a> %s</p>',
-                        __('This site is protected by reCAPTCHA and the', 'antispam-donation-for-givewp'),
-                        __('Privacy Policy', 'antispam-donation-for-givewp'),
-                        __('and Google', 'antispam-donation-for-givewp'),
-                        __('Terms of Service', 'antispam-donation-for-givewp'),
-                        __('apply.', 'antispam-donation-for-givewp'),
-                    );
+                $googleTermsText = sprintf(
+                    '<p>%s <a href="https://policies.google.com/privacy" target="_blank">%s</a> %s <a href="https://policies.google.com/terms" target="_blank">%s</a> %s</p>',
+                    __('This site is protected by reCAPTCHA and the', 'antispam-donation-for-givewp'),
+                    __('Privacy Policy', 'antispam-donation-for-givewp'),
+                    __('and Google', 'antispam-donation-for-givewp'),
+                    __('Terms of Service', 'antispam-donation-for-givewp'),
+                    __('apply.', 'antispam-donation-for-givewp'),
+                );
 
-                    $siteKeyData = array(
-                        'sitekey' => $configs['siteRec'],
-                        'googleTermsText' => $googleTermsText,
-                    );
+                $siteKeyData = array(
+                    'sitekey' => $configs['siteRec'],
+                    'googleTermsText' => $googleTermsText,
+                );
 
-                    wp_localize_script('lkn-antispam-for-givewp-recaptcha', 'skData', $siteKeyData);
-                    wp_localize_script('lkn-antispam-for-givewp-recaptcha-react-form', 'skData', $siteKeyData);
-                }
+                wp_localize_script('lkn-antispam-for-givewp-recaptcha', 'skData', $siteKeyData);
+                wp_localize_script('lkn-antispam-for-givewp-recaptcha-react-form', 'skData', $siteKeyData);
             }
         }
 
